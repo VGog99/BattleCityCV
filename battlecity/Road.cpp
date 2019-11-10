@@ -5,6 +5,11 @@
 Road::Road()
 {
 
+	setCanAdvance(true);
+	setCanHideTank(false);
+	setCanShootThrough(true);
+	setIsBreakable(false);
+	roadTexture.loadFromFile("../resources/road.png");
 }
 
 Road::~Road()
@@ -12,7 +17,8 @@ Road::~Road()
 
 }
 
-void Road::drawRoad()
+sf::Sprite Road::createSprite()
 {
-
+	sf::Sprite sprite(roadTexture);
+	return sprite;
 }

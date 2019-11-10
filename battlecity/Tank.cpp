@@ -3,6 +3,7 @@
 Tank::Tank()
 {
 
+	tankTexture.loadFromFile("../resources/playerOne.gif");
 }
 
 Tank::Tank(double posX, double posY, int speed, int damage, int direction) 
@@ -12,7 +13,8 @@ Tank::Tank(double posX, double posY, int speed, int damage, int direction)
 	this->direction = direction;
 }
 
-void Tank::drawTank() 
+sf::Sprite Tank::createSprite()
 {
-	//deseneaza tank-ul
+	sf::Sprite sprite(tankTexture);
+	return sprite;
 }

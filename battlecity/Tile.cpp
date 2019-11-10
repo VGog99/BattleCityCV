@@ -2,6 +2,10 @@
 
 Tile::Tile()
 {
+	m_advance = false;
+	m_breakable = false;
+	m_canShootThrough = false;
+	m_canHide = false;
 }
 
 Tile::Tile(const Tile&)
@@ -33,9 +37,9 @@ void Tile::setIsBreakable(const bool breakable)
 	m_breakable = breakable;
 }
 
-void Tile::setCanTakeDamage(const bool canTakeDamage)
+void Tile::setCanShootThrough(const bool canShootThrough)
 {
-	m_canTakeDamage = canTakeDamage;
+	m_canShootThrough = canShootThrough;
 }
 
 bool Tile::getCanAdvance() const
@@ -53,7 +57,7 @@ bool Tile::getIsBreakable() const
 	return m_breakable;
 }
 
-bool Tile::getCanTakeDamage() const
+bool Tile::getCanShootThrough() const
 {
-	return m_canTakeDamage;
+	return m_canShootThrough;
 }

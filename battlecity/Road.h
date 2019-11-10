@@ -1,12 +1,17 @@
 #pragma once
 #include "Tile.h"
+
 class Road :public Tile
 {
+
+private:
+	sf::Texture roadTexture;
+
 public:
 	Road();
 	~Road();
 
-	void drawRoad(); //deseneaza casutele de drum
+	sf::Sprite createSprite();
 
 };
 

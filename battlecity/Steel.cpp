@@ -1,9 +1,15 @@
 #include "Steel.h"
 
+#include <iostream>
 
 
 Steel::Steel()
 {
+	setIsBreakable(false);
+	setCanAdvance(false);
+	setCanHideTank(false);
+	setCanShootThrough(false);
+	steelTexture.loadFromFile("../resources/steel.png");
 
 }
 
@@ -12,7 +18,8 @@ Steel::~Steel()
 
 }
 
-void Steel::drawSteel()
-{
+sf::Sprite Steel::createSprite() {
 
+	sf::Sprite sprite(steelTexture);
+	return sprite;
 }

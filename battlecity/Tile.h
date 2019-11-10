@@ -1,23 +1,28 @@
 #pragma once
+#include <SFML/Graphics.hpp>
+
 class Tile
 { 
 protected:
-	static const int m_width=25;
-	static const int m_height=25;
-	bool m_advance, m_breakable, m_canHide, m_canTakeDamage;
+	bool m_advance;
+	bool m_breakable;
+	bool m_canHide;
+	bool m_canShootThrough;
+
 	Tile();
 	Tile(const Tile&);
-	Tile& operator = (const Tile&);//fiind protected constructorul, constructorul de copiere si supraincarcarea op egal se va preveni orice incercare de instantiere
+	Tile& operator = (const Tile&); //fiind protected constructorul, constructorul de copiere si supraincarcarea op egal se va preveni orice incercare de instantiere
 
 public:
 	bool getCanAdvance() const;
 	bool getIsBreakable() const;
 	bool getCanHideTank() const;
-	bool getCanTakeDamage() const;
+	bool getCanShootThrough() const;
 	void setCanAdvance(const bool advance);
 	void setIsBreakable(const bool breakable);
 	void setCanHideTank(const bool canHide);
-	void setCanTakeDamage(const bool shootThrough);
+	void setCanShootThrough(const bool shootThrough);
+	virtual sf::Sprite createSprite() = 0;
 	~Tile();
 };
 
