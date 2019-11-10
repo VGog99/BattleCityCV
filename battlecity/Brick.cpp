@@ -18,7 +18,6 @@ Brick::~Brick()
 
 }
 
-void Brick::drawBrick() {
 
 sf::Sprite Brick::createSprite() {
 
