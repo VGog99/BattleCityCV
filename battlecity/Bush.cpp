@@ -1,7 +1,5 @@
 #include "Bush.h"
 
-
-
 Bush::Bush()
 {
 	setCanAdvance(true);
