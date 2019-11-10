@@ -138,6 +138,7 @@
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Bush.h" />
     <ClInclude Include="Road.h" />
+    <ClInclude Include="SDK.h" />
     <ClInclude Include="Steel.h" />
     <ClInclude Include="Tank.h" />
     <ClInclude Include="Tile.h" />

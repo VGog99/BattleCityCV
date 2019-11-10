@@ -1,8 +1,14 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include "SDK.h"
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+
+	Tile* testTile = new Brick();
+	testTile->setCanAdvance(true);
+	std::cout << testTile->getCanAdvance();
 
 	while (window.isOpen())
 	{
@@ -20,7 +26,6 @@ int main()
 		window.display();
 	}
 	
-
 
 	return 0;
 }
