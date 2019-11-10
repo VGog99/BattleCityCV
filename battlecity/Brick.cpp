@@ -5,19 +5,19 @@
 Brick::Brick()
 {
 }
-void Brick::setCanAdvance(bool advance)
+void Brick::setCanAdvance(const bool advance)
 {
 	m_advance = advance;
 }
-void Brick::setCanHideTank(bool canHide)
+void Brick::setCanHideTank(const bool canHide)
 {
 	m_canHide = canHide;
 }
-void Brick::setIsBreakeble(bool breakeble)
+void Brick::setIsBreakeble(const bool breakeble)
 {
 	m_breakeble = breakeble;
 }
-void Brick::setIsShootThrough(bool shootThrough)
+void Brick::setIsShootThrough(const bool shootThrough)
 {
 	m_shootThrough = shootThrough;
 }

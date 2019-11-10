@@ -6,19 +6,19 @@ Steel::Steel()
 {
 }
 
-void Steel::setCanAdvance(bool advance)
+void Steel::setCanAdvance(const bool advance)
 {
 	m_advance = advance;
 }
-void Steel::setCanHideTank(bool canHide)
+void Steel::setCanHideTank(const bool canHide)
 {
 	m_canHide = canHide;
 }
-void Steel::setIsBreakeble(bool breakeble)
+void Steel::setIsBreakeble(const bool breakeble)
 {
 	m_breakeble = breakeble;
 }
-void Steel::setIsShootThrough(bool shootThrough)
+void Steel::setIsShootThrough(const bool shootThrough)
 {
 	m_shootThrough = shootThrough;
 }
