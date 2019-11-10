@@ -126,7 +126,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
     <ClCompile Include="Main.cpp" />
+=======
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Bush.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Road.cpp" />
+    <ClCompile Include="Steel.cpp" />
+    <ClCompile Include="Tank.cpp" />
+    <ClCompile Include="Tile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="Bush.h" />
+    <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="Road.h" />
+    <ClInclude Include="SDK.h" />
+    <ClInclude Include="Steel.h" />
+    <ClInclude Include="Tank.h" />
+    <ClInclude Include="Tile.h" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

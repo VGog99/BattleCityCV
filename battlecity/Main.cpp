@@ -1,7 +1,14 @@
+<<<<<<< Updated upstream
 #include <SFML\Graphics.hpp>
+=======
+#include <iostream>
+#include "SDK.h"
+>>>>>>> Stashed changes
+
 
 int main()
 {
+<<<<<<< Updated upstream
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
 
 	while (window.isOpen())
@@ -19,6 +26,10 @@ int main()
 
 		window.display();
 	}
+=======
+	GameBoard game;
+	game.draw();
+>>>>>>> Stashed changes
 
 	return 0;
 }
