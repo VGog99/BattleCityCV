@@ -27,6 +27,9 @@
     <ClCompile Include="Steel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tile.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Steel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

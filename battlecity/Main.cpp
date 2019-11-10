@@ -1,6 +1,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include "Steel.h"
+#include "Brick.h"
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
@@ -20,9 +21,10 @@ int main()
 
 		window.display();
 	}
-	Steel s;
-	s.setIsShootThrough();
-	std::cout << s.getIsShootThrough()<<"\n";
+	Brick b;
+	b.setIsShootThrough();
+	std::cout << b.getIsShootThrough() << "\n";
+	
 
 
 	return 0;
