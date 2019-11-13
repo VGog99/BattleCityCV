@@ -1,7 +1,5 @@
 #include "Steel.h"
 
-#include <iostream>
-
 
 Steel::Steel()
 {
@@ -18,7 +16,8 @@ Steel::~Steel()
 
 }
 
-sf::Sprite Steel::createSprite() {
+sf::Sprite Steel::createSprite() 
+{
 
 	sf::Sprite sprite(steelTexture);
 	return sprite;

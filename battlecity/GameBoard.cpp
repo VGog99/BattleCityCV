@@ -1,5 +1,4 @@
 #include "GameBoard.h"
-#include <iostream>
 
 void GameBoard::createLevel() {
 	static const int matrixSize = 15;

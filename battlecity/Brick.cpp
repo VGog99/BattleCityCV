@@ -1,5 +1,4 @@
 #include "Brick.h"
-#include <iostream>
 
 
 
@@ -19,7 +18,8 @@ Brick::~Brick()
 }
 
 
-sf::Sprite Brick::createSprite() {
+sf::Sprite Brick::createSprite()
+{
 
 	sf::Sprite sprite(brickTexture);
 	return sprite;
