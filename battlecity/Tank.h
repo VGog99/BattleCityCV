@@ -5,8 +5,8 @@ class Tank
 {
 private:
 
-	int speed;
-	int damage;
+	unsigned int m_speed;
+	unsigned int m_damage;
 	sf::Texture tankTexture;
 
 public: 
@@ -14,6 +14,8 @@ public:
 	double posX;
 	double posY;
 	int direction;
+	void setSpeed(unsigned int speed);
+	unsigned int getSpeed();
 
 	Tank(); //constructor default
 	Tank(double posX, double posY, int speed ,int damage, int direction); //constructor cu parametrii

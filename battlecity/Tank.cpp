@@ -8,9 +8,17 @@ Tank::Tank()
 
 Tank::Tank(double posX, double posY, int speed, int damage, int direction) 
 {
-	this->speed = speed;
-	this->damage = damage;
+	this->m_speed = speed;
+	this->m_damage = damage;
 	this->direction = direction;
+}
+void Tank::setSpeed(unsigned int speed)
+{
+	m_speed = speed;
+}
+unsigned int Tank::getSpeed()
+{
+	return m_speed;
 }
 
 sf::Sprite Tank::createSprite()

@@ -7,3 +7,4 @@
 #include "Tank.h"
 #include "GameBoard.h"
 #include "Water.h"
+#include "Ice.h"
