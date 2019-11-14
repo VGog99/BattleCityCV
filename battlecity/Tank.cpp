@@ -15,7 +15,7 @@ void Tank::setSpeed(unsigned int speed)
 {
 	m_speed = speed;
 }
-unsigned int Tank::getSpeed()
+unsigned int Tank::getSpeed() const
 {
 	return m_speed;
 }

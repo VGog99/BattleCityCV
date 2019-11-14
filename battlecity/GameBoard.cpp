@@ -1,4 +1,5 @@
 #include "GameBoard.h"
+#include <iostream>
 
 void GameBoard::createLevel() {
 	static const int matrixSize = 15;
@@ -41,10 +42,47 @@ void GameBoard::draw() {
 	while (window.isOpen())
 	{
 		sf::Event event;
+		Player player;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+
+			switch (event.type) {
+				case sf::Event::Closed: {
+					window.close();
+					break;
+				}
+
+				case sf::Event::KeyPressed: {
+					
+					switch (event.key.code) {
+						case sf::Keyboard::Up : {
+							player.setDirection('0');
+							std::cout << player.getDirection();
+							break;
+						}
+
+						case sf::Keyboard::Down: {
+							player.setDirection('1');
+							std::cout << player.getDirection();
+							break;
+						}
+
+						case sf::Keyboard::Left: {
+							player.setDirection('2');
+							std::cout << player.getDirection();
+							break;
+						}
+
+						case sf::Keyboard::Right: {
+							player.setDirection('3');
+							std::cout << player.getDirection();
+							break;
+						}
+					}
+
+				}
+			}
+
 		}
 
 		window.clear();
