@@ -18,7 +18,7 @@ PowerUps::PowerUps()
 }
 sf::Sprite PowerUps::createSprite()
 {
-	bonus b;
+	bonus b = bonus::Tank;
 	switch (b)
 	{
 		case 0:
