@@ -41,10 +41,16 @@ void GameBoard::draw() {
 	while (window.isOpen())
 	{
 		sf::Event event;
+		Player player;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+
+			switch (event.type) {
+				case sf::Event::Closed: {
+					window.close();
+					break;
+				}
+			}
 		}
 
 		window.clear();
