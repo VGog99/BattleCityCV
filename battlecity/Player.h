@@ -5,7 +5,7 @@ class Player
 {
 private:
 	std::string m_name;	
-	uint8_t m_direction;	
+	char m_direction;	
 
 public:
 	Player();
@@ -13,7 +13,8 @@ public:
 
 	std::string getPlayerName() const;
 	void setPlayerName(const std::string name);
-	void setDirection(const uint8_t direction);
+	void setDirection(const char direction);
+	char getDirection() const;
 
 };
 
