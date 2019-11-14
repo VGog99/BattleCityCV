@@ -1,10 +1,9 @@
 #pragma once
 #include "Tile.h"
 #include "Tank.h"
-class Ice :public Tile, public Tank
+class Ice :public Tile
 {private:
 	sf::Texture iceTexture;
-	const double speedBoost=2.0;
 public:
 	Ice();
 	~Ice();

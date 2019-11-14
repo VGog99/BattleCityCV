@@ -2,7 +2,6 @@
 
 Tank::Tank()
 {
-
 	tankTexture.loadFromFile("../resources/playerOne.gif");
 }
 

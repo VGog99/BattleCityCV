@@ -8,7 +8,7 @@ Water::Water()
 	setCanAdvance(false);
 	setCanHideTank(false);
 	setCanShootThrough(true);
-	waterTexture.loadFromFile("../resources/steel.png");
+	waterTexture.loadFromFile("../resources/water.png");
 }
 
 

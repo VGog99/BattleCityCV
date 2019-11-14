@@ -8,7 +8,7 @@ Ice::Ice()
 	setCanAdvance(true);
 	setCanHideTank(false);
 	setCanShootThrough(true);
-	iceTexture.loadFromFile("../resources/steel.png");
+	iceTexture.loadFromFile("../resources/ice.png");
 }
 
 

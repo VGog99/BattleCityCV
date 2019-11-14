@@ -48,6 +48,9 @@
     <ClCompile Include="Ice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tile.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
