@@ -2,7 +2,7 @@
 
 Tank::Tank()
 {
-	tankTexture.loadFromFile("../resources/playerOne.gif");
+	tankTexture.loadFromFile("../resources/playerOne.png");
 }
 
 Tank::Tank(double posX, double posY, int speed, int damage, int direction) 

@@ -7,7 +7,30 @@ void GameBoard::createLevel() {
 
 	for (unsigned int i = 0; i < matrixSize; i++) {
 		for (unsigned int j = 0; j < matrixSize; j++) {
+
 			
+			boardVec.at(13 * 15 + 5) = std::make_unique<Tank>();
+			boardVec.at(13 * 15 + 7) = std::make_unique<Eagle>();
+
+			//desenex niste tufisuri
+
+			boardVec.at(11 * 15 + 5) = std::make_unique<Bush>();
+			boardVec.at(11 * 15 + 6) = std::make_unique<Bush>();
+			boardVec.at(11 * 15 + 7) = std::make_unique<Bush>();
+			boardVec.at(11 * 15 + 8) = std::make_unique<Bush>();
+
+			//desenez niste apa
+
+			boardVec.at(10 * 15 + 5) = std::make_unique<Water>();
+			boardVec.at(10 * 15 + 6) = std::make_unique<Water>();
+			boardVec.at(10 * 15 + 7) = std::make_unique<Water>();
+
+			//desenez niste ice
+
+			boardVec.at(9 * 15 + 5) = std::make_unique<Ice>();
+			boardVec.at(9 * 15 + 6) = std::make_unique<Ice>();
+			boardVec.at(9 * 15 + 7) = std::make_unique<Ice>();
+
 			// verificam daca ne aflam pe margini, daca da, vrem sa avem Steel, fiind marginile tabelei de joc
 			if (i == 0 || j == 0 || i == matrixSize - 1 || j == matrixSize - 1) {
 				boardVec.at(i * 15 + j) = std::make_unique<Steel>();

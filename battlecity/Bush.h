@@ -12,7 +12,7 @@ public:
 	~Bush();
 
 	void drawBush(); //deseneaza tufisuri
-	//sf::Sprite createSprite();
+	sf::Sprite createSprite();
 
 };
 
