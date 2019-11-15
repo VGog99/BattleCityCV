@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Object.h"
 
-class Tile
+class Tile : public Object
 { 
 protected:
 	bool m_advance;
@@ -22,7 +23,6 @@ public:
 	void setIsBreakable(const bool breakable);
 	void setCanHideTank(const bool canHide);
 	void setCanShootThrough(const bool shootThrough);
-	virtual sf::Sprite createSprite() = 0;
 	~Tile();
 };
 

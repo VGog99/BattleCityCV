@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
-class Tank
+#include "Object.h"
+class Tank : public Object
 {
 private:
 

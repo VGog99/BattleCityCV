@@ -8,7 +8,7 @@
 class GameBoard {
 
 private:
-	std::vector<std::unique_ptr<Tile>> boardVec;
+	std::vector<std::unique_ptr<Object>> boardVec;
 
 public:
 	GameBoard() {};
