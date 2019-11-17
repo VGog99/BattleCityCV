@@ -6,6 +6,7 @@ Player::Player()
 {
 	playerTexture.loadFromFile("../resources/playerOne.png");
 };
+
 Player::Player(double posX, double posY, int speed, int damage, int direction) 
 	:Tank(posX, posY, speed, damage, direction)
 {
