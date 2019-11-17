@@ -16,6 +16,7 @@ public:
 	bool getIsEagleAlive() const;
 	void setIsEagleAlive(const bool isEagleAlive);
 	sf::Sprite createSprite();
+	std::string getType();
 
 };
 

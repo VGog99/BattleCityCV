@@ -22,3 +22,7 @@ sf::Sprite Steel::createSprite()
 	sf::Sprite sprite(steelTexture);
 	return sprite;
 }
+
+std::string Steel::getType() {
+	return "steel";
+}

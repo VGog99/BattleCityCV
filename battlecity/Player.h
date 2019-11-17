@@ -25,6 +25,7 @@ public:
 
 	void setDirection(const char direction);
 	char getDirection() const;
+	std::string getType();
 
 };
 

@@ -21,5 +21,6 @@ public:
 	Tank(double posX, double posY, int speed ,int damage, int direction); //constructor cu parametrii
 	sf::Sprite createSprite();
 
+
 };
 

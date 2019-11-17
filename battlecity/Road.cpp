@@ -22,3 +22,7 @@ sf::Sprite Road::createSprite()
 	sf::Sprite sprite(roadTexture);
 	return sprite;
 }
+
+std::string Road::getType() {
+	return "road";
+}

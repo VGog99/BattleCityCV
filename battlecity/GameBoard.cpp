@@ -85,9 +85,11 @@ void GameBoard::draw() {
 							player.setDirection('0');
 
 							boardVec.at(x * 15 + y) = std::make_unique<Road>();
-							x --;  
-							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul urca
-
+							x--;
+								
+							if (boardVec.at(x * 15 + y)->getType() == "road")
+								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul urca
+							
 							break;
 						}
 
@@ -96,7 +98,9 @@ void GameBoard::draw() {
 
 							boardVec.at(x * 15 + y) = std::make_unique<Road>();
 							x++;
-							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul coboara
+							
+							if (boardVec.at(x * 15 + y)->getType() == "road")
+								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul coboara
 
 							break;
 						}
@@ -106,7 +110,9 @@ void GameBoard::draw() {
 
 							boardVec.at(x * 15 + y) = std::make_unique<Road>();
 							y--;
-							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la stanga
+
+							if (boardVec.at(x * 15 + y)->getType() == "road")
+								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la stanga
 
 							break;
 						}
@@ -116,7 +122,9 @@ void GameBoard::draw() {
 
 							boardVec.at(x * 15 + y) = std::make_unique<Road>();
 							y++;
-							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la dreapta
+
+							if (boardVec.at(x * 15 + y)->getType() == "road")
+								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la dreapta
 
 							break;
 						}

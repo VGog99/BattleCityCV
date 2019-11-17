@@ -26,3 +26,7 @@ sf::Sprite Eagle::createSprite()
 	sf::Sprite sprite(eagleTexture);
 	return sprite;
 }
+
+std::string Eagle::getType() {
+	return "eagle";
+}

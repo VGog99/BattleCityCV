@@ -24,3 +24,7 @@ sf::Sprite Brick::createSprite()
 	sf::Sprite sprite(brickTexture);
 	return sprite;
 }
+
+std::string Brick::getType() {
+	return "brick";
+}

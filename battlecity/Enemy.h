@@ -14,5 +14,7 @@ public:
 	Enemy(double posX, double posY, int speed, int damage, int direction); 
 	sf::Sprite createSprite();
 	//void drawEnemy();
+	std::string getType();
+
 };
 

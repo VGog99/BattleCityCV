@@ -12,6 +12,6 @@ public:
 	~Road();
 
 	sf::Sprite createSprite();
-
+	std::string getType();
 };
 

@@ -49,3 +49,7 @@ sf::Sprite Player::createSprite()
 	sf::Sprite sprite(playerTexture);
 	return sprite;
 }
+
+std::string Player::getType() {
+	return "player";
+}

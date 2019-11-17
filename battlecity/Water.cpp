@@ -22,3 +22,7 @@ sf::Sprite Water::createSprite()
 	sf::Sprite sprite(waterTexture);
 	return sprite;
 }
+
+std::string Water::getType() {
+	return "water";
+}

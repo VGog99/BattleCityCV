@@ -13,6 +13,7 @@ public:
 
 	void drawBush(); //deseneaza tufisuri
 	sf::Sprite createSprite();
+	std::string getType();
 
 };
 

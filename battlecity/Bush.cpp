@@ -26,3 +26,7 @@ sf::Sprite Bush::createSprite()
 	sf::Sprite sprite(bushTexture);
 	return sprite;
 }
+
+std::string Bush::getType() {
+	return "bush";
+}

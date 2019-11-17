@@ -15,3 +15,7 @@ sf::Sprite Enemy::createSprite()
 	sf::Sprite sprite(enemyTexture);
 	return sprite;
 }
+
+std::string Enemy::getType() {
+	return "enemy";
+}
