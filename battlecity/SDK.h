@@ -11,3 +11,4 @@
 #include "Player.h"
 #include "Eagle.h"
 #include "Enemy.h"
+#include "PowerUps.h"

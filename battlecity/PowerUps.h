@@ -20,6 +20,7 @@ class PowerUps : public Tile
 
 public:
 	PowerUps();
+	sf::Sprite createSprite(bonus b);
 	~PowerUps();
 	sf::Sprite createSprite();
 };

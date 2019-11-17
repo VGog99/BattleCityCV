@@ -16,7 +16,7 @@ PowerUps::PowerUps()
 	ShieldPUTexture.loadFromFile("../resources/ShieldPUTexture.png");
 
 }
-sf::Sprite PowerUps::createSprite()
+sf::Sprite PowerUps::createSprite(bonus b)
 {
 	bonus b = bonus::Tank;
 	switch (b)

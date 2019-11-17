@@ -8,7 +8,17 @@ void GameBoard::createLevel() {
 	for (unsigned int i = 0; i < matrixSize; i++) {
 		for (unsigned int j = 0; j < matrixSize; j++) {
 
-			
+			//powerups
+
+			boardVec.at(1 * 15 + 3) = std::make_unique<PowerUps>();
+			boardVec.at(1 * 15 + 4) = std::make_unique<PowerUps>();
+			boardVec.at(1 * 15 + 5) = std::make_unique<PowerUps>();
+			boardVec.at(1 * 15 + 6) = std::make_unique<PowerUps>();
+			boardVec.at(1 * 15 + 7) = std::make_unique<PowerUps>();
+			boardVec.at(1 * 15 + 8) = std::make_unique<PowerUps>();
+
+
+			//eagle si inamic
 
 			boardVec.at(13 * 15 + 7) = std::make_unique<Eagle>();
 			boardVec.at(13 * 15 + 9) = std::make_unique<Enemy>();
