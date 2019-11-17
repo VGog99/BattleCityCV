@@ -8,9 +8,9 @@ void GameBoard::createLevel() {
 	for (unsigned int i = 0; i < matrixSize; i++) {
 		for (unsigned int j = 0; j < matrixSize; j++) {
 
-			
 			boardVec.at(13 * 15 + 5) = std::make_unique<Tank>();
 			boardVec.at(13 * 15 + 7) = std::make_unique<Eagle>();
+			boardVec.at(13 * 15 + 9) = std::make_unique<Enemy>();
 
 			//desenex niste tufisuri
 
