@@ -8,7 +8,8 @@ void GameBoard::createLevel() {
 	for (unsigned int i = 0; i < matrixSize; i++) {
 		for (unsigned int j = 0; j < matrixSize; j++) {
 
-			boardVec.at(13 * 15 + 5) = std::make_unique<Tank>();
+			
+
 			boardVec.at(13 * 15 + 7) = std::make_unique<Eagle>();
 			boardVec.at(13 * 15 + 9) = std::make_unique<Enemy>();
 
@@ -66,6 +67,15 @@ void GameBoard::draw() {
 	{
 		sf::Event event;
 		Player player;
+
+		double x = 13; //pozitia x initiala a playerului
+		double y = 5; //pozitia y initiala a playerului
+
+		//Player().setPos(x, y);
+		//std::cout << "player pos: " << Player().getPosX() << Player().getPosY();
+
+		boardVec.at(x * 15 + y) = std::make_unique<Player>();  //deseneaza playerul in punctul initial
+
 		while (window.pollEvent(event))
 		{
 
@@ -81,24 +91,39 @@ void GameBoard::draw() {
 						case sf::Keyboard::Up : {
 							player.setDirection('0');
 							std::cout << player.getDirection();
+
+							x --;  
+							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul urca
+
 							break;
 						}
 
 						case sf::Keyboard::Down: {
 							player.setDirection('1');
 							std::cout << player.getDirection();
+
+							x++;
+							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul coboara
+
 							break;
 						}
 
 						case sf::Keyboard::Left: {
 							player.setDirection('2');
 							std::cout << player.getDirection();
+
+							y--;
+							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la stanga
+
 							break;
 						}
 
 						case sf::Keyboard::Right: {
 							player.setDirection('3');
 							std::cout << player.getDirection();
+
+							y++;
+							boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la dreapta
 							break;
 						}
 					}

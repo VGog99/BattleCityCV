@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tank.h"
+#include "SDK.h"
 
 class Enemy : public Tank
 {
