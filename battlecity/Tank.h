@@ -7,7 +7,10 @@ private:
 
 	unsigned int m_speed;
 	unsigned int m_damage;
-	sf::Texture tankTexture;
+	sf::Texture tankTexture0;
+	sf::Texture tankTexture1;
+	sf::Texture tankTexture2;
+	sf::Texture tankTexture3;
 
 public: 
 
@@ -19,7 +22,7 @@ public:
 	
 	Tank(); //constructor default
 	Tank(double posX, double posY, int speed ,int damage, int direction); //constructor cu parametrii
-	sf::Sprite createSprite();
+	sf::Sprite createSprite(int pos);
 
 
 };
