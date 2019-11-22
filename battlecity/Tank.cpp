@@ -8,17 +8,14 @@ Tank::Tank()
 	tankTexture3.loadFromFile("../resources/playerOne3.png");
 }
 
-Tank::Tank(double posX, double posY, int speed, int damage, int direction) 
+Tank::Tank(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction): pos(posX,posY),m_speed(speed),m_damage(damage),m_direction(direction)
 {
-	this->m_speed = speed;
-	this->m_damage = damage;
-	this->direction = direction;
 }
-void Tank::setSpeed(unsigned int speed)
+void Tank::setSpeed(uint16_t speed)
 {
 	m_speed = speed;
 }
-unsigned int Tank::getSpeed() const
+uint16_t Tank::getSpeed() const
 {
 	return m_speed;
 }

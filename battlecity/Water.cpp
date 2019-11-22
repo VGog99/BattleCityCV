@@ -23,6 +23,6 @@ sf::Sprite Water::createSprite()
 	return sprite;
 }
 
-std::string Water::getType() {
+std::string Water::getType() const{
 	return "water";
 }

@@ -5,8 +5,8 @@ class Tank : public Object
 {
 private:
 
-	unsigned int m_speed;
-	unsigned int m_damage;
+	uint16_t m_speed;
+	uint16_t m_damage;
 	sf::Texture tankTexture0;
 	sf::Texture tankTexture1;
 	sf::Texture tankTexture2;
@@ -14,14 +14,13 @@ private:
 
 public: 
 
-	double posX;
-	double posY;
-	int direction;
-	void setSpeed(unsigned int speed);
-	unsigned int getSpeed() const;
-	
+	using position = std::pair<double, double>;
+	position pos;
+	uint16_t m_direction;
+	void setSpeed(uint16_t speed);
+	uint16_t getSpeed() const;
 	Tank(); //constructor default
-	Tank(double posX, double posY, int speed ,int damage, int direction); //constructor cu parametrii
+	Tank(double posX, double posY, uint16_t speed ,uint16_t damage, uint16_t direction); //constructor cu parametrii
 	sf::Sprite createSprite(int pos);
 
 

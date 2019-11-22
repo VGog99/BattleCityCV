@@ -25,6 +25,6 @@ sf::Sprite Brick::createSprite()
 	return sprite;
 }
 
-std::string Brick::getType() {
+std::string Brick::getType() const{
 	return "brick";
 }

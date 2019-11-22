@@ -27,6 +27,6 @@ sf::Sprite Bush::createSprite()
 	return sprite;
 }
 
-std::string Bush::getType() {
+std::string Bush::getType() const{
 	return "bush";
 }

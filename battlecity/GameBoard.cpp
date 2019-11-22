@@ -2,11 +2,11 @@
 #include <iostream>
 
 void GameBoard::createLevel() {
-	static const int matrixSize = 15;
+	static const uint16_t matrixSize = 15;
 	boardVec.resize(matrixSize * matrixSize);
 
-	for (unsigned int i = 0; i < matrixSize; i++) {
-		for (unsigned int j = 0; j < matrixSize; j++) {
+	for (uint16_t i = 0; i < matrixSize; i++) {
+		for (uint16_t j = 0; j < matrixSize; j++) {
 
 			// din pacate nu exista switch cu mai multe argumente, deci o sa avem un trenulet de ifs
 
@@ -48,8 +48,8 @@ void GameBoard::draw() {
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Battle City");
 	std::vector<sf::Sprite> spriteVec;
 
-	int x = 13; //pozitia x initiala a playerului
-	int y = 5; //pozitia y initiala a playerului
+	uint16_t x = 13; //pozitia x initiala a playerului
+	uint16_t y = 5; //pozitia y initiala a playerului
 
 	boardVec.at(x * 15 + y) = std::make_unique<Player>();  //deseneaza playerul in punctul initial
 
@@ -58,8 +58,8 @@ void GameBoard::draw() {
 		sf::Event event;
 		Player player;
 
-		for (unsigned int i = 0; i < 15; i++) {
-			for (unsigned int j = 0; j < 15; j++) {
+		for (uint16_t i = 0; i < 15; i++) {
+			for (uint16_t j = 0; j < 15; j++) {
 				sf::Sprite tempSprite = boardVec.at(i * 15 + j)->createSprite();
 				tempSprite.setPosition(float(35 * j), float(35 * i));
 				spriteVec.emplace_back(tempSprite);

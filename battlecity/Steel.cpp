@@ -23,6 +23,6 @@ sf::Sprite Steel::createSprite()
 	return sprite;
 }
 
-std::string Steel::getType() {
+std::string Steel::getType() const{
 	return "steel";
 }

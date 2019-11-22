@@ -7,6 +7,6 @@ public:
 	Water();
 	~Water();
 	sf::Sprite createSprite();
-	std::string getType();
+	std::string getType() const;
 
 };

@@ -11,6 +11,6 @@ public:
 	Steel();
 	~Steel();
 	sf::Sprite createSprite(); 
-	std::string getType();
+	std::string getType() const;
 };
 

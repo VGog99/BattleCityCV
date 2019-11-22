@@ -7,7 +7,7 @@ Player::Player()
 	playerTexture.loadFromFile("../resources/playerOne.png");
 };
 
-Player::Player(double posX, double posY, int speed, int damage, int direction) 
+Player::Player(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction) 
 	:Tank(posX, posY, speed, damage, direction)
 {
 
@@ -15,17 +15,17 @@ Player::Player(double posX, double posY, int speed, int damage, int direction)
 
 void Player::setPos(double pX, double pY)
 {
-	posX = pX;
-	posY = pY;
+	pos.first = pX;
+	pos.second = pY;
 }
 
-double Player::getPosX()
+double Player::getPosX() const
 {
-	return posX;
+	return pos.first;
 }
-double Player::getPosY()
+double Player::getPosY() const
 {
-	return posY;
+	return pos.second;
 }
 
 void Player::setPlayerName(const std::string name) {
@@ -50,6 +50,6 @@ sf::Sprite Player::createSprite()
 	return sprite;
 }
 
-std::string Player::getType() {
+std::string Player::getType() const {
 	return "player";
 }

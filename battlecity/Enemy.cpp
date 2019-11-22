@@ -5,7 +5,7 @@ Enemy::Enemy()
 	enemyTexture.loadFromFile("../resources/enemy.png");
 }
 
-Enemy::Enemy(double posX, double posY, int speed, int damage, int direction)
+Enemy::Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction)
 	:Tank(posX, posY, speed, damage, direction)
 {
 }
@@ -16,6 +16,6 @@ sf::Sprite Enemy::createSprite()
 	return sprite;
 }
 
-std::string Enemy::getType() {
+std::string Enemy::getType() const{
 	return "enemy";
 }

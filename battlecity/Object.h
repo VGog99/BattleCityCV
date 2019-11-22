@@ -9,7 +9,7 @@ public:
 
 	~Object();
 	virtual sf::Sprite createSprite() = 0;
-	virtual std::string getType() = 0;
+	virtual std::string getType() const = 0;
 
 };
 

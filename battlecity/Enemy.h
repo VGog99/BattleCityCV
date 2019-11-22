@@ -11,10 +11,10 @@ private:
 public:
 
 	Enemy(); 
-	Enemy(double posX, double posY, int speed, int damage, int direction); 
+	Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction); 
 	sf::Sprite createSprite();
 	//void drawEnemy();
-	std::string getType();
+	std::string getType() const;
 
 };
 
