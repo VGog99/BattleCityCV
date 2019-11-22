@@ -1,7 +1,8 @@
 #pragma once
 #include "Tile.h"
 class Water : public Tile
-{private:
+{
+private:
 	sf::Texture waterTexture;
 public:
 	Water();

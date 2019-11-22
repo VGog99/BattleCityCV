@@ -46,22 +46,29 @@ void GameBoard::draw() {
 
 	createLevel();
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Battle City");
-	std::vector<sf::Sprite> spriteVec;
+
 
 	uint16_t x = 13; //pozitia x initiala a playerului
 	uint16_t y = 5; //pozitia y initiala a playerului
 
-	boardVec.at(x * 15 + y) = std::make_unique<Player>();  //deseneaza playerul in punctul initial
-
+	boardVec.at(x * 15 + y) = std::make_unique<Tank>(); //deseneaza playerul in punctul initial
+	
 	while (window.isOpen())
 	{
+		std::vector<sf::Sprite> spriteVec;
 		sf::Event event;
-		Player player;
 
 		for (uint16_t i = 0; i < 15; i++) {
 			for (uint16_t j = 0; j < 15; j++) {
 				sf::Sprite tempSprite = boardVec.at(i * 15 + j)->createSprite();
-				tempSprite.setPosition(float(35 * j), float(35 * i));
+				// in cazul in care este tank, avem nevoie sa rotim sprite-ul, 
+				// inainte de rotatie, ca tank-ul sa nu isi modifice pozitia, origin-ul este setat in mijlocul sprite-ului, 
+				// nu in coltul din stanga sus cum este by default in SFML,
+				// deci vom pozitiona sprite-ul corect, adaugand
+				if (boardVec.at(i * 15 + j)->getType() == "tank")
+					tempSprite.setPosition(TILE_SIZE * j + TILE_SIZE * 0.5, TILE_SIZE * i + TILE_SIZE * 0.5);
+				else
+					tempSprite.setPosition(TILE_SIZE * j, TILE_SIZE * i);
 				spriteVec.emplace_back(tempSprite);
 			}
 		}
@@ -77,54 +84,32 @@ void GameBoard::draw() {
 
 				case sf::Event::KeyPressed: {
 					
-					// ghetto moving, de facut ceva mai inteligent, will do for now
-
 					switch (event.key.code) {
 						case sf::Keyboard::Up : {
 
-							player.setDirection('0');
+							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_UP);
 
-							boardVec.at(x * 15 + y) = std::make_unique<Road>();
-							x--;
-								
-							if (boardVec.at(x * 15 + y)->getType() == "road")
-								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul urca
-							
 							break;
 						}
 
 						case sf::Keyboard::Down: {
-							player.setDirection('1');
 
-							boardVec.at(x * 15 + y) = std::make_unique<Road>();
-							x++;
-							
-							if (boardVec.at(x * 15 + y)->getType() == "road")
-								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul coboara
+
+							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_DOWN);
 
 							break;
 						}
 
 						case sf::Keyboard::Left: {
-							player.setDirection('2');
 
-							boardVec.at(x * 15 + y) = std::make_unique<Road>();
-							y--;
-
-							if (boardVec.at(x * 15 + y)->getType() == "road")
-								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la stanga
+							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_LEFT);
 
 							break;
 						}
 
 						case sf::Keyboard::Right: {
-							player.setDirection('3');
 
-							boardVec.at(x * 15 + y) = std::make_unique<Road>();
-							y++;
-
-							if (boardVec.at(x * 15 + y)->getType() == "road")
-								boardVec.at(x * 15 + y) = std::make_unique<Player>();  //playerul se muta la dreapta
+							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_RIGHT);
 
 							break;
 						}
@@ -137,9 +122,9 @@ void GameBoard::draw() {
 
 		window.clear();
 
-		//draw stuff
+		// ----------------- DRAWING --------------------
 
-		//level drawing
+		// draw game
 		for (auto const& sprite : spriteVec) {
 			window.draw(sprite);
 		}
