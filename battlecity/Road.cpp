@@ -23,6 +23,6 @@ sf::Sprite Road::createSprite()
 	return sprite;
 }
 
-std::string Road::getType() const{
+std::string Road::getType() const {
 	return "road";
 }

@@ -3,6 +3,8 @@
 Tank::Tank()
 {
 	tankTexture.loadFromFile("../resources/tank.png");
+	m_futurePosition.first = 13;
+	m_futurePosition.second = 5;
 }
 
 Tank::Tank(double posX, double posY, uint16_t speed, uint16_t damage, char direction): m_position(posX,posY),m_speed(speed),m_damage(damage),m_direction(direction)
@@ -50,6 +52,33 @@ void Tank::setDirection(const char direction) {
 	m_direction = direction;
 }
 
+bool Tank::getIsMoving() const {
+	return m_isMoving;
+}
+
+std::pair<uint16_t, uint16_t> Tank::getFuturePosition() const {
+	return m_futurePosition;
+}
+
+void Tank::setFuturePosition(std::pair<uint16_t, uint16_t> futurePosition) {
+	m_futurePosition = futurePosition;
+}
+
+void Tank::setIsMoving(const bool isMoving) {
+	m_isMoving = isMoving;
+}
+
+position Tank::getPosition() const {
+	return m_position;
+}
+
+void Tank::setPosition(const position position) {
+	m_position = position;
+}
+
+char Tank::getDirection() const {
+	return m_direction;
+}
 
 std::string Tank::getType() const {
 	return "tank";

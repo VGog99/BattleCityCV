@@ -13,16 +13,27 @@ private:
 	uint16_t m_damage;
 	sf::Texture tankTexture;
 	position m_position;
-	char m_direction = '0';
+	char m_direction = DIR_UP;
+	bool m_isMoving = false;
+	std::pair<uint16_t, uint16_t> m_futurePosition;
 
 public:
 
+
+	Tank(); //constructor default
+	Tank(double posX, double posY, uint16_t speed, uint16_t damage, char direction); //constructor cu parametrii
+
 	void setSpeed(uint16_t speed);
 	uint16_t getSpeed() const;
-	Tank(); //constructor default
-	Tank(double posX, double posY, uint16_t speed ,uint16_t damage, char direction); //constructor cu parametrii
 	sf::Sprite createSprite();
 	void setDirection(const char direction);
+	char getDirection() const;
 	std::string getType() const;
+	bool getIsMoving() const;
+	void setIsMoving(const bool isMoving);
+	std::pair<uint16_t, uint16_t> getFuturePosition() const;
+	void setFuturePosition(const std::pair<uint16_t, uint16_t> futurePosition);
+	position getPosition() const;
+	void setPosition(const position position);
 };
 
