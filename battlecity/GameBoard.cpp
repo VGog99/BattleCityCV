@@ -55,6 +55,12 @@ void GameBoard::draw() {
 	sf::Sprite menuSprite = menu.createSprite();
 	int savedMenuOption = menu.getMenuOption();
 
+	sf::Font menuFont = menu.getMenuFont();
+	sf::Text startText("Start", menuFont);
+	sf::Text exitText("Exit", menuFont);
+
+	startText.setPosition(200, 310);
+	exitText.setPosition(215, 380);
 
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Bootleg Battle City");
 	window.setFramerateLimit(60);
@@ -76,6 +82,9 @@ void GameBoard::draw() {
 		//std::cout << "Last frame executed in: " << dt.asSeconds() << " seconds. \n";
 		std::vector<sf::Sprite> spriteVec;
 		sf::Event event;
+
+		startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
+		exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
 
 		for (uint16_t i = 0; i < 15; i++) {
 			for (uint16_t j = 0; j < 15; j++) {
@@ -158,20 +167,35 @@ void GameBoard::draw() {
 					switch (event.key.code) {
 
 					case sf::Keyboard::Up:	
-						savedMenuOption = menu.getMenuOption();
-						savedMenuOption++;
-						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
-						menu.setMenuOption(savedMenuOption);
-						std::cout << menu.getMenuOption();
-						break;
-					case sf::Keyboard::Down:
+
 						savedMenuOption = menu.getMenuOption();
 						savedMenuOption--;
 						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+
 						menu.setMenuOption(savedMenuOption);
 						std::cout << menu.getMenuOption();
 						break;
+
+					case sf::Keyboard::Down:
+
+						savedMenuOption = menu.getMenuOption();
+						savedMenuOption++;
+						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+
+						menu.setMenuOption(savedMenuOption);
+						std::cout << menu.getMenuOption();
+						break;
+
 					case sf::Keyboard::Enter:
+
+						if (!menu.getMenuOption())
+						{
+							menu.setIsInMenu(false);
+						}
+						else
+						{
+							window.close();
+						}
 						break;
 
 					}
@@ -440,7 +464,8 @@ void GameBoard::draw() {
 		if (menu.getIsInMenu())
 		{
 			window.draw(menuSprite);
-
+			window.draw(startText);
+			window.draw(exitText);
 		}
 		else
 		for (auto const& sprite : spriteVec) {

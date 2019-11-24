@@ -1,8 +1,14 @@
 #include "Menu.h"
-
+#include <iostream>
 Menu::Menu()
 {
 	titleTexture.loadFromFile("../resources/title.png");
+	if (!menuFont.loadFromFile("../resources/font.ttf"))
+	{
+		// error...
+		std::cout << "eroare";
+	}
+	
 }
 
 Menu::~Menu()
@@ -35,4 +41,9 @@ int Menu::getMenuOption() const
 void Menu::setMenuOption(const int option)
 {
 	menuOption = option;
+}
+
+sf::Font Menu::getMenuFont()
+{
+	return menuFont;
 }
