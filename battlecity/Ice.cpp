@@ -15,10 +15,15 @@ Ice::Ice()
 Ice::~Ice()
 {
 }
+
 sf::Sprite Ice::createSprite()
 {
 
 	sf::Sprite sprite(iceTexture);
 	return sprite;
+}
+
+std::string Ice::getType() const {
+	return "ice";
 }
 

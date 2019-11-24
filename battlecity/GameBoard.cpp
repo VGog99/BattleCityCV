@@ -26,6 +26,10 @@ void GameBoard::createLevel() {
 			else if (i == 10 && j > 4 && j < 8) {
 				boardVec.at(i * 15 + j) = std::make_unique<Water>();
 			}
+            // ice
+			else if (i == 10 && j > 7 && j < 10) {
+				boardVec.at(i * 15 + j) = std::make_unique<Ice>();
+			}
 			// eagle + enemy
 			else if (i == 13 && (j == 7 || j == 9)) {
 				if (j == 7) 
