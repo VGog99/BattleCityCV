@@ -4,6 +4,7 @@ Tank::Tank()
 {
 	tankTexture.loadFromFile("../resources/tank.png");
 	tankHiddenTexture.loadFromFile("../resources/tankHidden.png");
+	tankOnIceTexture.loadFromFile("../resources/tankOnIce.png");
 	m_futurePosition.first = 13;
 	m_futurePosition.second = 5;
 }
@@ -24,7 +25,16 @@ uint16_t Tank::getSpeed() const
 
 sf::Sprite Tank::createSprite()
 {
-	sf::Sprite sprite(getIsHidden() ? tankHiddenTexture : tankTexture);
+	sf::Sprite sprite;
+
+	if(getIsHidden())
+		sprite.setTexture(tankHiddenTexture);
+	else
+		if(getIsOnIce())
+			sprite.setTexture(tankOnIceTexture);
+		else 
+			sprite.setTexture(tankTexture);
+
 	sprite.setOrigin(sf::Vector2f(35 * 0.5, 35 * 0.5));
 
 	switch (m_direction) {
@@ -91,4 +101,12 @@ void Tank::setIsHidden(bool isHidden)
 bool Tank::getIsHidden() const
 {
 	return m_isHidden;
+}
+void Tank::setIsOnIce(bool isOnIce)
+{
+	m_isOnIce = isOnIce;
+}
+bool Tank::getIsOnIce() const
+{
+	return m_isOnIce;
 }

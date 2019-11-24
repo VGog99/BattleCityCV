@@ -141,23 +141,38 @@ void GameBoard::draw() {
 
 					if (boardVec.at((x - 1) * 15 + y)->getType() == "road")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
-						x--;
-						tileUnderTank = "road";
+						if (tileUnderTank == "road")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+							x--;
+							tileUnderTank = "road";
+						}
+						
 					}
 					else
 					if (boardVec.at((x - 1) * 15 + y)->getType() == "bush")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
-						tileUnderTank = "bush";
-						x--;
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+							x--;
+							tileUnderTank = "bush";
+						}
+			
+					
+						
 					}
 					else
 					if (boardVec.at((x - 1) * 15 + y)->getType() == "ice")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
-						tileUnderTank = "ice";
-						x--;
+						if (tileUnderTank == "ice")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+							x--;
+							tileUnderTank = "ice";
+						}
+						
+						
 					}
 
 					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
@@ -191,23 +206,35 @@ void GameBoard::draw() {
 
 					if (boardVec.at((x + 1) * 15 + y)->getType() == "road")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
-						x++;
-						tileUnderTank = "road";
+						if (tileUnderTank == "road")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+							x++;
+							tileUnderTank = "road";
+						}
+						
 					}
 					else
 					if (boardVec.at((x + 1) * 15 + y)->getType() == "bush")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
-						x++;
-						tileUnderTank = "bush";
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+							x++;
+							tileUnderTank = "bush";
+						}
+						
 					}
 					else
 					if (boardVec.at((x + 1) * 15 + y)->getType() == "ice")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
-						x++;
-						tileUnderTank = "ice";
+						if (tileUnderTank == "ice")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+							x++;
+							tileUnderTank = "ice";
+						}
+						
 					}
 
 					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
@@ -236,23 +263,35 @@ void GameBoard::draw() {
 
 					if (boardVec.at(x * 15 + (y-1))->getType() == "road")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
-						y--;
-						tileUnderTank = "road";
+						if (tileUnderTank == "road")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
+							y--;
+							tileUnderTank = "road";
+						}
+						
 					}
 					else
 					if (boardVec.at(x * 15 + (y - 1))->getType() == "bush")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x* 15 + (y - 1)));
-						y--;
-						tileUnderTank = "bush";
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
+							y--;
+							tileUnderTank = "bush";
+						}
+						
 					}
 					else
 					if (boardVec.at(x* 15 + (y - 1))->getType() == "ice")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
-						y--;
-						tileUnderTank = "ice";
+						if (tileUnderTank == "ice")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
+							y--;
+							tileUnderTank = "ice";
+						}
+						
 					}
 
 					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
@@ -279,23 +318,36 @@ void GameBoard::draw() {
 					((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_RIGHT);
 					if (boardVec.at(x * 15 + (y + 1))->getType() == "road")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
-						y++;
-						tileUnderTank = "road";
+						
+						if (tileUnderTank == "road")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+							y++;
+							tileUnderTank = "road";
+						}
+					
 					}
 					else
 					if (boardVec.at(x * 15 + (y + 1))->getType() == "bush")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
-						y++;
-						tileUnderTank = "bush";
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+							y++;
+							tileUnderTank = "bush";
+						}
+					
 					}
 					else
 					if (boardVec.at(x * 15 + (y + 1))->getType() == "ice")
 					{
-						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
-						y++;
-						tileUnderTank = "ice";
+						if (tileUnderTank == "ice")
+						{
+							std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+							y++;
+							tileUnderTank = "ice";
+						}
+						
 					}
 
 					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
