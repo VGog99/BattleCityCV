@@ -3,6 +3,7 @@
 Tank::Tank()
 {
 	tankTexture.loadFromFile("../resources/tank.png");
+	tankHiddenTexture.loadFromFile("../resources/tankHidden.png");
 	m_futurePosition.first = 13;
 	m_futurePosition.second = 5;
 }
@@ -23,7 +24,7 @@ uint16_t Tank::getSpeed() const
 
 sf::Sprite Tank::createSprite()
 {
-	sf::Sprite sprite(tankTexture);
+	sf::Sprite sprite(getIsHidden() ? tankHiddenTexture : tankTexture);
 	sprite.setOrigin(sf::Vector2f(35 * 0.5, 35 * 0.5));
 
 	switch (m_direction) {
@@ -82,4 +83,12 @@ char Tank::getDirection() const {
 
 std::string Tank::getType() const {
 	return "tank";
+}
+void Tank::setIsHidden(bool isHidden)
+{
+	m_isHidden = isHidden;
+}
+bool Tank::getIsHidden() const
+{
+	return m_isHidden;
 }

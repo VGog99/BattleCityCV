@@ -52,6 +52,7 @@ void GameBoard::draw() {
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Battle City - made in China (momentan)");
 	window.setFramerateLimit(60);
 	sf::Clock deltaClock;
+	std::string tileUnderTank = "road";
 
 	// initializam si salvam pozitia player-ului pentru a evita cautari inutile in vector sa gasim tank-ul
 	uint16_t x = 13; 
@@ -62,7 +63,7 @@ void GameBoard::draw() {
 	while (window.isOpen())
 	{
 		sf::Time dt = deltaClock.restart();
-		std::cout << "Last frame executed in: " << dt.asSeconds() << " seconds. \n";
+		//std::cout << "Last frame executed in: " << dt.asSeconds() << " seconds. \n";
 		std::vector<sf::Sprite> spriteVec;
 		sf::Event event;
 
@@ -127,95 +128,197 @@ void GameBoard::draw() {
 		{
 
 			switch (event.type) {
-				case sf::Event::Closed: {
-					window.close();
+			case sf::Event::Closed: {
+				window.close();
+				break;
+			}
+			case sf::Event::KeyPressed: {
+
+				switch (event.key.code) {
+				case sf::Keyboard::Up: {
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_UP);
+
+					if (boardVec.at((x - 1) * 15 + y)->getType() == "road")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+						x--;
+						tileUnderTank = "road";
+					}
+					else
+					if (boardVec.at((x - 1) * 15 + y)->getType() == "bush")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+						tileUnderTank = "bush";
+						x--;
+					}
+					else
+					if (boardVec.at((x - 1) * 15 + y)->getType() == "ice")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x - 1) * 15 + y));
+						tileUnderTank = "ice";
+						x--;
+					}
+
+					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
+						break;
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
+					((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x - 1, y));
+
+
+					/*if ((boardVec.at(x * 15 + y)->getType() == "road" && boardVec.at((x - 1) * 15 + y)->getType() == "road") || (boardVec.at(x * 15 + y)->getType() == "bush" && boardVec.at((x - 1) * 15 + y)->getType() == "bush"))
+					{
+						std::swap(boardVec.at((x + 1) * 15 + y), boardVec.at(x * 15 + y));
+						std::cout << "mere";
+					}
+					else
+						if ((boardVec.at(x * 15 + y)->getType() == "road" && boardVec.at((x - 1) * 15 + y)->getType() == "bush") || (boardVec.at(x * 15 + y)->getType() == "bush" && boardVec.at((x - 1) * 15 + y)->getType() == "road"))
+						{
+							std::swap(boardVec.at((x + 1) * 15 + y), boardVec.at(x * 15 + y));
+							sf::Sprite tempSprite = boardVec.at((x + 1) * 15 + y)->createSprite();
+							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
+						}*/
+					
+
 					break;
 				}
 
-				case sf::Event::KeyPressed: {
-					
-					switch (event.key.code) {
-						case sf::Keyboard::Up : {
+				case sf::Keyboard::Down: {
 
-							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_UP);
+					((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_DOWN);
 
-							if (boardVec.at((x - 1) * 15 + y)->getType() != "road")
-								break;
 
-							if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
-								break;
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
-							((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x - 1, y));
-							
-
-							x--;
-							std::swap(boardVec.at((x + 1) * 15 + y), boardVec.at(x * 15 + y));
-							
-							break;
-						}
-
-						case sf::Keyboard::Down: {
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_DOWN);
-
-							if (boardVec.at((x + 1) * 15 + y)->getType() != "road")
-								break;
-
-							if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
-								break;
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
-							((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x + 1, y));
-
-							x++;
-							std::swap(boardVec.at((x - 1) * 15 + y), boardVec.at(x * 15 + y));
-
-							break;
-						}
-
-						case sf::Keyboard::Left: {
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_LEFT);
-
-							if (boardVec.at(x * 15 + (y - 1))->getType() != "road")
-								break;
-
-							if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
-								break;
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
-							((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x, y - 1));
-
-							y--;
-							std::swap(boardVec.at(x * 15 + y + 1), boardVec.at(x * 15 + y));
-
-							break;
-						}
-
-						case sf::Keyboard::Right: {
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_RIGHT);
-
-							if (boardVec.at(x * 15 + (y + 1))->getType() != "road")
-								break;
-
-							if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
-								break;
-
-							((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
-							((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x, y + 1));
-
-							y++;
-							std::swap(boardVec.at(x * 15 + y - 1), boardVec.at(x * 15 + y));
-
-							break;
-						}
+					if (boardVec.at((x + 1) * 15 + y)->getType() == "road")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+						x++;
+						tileUnderTank = "road";
 					}
+					else
+					if (boardVec.at((x + 1) * 15 + y)->getType() == "bush")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+						x++;
+						tileUnderTank = "bush";
+					}
+					else
+					if (boardVec.at((x + 1) * 15 + y)->getType() == "ice")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at((x + 1) * 15 + y));
+						x++;
+						tileUnderTank = "ice";
+					}
+
+					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
+						break;
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
+					((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x + 1, y));
+
+					/*if (boardVec.at(x * 15 + y)->getType() == "road")
+						std::swap(boardVec.at((x - 1) * 15 + y), boardVec.at(x * 15 + y));
+					else
+						if ((boardVec.at(x * 15 + y)->getType() == "road" && boardVec.at((x + 1) * 15 + y)->getType() == "bush") || (boardVec.at(x * 15 + y)->getType() == "bush" && boardVec.at((x + 1) * 15 + y)->getType() == "road"))
+						{
+							std::swap(boardVec.at((x - 1) * 15 + y), boardVec.at(x * 15 + y));
+							sf::Sprite tempSprite = boardVec.at((x - 1) * 15 + y)->createSprite();
+							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
+						}*/
+
+					break;
+				}
+
+				case sf::Keyboard::Left: {
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_LEFT);
+
+
+					if (boardVec.at(x * 15 + (y-1))->getType() == "road")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
+						y--;
+						tileUnderTank = "road";
+					}
+					else
+					if (boardVec.at(x * 15 + (y - 1))->getType() == "bush")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x* 15 + (y - 1)));
+						y--;
+						tileUnderTank = "bush";
+					}
+					else
+					if (boardVec.at(x* 15 + (y - 1))->getType() == "ice")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y - 1)));
+						y--;
+						tileUnderTank = "ice";
+					}
+
+					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
+						break;
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
+					((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x, y - 1));
+
+					/*if (boardVec.at(x * 15 + y)->getType() == "road")
+						std::swap(boardVec.at(x * 15 + y + 1), boardVec.at(x * 15 + y));
+					else
+						if ((boardVec.at(x * 15 + y)->getType() == "road" && boardVec.at(x * 15 + (y - 1))->getType() == "bush") || (boardVec.at(x * 15 + y)->getType() == "bush" && boardVec.at(x * 15 + (y - 1))->getType() == "road"))
+						{
+							std::swap(boardVec.at(x * 15 + (y + 1)), boardVec.at(x * 15 + y));
+							sf::Sprite tempSprite = boardVec.at(x * 15 + (y + 1))->createSprite();
+							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
+						}*/
+
+					break;
+				}
+
+				case sf::Keyboard::Right: {
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setDirection(DIR_RIGHT);
+					if (boardVec.at(x * 15 + (y + 1))->getType() == "road")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+						y++;
+						tileUnderTank = "road";
+					}
+					else
+					if (boardVec.at(x * 15 + (y + 1))->getType() == "bush")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+						y++;
+						tileUnderTank = "bush";
+					}
+					else
+					if (boardVec.at(x * 15 + (y + 1))->getType() == "ice")
+					{
+						std::swap(boardVec.at(x * 15 + y), boardVec.at(x * 15 + (y + 1)));
+						y++;
+						tileUnderTank = "ice";
+					}
+
+					if (((Tank*)boardVec.at(x * 15 + y).get())->getIsMoving())
+						break;
+
+					((Tank*)boardVec.at(x * 15 + y).get())->setIsMoving(true);
+					((Tank*)boardVec.at(x * 15 + y).get())->setFuturePosition(std::make_pair(x, y + 1));
+
+					/*if (boardVec.at(x * 15 + y)->getType() == "road")
+						std::swap(boardVec.at(x * 15 + y - 1), boardVec.at(x * 15 + y));
+					else
+						if ((boardVec.at(x * 15 + y)->getType() == "road" && boardVec.at(x * 15 + (y + 1))->getType() == "bush") || (boardVec.at(x * 15 + y)->getType() == "bush" && boardVec.at(x * 15 + (y + 1))->getType() == "road"))
+						{
+							std::swap(boardVec.at(x * 15 + (y - 1)), boardVec.at(x * 15 + y));
+							sf::Sprite tempSprite = boardVec.at(x * 15 + (y - 1))->createSprite();
+							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
+						}*/
+				}
 
 				}
 			}
 
+			}
 		}
 
 		window.clear();
