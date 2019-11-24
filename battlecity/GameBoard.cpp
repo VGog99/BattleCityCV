@@ -30,13 +30,14 @@ void GameBoard::createLevel() {
 			else if (i == 10 && j > 7 && j < 10) {
 				boardVec.at(i * 15 + j) = std::make_unique<Ice>();
 			}
-			// eagle + enemy
-			else if (i == 13 && (j == 7 || j == 9)) {
+			// eagle + enemy + bullet(test)
+			else if (i == 13 && (j == 7 || j == 9 || j == 13)) {
 				if (j == 7) 
 					boardVec.at(i * 15 + j) = std::make_unique<Eagle>();
-				else
+				else if (j == 9)
 					boardVec.at(i * 15 + j) = std::make_unique<Enemy>();
-
+				else
+					boardVec.at(i * 15 + j) = std::make_unique<Bullet>();
 			}
 			// roads
 			else {
@@ -70,6 +71,13 @@ void GameBoard::draw() {
 		for (uint16_t i = 0; i < 15; i++) {
 			for (uint16_t j = 0; j < 15; j++) {
 				sf::Sprite tempSprite = boardVec.at(i * 15 + j)->createSprite();
+
+				if (boardVec.at(i * 15 + j)->getType() == "bullet")
+				{
+					tempSprite.setPosition(TILE_SIZE * j + TILE_SIZE * 0.5, TILE_SIZE * i + TILE_SIZE * 0.5);
+				}
+				else 
+
 				// in cazul in care este tank, avem nevoie sa rotim sprite-ul, 
 				// inainte de rotatie, ca tank-ul sa nu isi modifice pozitia, origin-ul este setat in mijlocul sprite-ului, 
 				// nu in coltul din stanga sus cum este by default in SFML,
