@@ -31,11 +31,9 @@ void GameBoard::createLevel() {
 				boardVec.at(i * 15 + j) = std::make_unique<Ice>();
 			}
 			// eagle + enemy + bullet(test)
-			else if (i == 13 && (j == 7 || j == 9 || j == 13)) {
+			else if (i == 13 && (j == 7 || j == 13)) {
 				if (j == 7) 
 					boardVec.at(i * 15 + j) = std::make_unique<Eagle>();
-				else if (j == 9)
-					boardVec.at(i * 15 + j) = std::make_unique<Enemy>();
 				else
 					boardVec.at(i * 15 + j) = std::make_unique<Bullet>();
 			}
@@ -72,6 +70,14 @@ void GameBoard::draw() {
 	uint16_t y = 5; 
 
 	boardVec.at(x * 15 + y) = std::make_unique<Tank>(); //deseneaza playerul in punctul initial
+
+	Enemy enemy;
+	// initializam si salvam pozitia enemy-ului
+	uint16_t enemy_x = 13; 
+	uint16_t enemy_y = 9;
+	boardVec.at(enemy_x * 15 + enemy_y) = std::make_unique<Enemy>();
+
+	
 
 	while (window.isOpen())
 	{
@@ -446,6 +452,9 @@ void GameBoard::draw() {
 							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
 						}*/
 				}
+										// reinitializam pozitia enemy-ului intr-o pozitite aleatorie de fiecare data cand se misca player-ul
+										enemy.randomMovement(enemy_x, enemy_y);
+										boardVec.at(enemy_x * 15 + enemy_y) = std::make_unique<Enemy>();
 
 
 

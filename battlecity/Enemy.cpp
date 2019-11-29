@@ -10,6 +10,27 @@ Enemy::Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t
 {
 }
 
+void Enemy::randomMovement(uint16_t posX, uint16_t posY)
+{
+	int rand = std::rand() % 4;
+	if (rand == 0)
+	{
+		++posY;
+	}
+	else if (rand == 1)
+	{
+		++posX;
+	}
+	else if (rand == 2)
+	{
+		--posY;
+	}
+	else 
+	{
+		--posX;
+	}
+}
+
 sf::Sprite Enemy::createSprite()
 {
 	sf::Sprite sprite(enemyTexture);
