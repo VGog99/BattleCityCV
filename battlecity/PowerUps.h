@@ -1,7 +1,8 @@
 #pragma once
 #include "Tile.h"
 class PowerUps : public Tile
-{private: 
+{
+private: 
 	enum bonus
 	{
 		Tank=0,

@@ -50,12 +50,14 @@ void GameBoard::draw() {
 	createLevel();
 
 	Menu menu;
+	bool pause;
 	sf::Sprite menuSprite = menu.createSprite();
 	int savedMenuOption = menu.getMenuOption();
 
 	sf::Font menuFont = menu.getMenuFont();
 	sf::Text startText("Start", menuFont);
 	sf::Text exitText("Exit", menuFont);
+	sf::Text pauseText("Pause", menuFont);
 
 	startText.setPosition(200, 310);
 	exitText.setPosition(215, 380);
@@ -451,6 +453,15 @@ void GameBoard::draw() {
 							sf::Sprite tempSprite = boardVec.at(x * 15 + (y - 1))->createSprite();
 							sf::Sprite tempSprite1 = boardVec.at(x * 15 + y)->createSprite();
 						}*/
+				}
+				case sf::Keyboard::Escape:
+				{
+					window.close();
+				}
+				case sf::Keyboard::P:
+				{
+					//window.draw(pauseText);
+					//pause = true;
 				}
 										// reinitializam pozitia enemy-ului intr-o pozitite aleatorie de fiecare data cand se misca player-ul
 										enemy.randomMovement(enemy_x, enemy_y);
