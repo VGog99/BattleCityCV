@@ -7,14 +7,18 @@ class Enemy : public Tank
 private:
 
 	sf::Texture enemyTexture;
+	//char m_enemyDirection;
 
 public:
 
 	Enemy(); 
 	Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction); 
-	void randomMovement(uint16_t posX, uint16_t posY);
+	static char randomMovement();
 	sf::Sprite createSprite();
 	//void drawEnemy();
+
+	//void setDirection(const char enemyDirection);
+	//char getDirection() const;
 	std::string getType() const;
 
 };

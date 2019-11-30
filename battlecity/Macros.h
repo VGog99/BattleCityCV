@@ -5,3 +5,4 @@
 #define DIR_RIGHT '1'
 #define DIR_LEFT '2'
 #define DIR_DOWN '3'
+#define MATRIX_SIZE 15

@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include <iostream>
 
 Enemy::Enemy()
 {
@@ -10,30 +11,37 @@ Enemy::Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t
 {
 }
 
-void Enemy::randomMovement(uint16_t posX, uint16_t posY)
+char Enemy::randomMovement()
 {
-	int rand = std::rand() % 4;
-	if (rand == 0)
-	{
-		++posY;
-	}
-	else if (rand == 1)
-	{
-		++posX;
-	}
-	else if (rand == 2)
-	{
-		--posY;
-	}
-	else 
-	{
-		--posX;
-	}
+	std::cout << (char)(std::rand() % 4 + 48);
+	return (char)(std::rand() % 4 + 48);
 }
+
 
 sf::Sprite Enemy::createSprite()
 {
 	sf::Sprite sprite(enemyTexture);
+	sprite.setOrigin(sf::Vector2f(TILE_SIZE * 0.5, TILE_SIZE * 0.5));
+
+	switch (getDirection()) {
+
+		case DIR_UP:
+			sprite.rotate(0.f);
+		break;
+
+		case DIR_RIGHT:
+			sprite.rotate(90.f);
+		break;
+
+		case DIR_LEFT:
+			sprite.rotate(-90.f);
+		break;
+
+		case DIR_DOWN:
+			sprite.rotate(180.f);
+		break;
+	}
+
 	return sprite;
 }
 
