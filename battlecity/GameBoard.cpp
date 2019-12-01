@@ -1,12 +1,27 @@
 #include "GameBoard.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 void GameBoard::createLevel() {
 
 	int inputFromFile;
 
-	std::ifstream file(!stageChosen ? "../stages/stage1.txt" : "../stages/stage2.txt");
+	std::string filePath;
+	switch (stageChosen)
+	{
+	case 0:
+		filePath = "../stages/stage1.txt";
+		break;
+	case 1:
+		filePath = "../stages/stage2.txt";
+		break;
+	case 2:
+		filePath = "../stages/stage3.txt";
+		break;
+	}
+	std::ifstream file(filePath);
+
 	boardVec.resize(MATRIX_SIZE * MATRIX_SIZE);
 
 	for (uint16_t i = 0; i < MATRIX_SIZE; i++) {
@@ -48,6 +63,11 @@ void GameBoard::createLevel() {
 			case 6:
 
 				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Bush>();
+				break;
+
+			case 7:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Water>();
 				break;
 
 			default:
@@ -402,6 +422,7 @@ void GameBoard::draw() {
 	sf::Text stageText("Choose your stage \n(use arrow keys)", menuFont);
 	sf::Text stageOne("Stage 1", menuFont);
 	sf::Text stageTwo("Stage 2", menuFont);
+	sf::Text stageThree("Stage 3", menuFont);
 
 	sf::Music menuMusic;
 
@@ -421,6 +442,8 @@ void GameBoard::draw() {
 	stageOne.setPosition(200, 250);
 	stageTwo.setCharacterSize(20.f);
 	stageTwo.setPosition(200, 300);
+	stageThree.setCharacterSize(20.f);
+	stageThree.setPosition(200, 350);
 
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Bootleg Battle City");
 	window.setFramerateLimit(60);
@@ -442,8 +465,9 @@ void GameBoard::draw() {
 		if (menu.getIsInMenu()) {
 			startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
 			exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
-			stageOne.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
-			stageTwo.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
+			stageOne.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
+			stageTwo.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
+			stageThree.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
 
 		}
 
@@ -469,17 +493,18 @@ void GameBoard::draw() {
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption--;
-								savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
+								
 								break;
 
 							case sf::Keyboard::Down:
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption++;
-								savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
@@ -499,9 +524,16 @@ void GameBoard::draw() {
 
 										menu.setIsInMenu(false);
 									}
-									else
+									else if(menu.getMenuOption() == 1)
 									{
 										setStage(1);
+										createLevel();
+
+										menu.setIsInMenu(false);
+									}
+									else 
+									{
+										setStage(2);
 										createLevel();
 
 										menu.setIsInMenu(false);
@@ -551,6 +583,7 @@ void GameBoard::draw() {
 				window.draw(stageText);
 				window.draw(stageOne);
 				window.draw(stageTwo);
+				window.draw(stageThree);
 			}
 			
 		}
