@@ -61,11 +61,6 @@ void GameBoard::createLevel() {
 	}
 }
 
-	
-
-
-
-
 void GameBoard::enemyLogic() {
 
 	//update la pozitia enemy la 0.5 secunde
@@ -395,11 +390,18 @@ void GameBoard::draw() {
 	sf::Text exitText("Exit", menuFont);
 	sf::Text pauseText("Pause", menuFont);
 
+	sf::Music menuMusic;
+
+	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
+	{
+		std::cout << "Nu s-a putut incarca fisierul de muzica.";
+	}
+
+	menuMusic.setVolume(0.50f);
+	menuMusic.play();
+
 	startText.setPosition(200, 310);
 	exitText.setPosition(215, 380);
-
-	startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
-	exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
 
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Bootleg Battle City");
 	window.setFramerateLimit(60);
@@ -412,6 +414,8 @@ void GameBoard::draw() {
 
 		sf::Event event;		
 		std::vector<sf::Sprite> spriteVec = setUpSprites();
+		startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
+		exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
 
 		enemyLogic();
 
@@ -488,11 +492,13 @@ void GameBoard::draw() {
 			window.draw(startText);
 			window.draw(exitText);
 		}
-		else
-
-		for (auto const& sprite : spriteVec) {
-			window.draw(sprite);
+		else {		
+			for (auto const& sprite : spriteVec) {
+				window.draw(sprite);
+			}
 		}
+
+
 
 		window.display();
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1)); //TODO: de vazut daca exista vreo diferenta signifiant vizibila dpdv vizual, gpu usage mi-a scazut de la 50% la 7%
