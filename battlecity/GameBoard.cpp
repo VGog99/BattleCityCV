@@ -6,7 +6,7 @@ void GameBoard::createLevel() {
 
 	int inputFromFile;
 
-	std::ifstream file("../stages/stage1.txt");
+	std::ifstream file(!stageChosen ? "../stages/stage1.txt" : "../stages/stage2.txt");
 	boardVec.resize(MATRIX_SIZE * MATRIX_SIZE);
 
 	for (uint16_t i = 0; i < MATRIX_SIZE; i++) {
@@ -306,6 +306,16 @@ void GameBoard::executeOnKeyRight() {
 	((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setFuturePosition(std::make_pair(playerPosX, playerPosY + 1));
 }
 
+void GameBoard::setStage(const uint16_t stage)
+{
+	stageChosen = stage;
+}
+
+uint16_t GameBoard::getStage() const
+{
+	return stageChosen;
+}
+
 std::vector<sf::Sprite> GameBoard::setUpSprites() {
 
 	std::vector<sf::Sprite> spriteVec;
@@ -379,9 +389,9 @@ std::vector<sf::Sprite> GameBoard::setUpSprites() {
 
 void GameBoard::draw() {
 
-	createLevel();
-	
+
 	Menu menu;
+
 	int savedMenuOption = menu.getMenuOption();
 	sf::Sprite menuSprite = menu.createSprite();
 
@@ -389,6 +399,9 @@ void GameBoard::draw() {
 	sf::Text startText("Start", menuFont);
 	sf::Text exitText("Exit", menuFont);
 	sf::Text pauseText("Pause", menuFont);
+	sf::Text stageText("Choose your stage \n(use arrow keys)", menuFont);
+	sf::Text stageOne("Stage 1", menuFont);
+	sf::Text stageTwo("Stage 2", menuFont);
 
 	sf::Music menuMusic;
 
@@ -397,27 +410,45 @@ void GameBoard::draw() {
 		std::cout << "Nu s-a putut incarca fisierul de muzica.";
 	}
 
-	menuMusic.setVolume(0.50f);
+	menuMusic.setVolume(0.60f);
 	menuMusic.play();
 
 	startText.setPosition(200, 310);
 	exitText.setPosition(215, 380);
+	stageText.setCharacterSize(25.f);
+	stageText.setPosition(50, 150);
+	stageOne.setCharacterSize(20.f);
+	stageOne.setPosition(200, 250);
+	stageTwo.setCharacterSize(20.f);
+	stageTwo.setPosition(200, 300);
 
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Bootleg Battle City");
 	window.setFramerateLimit(60);
 	
-	boardVec.at(playerPosX * 15 + playerPosY) = std::make_unique<Tank>(); //deseneaza playerul in punctul initial
+	if (!menu.getIsInMenu())
+		boardVec.at(playerPosX * 15 + playerPosY) = std::make_unique<Tank>(); //deseneaza playerul in punctul initial
 
 	while (window.isOpen())
 	{
 		dt = deltaClock.restart();
 
-		sf::Event event;		
-		std::vector<sf::Sprite> spriteVec = setUpSprites();
-		startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
-		exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
+		sf::Event event;	
 
-		enemyLogic();
+		std::vector<sf::Sprite> spriteVec;
+		
+		if (!menu.getIsInMenu())
+			spriteVec = setUpSprites();
+
+		if (menu.getIsInMenu()) {
+			startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
+			exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
+			stageOne.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
+			stageTwo.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
+
+		}
+
+		if (!menu.getIsInMenu())
+			enemyLogic();
 
 		while (window.pollEvent(event))
 		{
@@ -454,7 +485,29 @@ void GameBoard::draw() {
 								std::cout << menu.getMenuOption();
 								break;
 
-							case sf::Keyboard::Enter: !menu.getMenuOption() ? menu.setIsInMenu(false) : window.close(); break;
+							case sf::Keyboard::Enter: {
+
+								if (!menu.getStageChooser()) {
+									!menu.getMenuOption() ? menu.setStageChooser(true) : window.close(); 
+									break;
+								}
+								else {
+									if (menu.getMenuOption() == 0)
+									{
+										setStage(0);
+										createLevel();
+
+										menu.setIsInMenu(false);
+									}
+									else
+									{
+										setStage(1);
+										createLevel();
+
+										menu.setIsInMenu(false);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -488,9 +541,18 @@ void GameBoard::draw() {
 		// draw game
 		if (menu.getIsInMenu())
 		{
-			window.draw(menuSprite);
-			window.draw(startText);
-			window.draw(exitText);
+			if (!menu.getStageChooser()) {
+				window.draw(menuSprite);
+				window.draw(startText);
+				window.draw(exitText);
+			}
+			else
+			{
+				window.draw(stageText);
+				window.draw(stageOne);
+				window.draw(stageTwo);
+			}
+			
 		}
 		else {		
 			for (auto const& sprite : spriteVec) {

@@ -23,6 +23,8 @@ private:
 
 	std::string tileUnderTank = "road";
 
+	uint16_t stageChosen = 0;
+
 public:
 	GameBoard() {};
 	~GameBoard() {};
@@ -34,6 +36,8 @@ public:
 	void executeOnKeyDown();
 	void executeOnKeyLeft();
 	void executeOnKeyRight();
+	void setStage(const uint16_t stage);
+	uint16_t getStage() const;
 	std::vector<sf::Sprite> setUpSprites();
 	
 

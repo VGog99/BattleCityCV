@@ -43,6 +43,16 @@ void Menu::setMenuOption(const int option)
 	menuOption = option;
 }
 
+void Menu::setStageChooser(const bool stageChooser)
+{
+	this->stageChooser = stageChooser;
+}
+
+bool Menu::getStageChooser() const
+{
+	return stageChooser;
+}
+
 sf::Font Menu::getMenuFont()
 {
 	return menuFont;

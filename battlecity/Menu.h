@@ -9,7 +9,8 @@ private:
 
 	bool isInMenu=true;
 	sf::Texture titleTexture;
-	int menuOption=0;
+	int menuOption = 0;
+	bool stageChooser = false;
 	sf::Font menuFont;
 
 public:
@@ -22,6 +23,9 @@ public:
 
 	int getMenuOption() const;
 	void setMenuOption(const int option);
+
+	void setStageChooser(const bool stageChooser);
+	bool getStageChooser() const;
 
 	sf::Font getMenuFont();
 };
