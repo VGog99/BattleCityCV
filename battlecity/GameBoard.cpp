@@ -19,6 +19,9 @@ void GameBoard::createLevel() {
 	case 2:
 		filePath = "../stages/stage3.txt";
 		break;
+	case 3:
+		filePath = "../stages/stage4.txt";
+		break;
 	}
 	std::ifstream file(filePath);
 
@@ -68,6 +71,11 @@ void GameBoard::createLevel() {
 			case 7:
 
 				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Water>();
+				break;
+
+			case 8:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Ice>();
 				break;
 
 			default:
@@ -423,6 +431,7 @@ void GameBoard::draw() {
 	sf::Text stageOne("Stage 1", menuFont);
 	sf::Text stageTwo("Stage 2", menuFont);
 	sf::Text stageThree("Stage 3", menuFont);
+	sf::Text stageFour("Stage 4", menuFont);
 
 	sf::Music menuMusic;
 
@@ -444,6 +453,8 @@ void GameBoard::draw() {
 	stageTwo.setPosition(200, 300);
 	stageThree.setCharacterSize(20.f);
 	stageThree.setPosition(200, 350);
+	stageFour.setCharacterSize(20.f);
+	stageFour.setPosition(200, 400);
 
 	sf::RenderWindow window(sf::VideoMode(530, 530), "Bootleg Battle City");
 	window.setFramerateLimit(60);
@@ -468,6 +479,7 @@ void GameBoard::draw() {
 			stageOne.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
 			stageTwo.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
 			stageThree.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
+			stageFour.setFillColor(menu.getMenuOption() == 4 ? sf::Color::Yellow : sf::Color::White);
 
 		}
 
@@ -493,7 +505,7 @@ void GameBoard::draw() {
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption--;
-								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
+								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
@@ -504,7 +516,7 @@ void GameBoard::draw() {
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption++;
-								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
+								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
@@ -531,9 +543,16 @@ void GameBoard::draw() {
 
 										menu.setIsInMenu(false);
 									}
-									else 
+									else if(menu.getMenuOption() == 2)
 									{
 										setStage(2);
+										createLevel();
+
+										menu.setIsInMenu(false);
+									}
+									else
+									{
+										setStage(3);
 										createLevel();
 
 										menu.setIsInMenu(false);
@@ -584,6 +603,7 @@ void GameBoard::draw() {
 				window.draw(stageOne);
 				window.draw(stageTwo);
 				window.draw(stageThree);
+				window.draw(stageFour);
 			}
 			
 		}
