@@ -1,51 +1,69 @@
 #include "GameBoard.h"
 #include <iostream>
+#include <fstream>
 
 void GameBoard::createLevel() {
-	static const uint16_t matrixSize = 15;
-	boardVec.resize(matrixSize * matrixSize);
 
-	for (uint16_t i = 0; i < matrixSize; i++) {
-		for (uint16_t j = 0; j < matrixSize; j++) {
+	int inputFromFile;
 
-			// din pacate nu exista switch cu mai multe argumente, deci o sa avem un trenulet de ifs
+	std::ifstream file("../stages/stage1.txt");
+	boardVec.resize(MATRIX_SIZE * MATRIX_SIZE);
 
-			// verificam daca ne aflam pe margini, daca da, vrem sa avem Steel, fiind marginile tabelei de joc
-			if (i == 0 || j == 0 || i == matrixSize - 1 || j == matrixSize - 1) {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Steel>();
+	for (uint16_t i = 0; i < MATRIX_SIZE; i++) {
+		for (uint16_t j = 0; j < MATRIX_SIZE; j++) {
+
+			file >> inputFromFile;
+
+			switch (inputFromFile) {
+
+			case 1:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Steel>();
+				break;
+
+			case 2:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Brick>();
+				break;
+
+			case 3:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Eagle>();
+				break;
+
+			case 4:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Tank>();
+				playerPosX = i;
+				playerPosY = j;
+				break;
+
+			case 5:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Enemy>();
+				enemyPosX = i;
+				enemyPosY = j;
+				break;
+
+			case 6:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Bush>();
+				break;
+
+			default:
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Road>();
+				break;
+
 			}
-			// niste linii de bricks for testing purposes
-			else if (j % 2 == 0 && i > 1 && i < 9) {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Brick>();
-			}
-			// tufisuri 
-			else if (i == 11 && j > 4 && j < 9) {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Bush>();
-			}
-			// apa
-			else if (i == 10 && j > 4 && j < 8) {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Water>();
-			}
-			// ice
-			else if (i == 10 && j > 7 && j < 10) {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Ice>();
-			}
-			// eagle + enemy + bullet(test)
-			else if (i == 13 && (j == 7 || j == 13 || j == 9)) {
-				if (j == 7)
-					boardVec.at(i * matrixSize + j) = std::make_unique<Eagle>();
-				else if (j == 13)
-					boardVec.at(i * matrixSize + j) = std::make_unique<Bullet>();
-				else
-					boardVec.at(i * matrixSize + j) = std::make_unique<Enemy>();
-			}
-			// roads
-			else {
-				boardVec.at(i * matrixSize + j) = std::make_unique<Road>();
-			}
+
 		}
 	}
 }
+
+	
+
+
 
 
 void GameBoard::enemyLogic() {
