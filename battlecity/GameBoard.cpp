@@ -168,7 +168,7 @@ void GameBoard::executeOnKeyUp() {
 			playerPosX--;
 			tileUnderTank = "road";
 		}
-
+		else
 		if (tileUnderTank == "bush")
 		{
 			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
@@ -176,6 +176,15 @@ void GameBoard::executeOnKeyUp() {
 			boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Bush>();
 			tileUnderTank = "road";
 			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+		}
+		else
+		if (tileUnderTank == "ice")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+			playerPosX--;
+			boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Ice>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
 		}
 
 	}
@@ -198,6 +207,16 @@ void GameBoard::executeOnKeyUp() {
 				((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
 				tileUnderTank = "bush";
 			}
+			else
+				if (tileUnderTank == "ice")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+					playerPosX--;
+					boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Ice>();
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+					tileUnderTank = "bush";
+				}
 
 		}
 		else
@@ -207,10 +226,28 @@ void GameBoard::executeOnKeyUp() {
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
 					playerPosX--;
+					boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Ice>();
 					tileUnderTank = "ice";
 				}
-
-
+				else
+					if (tileUnderTank == "road")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+						playerPosX--;
+						boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Road>();
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+						tileUnderTank = "ice";
+					}
+					else
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+							playerPosX--;
+							boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Bush>();
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+							tileUnderTank = "ice";
+						}
 			}
 
 	if (((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->getIsMoving())
@@ -232,7 +269,7 @@ void GameBoard::executeOnKeyDown() {
 			playerPosX++;
 			tileUnderTank = "road";
 		}
-
+		else
 		if (tileUnderTank == "bush")
 		{
 			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
@@ -241,6 +278,15 @@ void GameBoard::executeOnKeyDown() {
 			tileUnderTank = "road";
 			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
 		}
+		else 
+			if (tileUnderTank == "ice")
+			{
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+				playerPosX++;
+				boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Ice>();
+				tileUnderTank = "road";
+				((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+		    }
 
 	}
 	else
@@ -262,6 +308,16 @@ void GameBoard::executeOnKeyDown() {
 					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
 					tileUnderTank = "bush";
 				}
+				else
+					if (tileUnderTank == "ice")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+						playerPosX++;
+						boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Ice>();
+						tileUnderTank = "road";
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					}
 
 		}
 		else
@@ -271,8 +327,28 @@ void GameBoard::executeOnKeyDown() {
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
 					playerPosX++;
+					boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Ice>();
 					tileUnderTank = "ice";
 				}
+				else
+					if (tileUnderTank == "road")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+						playerPosX++;
+						boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Road>();
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+						tileUnderTank = "ice";
+					}
+					else
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+							playerPosX++;
+							boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Bush>();
+							tileUnderTank = "ice";
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+						}
 
 			}
 
@@ -292,19 +368,28 @@ void GameBoard::executeOnKeyLeft() {
 
 		if (tileUnderTank == "road")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
 			playerPosY--;
 			tileUnderTank = "road";
 		}
-
+		else
 		if (tileUnderTank == "bush")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
 			playerPosY--;
 			boardVec.at((playerPosX) * 15 + (playerPosY+1)) = std::make_unique<Bush>();
 			tileUnderTank = "road";
 			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
 		}
+		else
+			if (tileUnderTank == "ice")
+			{
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+				playerPosY--;
+				boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Ice>();
+				tileUnderTank = "road";
+				((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+			}
 
 	}
 	else
@@ -313,7 +398,7 @@ void GameBoard::executeOnKeyLeft() {
 
 			if (tileUnderTank == "bush")
 			{
-				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
 				playerPosY--;
 				boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
@@ -321,12 +406,22 @@ void GameBoard::executeOnKeyLeft() {
 			else
 				if (tileUnderTank == "road")
 				{
-					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
 					playerPosY--;
 					boardVec.at((playerPosX) * 15 + (playerPosY+1)) = std::make_unique<Road>();
 					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
 					tileUnderTank = "bush";
 				}
+				else
+					if (tileUnderTank == "ice")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+						playerPosX--;
+						boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Ice>();
+						tileUnderTank = "bush";
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					}
 
 		}
 		else
@@ -336,8 +431,28 @@ void GameBoard::executeOnKeyLeft() {
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
 					playerPosY--;
+					boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Ice>();
 					tileUnderTank = "ice";
 				}
+				else
+					if (tileUnderTank == "road")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+						playerPosY--;
+						boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Road>();
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+						tileUnderTank = "ice";
+					}
+					else
+						if (tileUnderTank == "bush")
+						{
+							std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+							playerPosX--;
+							boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Bush>();
+							tileUnderTank = "ice";
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+						}
 
 			}
 
@@ -355,18 +470,27 @@ void GameBoard::executeOnKeyRight() {
 
 		if (tileUnderTank == "road")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
 			playerPosY++;
 			tileUnderTank = "road";
 		}
-
+		else
 		if (tileUnderTank == "bush")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
 			playerPosY++;
-			boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
+			boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
 			tileUnderTank = "road";
 			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+		}
+		else
+		if (tileUnderTank == "ice")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+			playerPosY++;
+			boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Ice>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
 		}
 
 	}
@@ -375,20 +499,31 @@ void GameBoard::executeOnKeyRight() {
 		{
 			if (tileUnderTank == "bush")
 			{
-				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
 				playerPosY++;
-				boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
+				boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
 			}
 			else
 				if (tileUnderTank == "road")
 				{
-					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
 					playerPosY++;
-					boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Road>();
+					boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Road>();
 					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
 					tileUnderTank = "bush";
 				}
+				else
+					if (tileUnderTank == "ice")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+						playerPosY++;
+						boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Ice>();
+						tileUnderTank = "bush";
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					}
+					
 
 		}
 		else
@@ -398,8 +533,28 @@ void GameBoard::executeOnKeyRight() {
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
 					playerPosY++;
+					boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Ice>();
 					tileUnderTank = "ice";
 				}
+				else
+				if (tileUnderTank == "road")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+					playerPosY++;
+					boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Road>();
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+					tileUnderTank = "ice";
+				}
+				else
+					if (tileUnderTank == "ice")
+					{
+						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+						playerPosY++;
+						boardVec.at(playerPosX * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
+						tileUnderTank = "ice";
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
+						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+					}
 
 			}
 
