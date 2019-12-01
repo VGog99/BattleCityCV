@@ -169,6 +169,15 @@ void GameBoard::executeOnKeyUp() {
 			tileUnderTank = "road";
 		}
 
+		if (tileUnderTank == "bush")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+			playerPosX--;
+			boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Bush>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+		}
+
 	}
 	else
 		if (boardVec.at((playerPosX - 1) * 15 + playerPosY)->getType() == "bush")
@@ -177,10 +186,18 @@ void GameBoard::executeOnKeyUp() {
 			{
 				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
 				playerPosX--;
+				boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
 			}
-
-
+			else
+			if (tileUnderTank == "road") 
+			{
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
+				playerPosX--;
+				boardVec.at((playerPosX + 1) * 15 + playerPosY) = std::make_unique<Road>();
+				((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+				tileUnderTank = "bush";
+			}
 
 		}
 		else
@@ -216,6 +233,15 @@ void GameBoard::executeOnKeyDown() {
 			tileUnderTank = "road";
 		}
 
+		if (tileUnderTank == "bush")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+			playerPosX++;
+			boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Bush>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
+		}
+
 	}
 	else
 		if (boardVec.at((playerPosX + 1) * 15 + playerPosY)->getType() == "bush")
@@ -224,8 +250,18 @@ void GameBoard::executeOnKeyDown() {
 			{
 				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
 				playerPosX++;
+				boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
 			}
+			else
+				if (tileUnderTank == "road")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
+					playerPosX++;
+					boardVec.at((playerPosX - 1) * 15 + playerPosY) = std::make_unique<Road>();
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					tileUnderTank = "bush";
+				}
 
 		}
 		else
@@ -253,23 +289,44 @@ void GameBoard::executeOnKeyLeft() {
 
 	if (boardVec.at(playerPosX * 15 + (playerPosY - 1))->getType() == "road")
 	{
+
 		if (tileUnderTank == "road")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
 			playerPosY--;
 			tileUnderTank = "road";
+		}
+
+		if (tileUnderTank == "bush")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+			playerPosY--;
+			boardVec.at((playerPosX) * 15 + (playerPosY+1)) = std::make_unique<Bush>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
 		}
 
 	}
 	else
 		if (boardVec.at(playerPosX * 15 + (playerPosY - 1))->getType() == "bush")
 		{
+
 			if (tileUnderTank == "bush")
 			{
-				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
 				playerPosY--;
+				boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
 			}
+			else
+				if (tileUnderTank == "road")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY - 1)));
+					playerPosY--;
+					boardVec.at((playerPosX) * 15 + (playerPosY+1)) = std::make_unique<Road>();
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					tileUnderTank = "bush";
+				}
 
 		}
 		else
@@ -298,9 +355,18 @@ void GameBoard::executeOnKeyRight() {
 
 		if (tileUnderTank == "road")
 		{
-			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
 			playerPosY++;
 			tileUnderTank = "road";
+		}
+
+		if (tileUnderTank == "bush")
+		{
+			std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+			playerPosY++;
+			boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
+			tileUnderTank = "road";
+			((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(false);
 		}
 
 	}
@@ -309,10 +375,20 @@ void GameBoard::executeOnKeyRight() {
 		{
 			if (tileUnderTank == "bush")
 			{
-				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
+				std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
 				playerPosY++;
+				boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Bush>();
 				tileUnderTank = "bush";
 			}
+			else
+				if (tileUnderTank == "road")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX) * 15 + (playerPosY + 1)));
+					playerPosY++;
+					boardVec.at((playerPosX) * 15 + (playerPosY - 1)) = std::make_unique<Road>();
+					((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsHidden(true);
+					tileUnderTank = "bush";
+				}
 
 		}
 		else
@@ -476,10 +552,10 @@ void GameBoard::draw() {
 		if (menu.getIsInMenu()) {
 			startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
 			exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
-			stageOne.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
-			stageTwo.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
-			stageThree.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
-			stageFour.setFillColor(menu.getMenuOption() == 4 ? sf::Color::Yellow : sf::Color::White);
+			stageOne.setFillColor(menu.getMenuOption() == 0 ? sf::Color::Yellow : sf::Color::White);
+			stageTwo.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
+			stageThree.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
+			stageFour.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
 
 		}
 
@@ -505,7 +581,7 @@ void GameBoard::draw() {
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption--;
-								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
+								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
@@ -516,7 +592,7 @@ void GameBoard::draw() {
 
 								savedMenuOption = menu.getMenuOption();
 								savedMenuOption++;
-								savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
+								savedMenuOption = std::clamp(savedMenuOption,  0, menu.getStageChooser() ? 3 : 1);
 
 								menu.setMenuOption(savedMenuOption);
 								std::cout << menu.getMenuOption();
