@@ -222,6 +222,14 @@ void GameBoard::executeOnKeyUp() {
 		else
 			if (boardVec.at((playerPosX - 1) * 15 + playerPosY)->getType() == "ice")
 			{
+				if (tileUnderTank == "ice" && boardVec.at((playerPosX - 2) * 15 + playerPosY)->getType() == "ice")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 2) * 15 + playerPosY));
+					playerPosX = playerPosX - 2;
+					boardVec.at((playerPosX + 2) * 15 + playerPosY) = std::make_unique<Ice>();
+					tileUnderTank = "ice";
+				}
+				else
 				if (tileUnderTank == "ice")
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX - 1) * 15 + playerPosY));
@@ -323,6 +331,14 @@ void GameBoard::executeOnKeyDown() {
 		else
 			if (boardVec.at((playerPosX + 1) * 15 + playerPosY)->getType() == "ice")
 			{
+				if (tileUnderTank == "ice" && boardVec.at((playerPosX + 2) * 15 + playerPosY)->getType() == "ice")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 2) * 15 + playerPosY));
+					playerPosX = playerPosX + 2;
+					boardVec.at((playerPosX - 2) * 15 + playerPosY) = std::make_unique<Ice>();
+					tileUnderTank = "ice";
+				}
+				else
 				if (tileUnderTank == "ice")
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at((playerPosX + 1) * 15 + playerPosY));
@@ -416,7 +432,7 @@ void GameBoard::executeOnKeyLeft() {
 					if (tileUnderTank == "ice")
 					{
 						std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
-						playerPosX--;
+						playerPosY--;
 						boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Ice>();
 						tileUnderTank = "bush";
 						((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(false);
@@ -427,6 +443,14 @@ void GameBoard::executeOnKeyLeft() {
 		else
 			if (boardVec.at(playerPosX * 15 + (playerPosY - 1))->getType() == "ice")
 			{
+				if (tileUnderTank == "ice" && boardVec.at(playerPosX * 15 + (playerPosY - 2))->getType() == "ice")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 2)));
+					playerPosY = playerPosY - 2;
+					boardVec.at((playerPosX) * 15 + (playerPosY + 2)) = std::make_unique<Ice>();
+					tileUnderTank = "ice";
+				}
+				else
 				if (tileUnderTank == "ice")
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
@@ -447,7 +471,7 @@ void GameBoard::executeOnKeyLeft() {
 						if (tileUnderTank == "bush")
 						{
 							std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY - 1)));
-							playerPosX--;
+							playerPosY--;
 							boardVec.at((playerPosX) * 15 + (playerPosY + 1)) = std::make_unique<Bush>();
 							tileUnderTank = "ice";
 							((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setIsOnIce(true);
@@ -529,6 +553,14 @@ void GameBoard::executeOnKeyRight() {
 		else
 			if (boardVec.at(playerPosX * 15 + (playerPosY + 1))->getType() == "ice")
 			{
+				if (tileUnderTank == "ice" && boardVec.at(playerPosX * 15 + (playerPosY + 2))->getType() == "ice")
+				{
+					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 2)));
+					playerPosY = playerPosY + 2;
+					boardVec.at((playerPosX) * 15 + (playerPosY - 2)) = std::make_unique<Ice>();
+					tileUnderTank = "ice";
+				}
+				else
 				if (tileUnderTank == "ice")
 				{
 					std::swap(boardVec.at(playerPosX * 15 + playerPosY), boardVec.at(playerPosX * 15 + (playerPosY + 1)));
