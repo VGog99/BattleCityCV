@@ -104,45 +104,381 @@ void GameBoard::enemyLogic() {
 
 			if (boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY)->getType() == "road")
 			{
-				std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
-				enemyPosX--;
+				if (tileUnderEnemy == "road")
+				{
+					std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+					enemyPosX--;
+					tileUnderEnemy = "road";
+				}
+				else
+					if (tileUnderEnemy == "bush")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+						enemyPosX--;
+						boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+						tileUnderEnemy = "road";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+					}
+					else
+						if (tileUnderEnemy == "ice")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX--;
+							boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+							tileUnderEnemy = "road";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+						}
 			}
+			else
+				if (boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY)->getType() == "bush")
+			{
+					if (tileUnderEnemy == "road")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+						enemyPosX--;
+						boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Road>();
+						tileUnderEnemy = "bush";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
 
+					}
+					else
+						if (tileUnderEnemy == "bush")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX--;
+							boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+							tileUnderEnemy = "bush";
+						}
+						else
+							if (tileUnderEnemy == "ice")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+								enemyPosX--;
+								boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+								tileUnderEnemy = "bush";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+							}
+			}
+				else
+					if (boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY)->getType() == "ice")
+					{
+						if (tileUnderEnemy == "road")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX--;
+							boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Road>();
+							tileUnderEnemy = "ice";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+
+						}
+						else
+							if (tileUnderEnemy == "bush")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+								enemyPosX--;
+								boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+								tileUnderEnemy = "ice";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+							}
+							else
+								if (tileUnderEnemy == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
+									enemyPosX--;
+									boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+					}
 			break;
 
 		case DIR_DOWN:
 
-			((Enemy*)boardVec.at(enemyPosX * 15 + enemyPosY).get())->setDirection(DIR_DOWN);
+			((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setDirection(DIR_DOWN);
 
 			if (boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY)->getType() == "road")
 			{
-				std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
-				enemyPosX++;
+				if (tileUnderEnemy == "road")
+				{
+					std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+					enemyPosX++;
+					tileUnderEnemy = "road";
+				}
+				else
+					if (tileUnderEnemy == "bush")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+						enemyPosX++;
+						boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+						tileUnderEnemy = "road";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+					}
+					else
+						if (tileUnderEnemy == "ice")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX++;
+							boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+							tileUnderEnemy = "road";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+						}
 			}
+			else
+				if (boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY)->getType() == "bush")
+				{
+					if (tileUnderEnemy == "road")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+						enemyPosX++;
+						boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Road>();
+						tileUnderEnemy = "bush";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+
+					}
+					else
+						if (tileUnderEnemy == "bush")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX++;
+							boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+							tileUnderEnemy = "bush";
+						}
+						else
+							if (tileUnderEnemy == "ice")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+								enemyPosX++;
+								boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+								tileUnderEnemy = "bush";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+							}
+				}
+				else
+					if (boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY)->getType() == "ice")
+					{
+						if (tileUnderEnemy == "road")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+							enemyPosX++;
+							boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Road>();
+							tileUnderEnemy = "ice";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+
+						}
+						else
+							if (tileUnderEnemy == "bush")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+								enemyPosX++;
+								boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Bush>();
+								tileUnderEnemy = "ice";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+							}
+							else
+								if (tileUnderEnemy == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
+									enemyPosX++;
+									boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+					}
 
 			break;
 
 		case DIR_LEFT:
 
-			((Enemy*)boardVec.at(enemyPosX * 15 + enemyPosY).get())->setDirection(DIR_LEFT);
+			((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setDirection(DIR_LEFT);
 
-			if (boardVec.at((enemyPosX)* MATRIX_SIZE + enemyPosY - 1)->getType() == "road")
+			if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1))->getType() == "road")
 			{
-				std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX)* MATRIX_SIZE + enemyPosY - 1));
-				enemyPosY--;
+				if (tileUnderEnemy == "road")
+				{
+					std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+					enemyPosY--;
+					tileUnderEnemy = "road";
+				}
+				else
+					if (tileUnderEnemy == "bush")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+						enemyPosY--;
+						boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Bush>();
+						tileUnderEnemy = "road";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+					}
+					else
+						if (tileUnderEnemy == "ice")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+							enemyPosY--;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Ice>();
+							tileUnderEnemy = "road";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+						}
 			}
+			else
+				if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1))->getType() == "bush")
+				{
+					if (tileUnderEnemy == "road")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+						enemyPosY--;
+						boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Road>();
+						tileUnderEnemy = "bush";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+
+					}
+					else
+						if (tileUnderEnemy == "bush")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+							enemyPosY--;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Bush>();
+							tileUnderEnemy = "bush";
+						}
+						else
+							if (tileUnderEnemy == "ice")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+								enemyPosY--;
+								boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Ice>();
+								tileUnderEnemy = "bush";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+							}
+				}
+				else
+					if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1))->getType() == "ice")
+					{
+						if (tileUnderEnemy == "road")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+							enemyPosY--;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Road>();
+							tileUnderEnemy = "ice";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+
+						}
+						else
+							if (tileUnderEnemy == "bush")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+								enemyPosY--;
+								boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Bush>();
+								tileUnderEnemy = "ice";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+							}
+							else
+								if (tileUnderEnemy == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
+									enemyPosY--;
+									boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+					}
 
 			break;
 
 		case DIR_RIGHT:
 
-			((Enemy*)boardVec.at(enemyPosX * 15 + enemyPosY).get())->setDirection(DIR_RIGHT);
+			((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setDirection(DIR_RIGHT);
 
-			if (boardVec.at((enemyPosX)* MATRIX_SIZE + enemyPosY + 1)->getType() == "road")
+			if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1))->getType() == "road")
 			{
-				std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX)* MATRIX_SIZE + enemyPosY + 1));
-				enemyPosY++;
+				if (tileUnderEnemy == "road")
+				{
+					std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+					enemyPosY++;
+					tileUnderEnemy = "road";
+				}
+				else
+					if (tileUnderEnemy == "bush")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+						enemyPosY++;
+						boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Bush>();
+						tileUnderEnemy = "road";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+					}
+					else
+						if (tileUnderEnemy == "ice")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+							enemyPosY++;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Ice>();
+							tileUnderEnemy = "road";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+						}
 			}
+			else
+				if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1))->getType() == "bush")
+				{
+					if (tileUnderEnemy == "road")
+					{
+						std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+						enemyPosY++;
+						boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Road>();
+						tileUnderEnemy = "bush";
+						((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+
+					}
+					else
+						if (tileUnderEnemy == "bush")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+							enemyPosY++;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Bush>();
+							tileUnderEnemy = "bush";
+						}
+						else
+							if (tileUnderEnemy == "ice")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+								enemyPosY++;
+								boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Ice>();
+								tileUnderEnemy = "bush";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(false);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(true);
+							}
+				}
+				else
+					if (boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1))->getType() == "ice")
+					{
+						if (tileUnderEnemy == "road")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+							enemyPosY++;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Road>();
+							tileUnderEnemy = "ice";
+							((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+
+						}
+						else
+							if (tileUnderEnemy == "bush")
+							{
+								std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+								enemyPosY++;
+								boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Bush>();
+								tileUnderEnemy = "ice";
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsOnIce(true);
+								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
+							}
+							else
+								if (tileUnderEnemy == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
+									enemyPosY++;
+									boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+					}
+
 			break;
 		}
 

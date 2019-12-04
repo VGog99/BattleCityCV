@@ -7,7 +7,7 @@ using position = std::pair<double, double>;
 class Tank : public Object
 {
 
-private:
+protected:
 
 	uint16_t m_speed;
 	uint16_t m_damage;

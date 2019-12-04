@@ -4,6 +4,8 @@
 Enemy::Enemy()
 {
 	enemyTexture.loadFromFile("../resources/enemy.png");
+	enemyHiddenTexture.loadFromFile("../resources/enemyHidden.png");
+	enemyOnIceTexture.loadFromFile("../resources/enemyOnIce.png");
 }
 
 Enemy::Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t direction)
@@ -20,28 +22,36 @@ char Enemy::randomMovement()
 
 sf::Sprite Enemy::createSprite()
 {
-	sf::Sprite sprite(enemyTexture);
-	sprite.setOrigin(sf::Vector2f(TILE_SIZE * 0.5, TILE_SIZE * 0.5));
+	sf::Sprite sprite;
 
-	switch (getDirection()) {
+	if (getIsHidden())
+		sprite.setTexture(enemyHiddenTexture);
+	else
+		if (getIsOnIce())
+			sprite.setTexture(enemyOnIceTexture);
+		else
+			sprite.setTexture(enemyTexture);
 
-		case DIR_UP:
-			sprite.rotate(0.f);
+	sprite.setOrigin(sf::Vector2f(35 * 0.5, 35 * 0.5));
+
+	switch (m_direction) {
+
+	case DIR_UP:
+		sprite.rotate(0.f);
 		break;
 
-		case DIR_RIGHT:
-			sprite.rotate(90.f);
+	case DIR_RIGHT:
+		sprite.rotate(90.f);
 		break;
 
-		case DIR_LEFT:
-			sprite.rotate(-90.f);
+	case DIR_LEFT:
+		sprite.rotate(-90.f);
 		break;
 
-		case DIR_DOWN:
-			sprite.rotate(180.f);
+	case DIR_DOWN:
+		sprite.rotate(180.f);
 		break;
 	}
-
 	return sprite;
 }
 

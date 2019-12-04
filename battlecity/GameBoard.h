@@ -22,6 +22,7 @@ private:
 	uint16_t enemyPosY = 9;
 
 	std::string tileUnderTank = "road";
+	std::string tileUnderEnemy = "road";
 
 	uint16_t stageChosen = 0;
 

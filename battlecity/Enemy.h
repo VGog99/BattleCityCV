@@ -7,6 +7,8 @@ class Enemy : public Tank
 private:
 
 	sf::Texture enemyTexture;
+	sf::Texture enemyHiddenTexture;
+	sf::Texture enemyOnIceTexture;
 	//char m_enemyDirection;
 
 public:
