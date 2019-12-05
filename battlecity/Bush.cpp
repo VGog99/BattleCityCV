@@ -5,7 +5,7 @@ Bush::Bush()
 {
 	setCanAdvance(true);
 	setCanShootThrough(true);
-	setIsBreakable(false);
+	setHP(0);
 	setCanHideTank(true);
 	bushTexture.loadFromFile("../resources/bush.png");
 }

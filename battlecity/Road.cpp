@@ -8,7 +8,7 @@ Road::Road()
 	setCanAdvance(true);
 	setCanHideTank(false);
 	setCanShootThrough(true);
-	setIsBreakable(false);
+	setHP(1);
 	roadTexture.loadFromFile("../resources/road.png");
 }
 

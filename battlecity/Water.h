@@ -1,6 +1,6 @@
 #pragma once
-#include "Tile.h"
-class Water : public Tile
+#include "Object.h"
+class Water : public Object
 {
 private:
 	sf::Texture waterTexture;

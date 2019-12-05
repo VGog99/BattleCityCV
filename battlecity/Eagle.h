@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Tile.h"
+#include "Object.h"
 
-class Eagle : public Tile
+class Eagle : public Object
 {
 
 private:

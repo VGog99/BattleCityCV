@@ -8,7 +8,7 @@ Brick::Brick()
 	setCanAdvance(false);
 	setCanHideTank(false);
 	setCanShootThrough(false);
-	setIsBreakable(true);
+	setHP(1);
 	brickTexture.loadFromFile("../resources/brick.png");
 }
 

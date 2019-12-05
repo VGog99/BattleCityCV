@@ -1,6 +1,6 @@
 #pragma once
-#include "Tile.h"
-class PowerUps : public Tile
+#include "Object.h"
+class PowerUps : public Object
 {
 private: 
 	enum bonus

@@ -2,6 +2,10 @@
 
 Bullet::Bullet()
 {
+	setCanAdvance(false);
+	setCanHideTank(false);
+	setCanShootThrough(false);
+	setHP(1);
 	bulletTexture.loadFromFile("../resources/bullet.png");
 	bulletTexture.loadFromFile("../resources/bulletOnWater.png");
 	bulletTexture.loadFromFile("../resources/bulletOnIce.png");

@@ -1,7 +1,7 @@
 #pragma once
-#include "Tile.h"
+#include "Object.h"
 
-class Steel : public Tile
+class Steel : public Object
 {
 
 private:

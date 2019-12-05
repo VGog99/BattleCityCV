@@ -1,6 +1,6 @@
 #pragma once
-#include "Tile.h"
-class Bush :public Tile
+#include "Object.h"
+class Bush :public Object
 {
 
 private:

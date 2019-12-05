@@ -4,7 +4,7 @@
 
 Ice::Ice()
 {
-	setIsBreakable(false);
+	setHP(0);
 	setCanAdvance(true);
 	setCanHideTank(false);
 	setCanShootThrough(true);

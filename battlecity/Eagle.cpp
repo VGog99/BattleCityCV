@@ -3,7 +3,7 @@
 Eagle::Eagle()
 {
 	m_advance = false;
-	m_breakable = true;
+	m_HP = 1;
 	m_canHide = false;
 	m_canShootThrough = false;
 	m_isEagleAlive = true;

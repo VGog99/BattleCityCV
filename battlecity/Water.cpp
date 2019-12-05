@@ -4,7 +4,7 @@
 
 Water::Water()
 {
-	setIsBreakable(false);
+	setHP(0);
 	setCanAdvance(false);
 	setCanHideTank(false);
 	setCanShootThrough(true);

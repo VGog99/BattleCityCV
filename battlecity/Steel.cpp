@@ -3,7 +3,7 @@
 
 Steel::Steel()
 {
-	setIsBreakable(false);
+	setHP(500);
 	setCanAdvance(false);
 	setCanHideTank(false);
 	setCanShootThrough(false);

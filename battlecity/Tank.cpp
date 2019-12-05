@@ -2,6 +2,10 @@
 
 Tank::Tank()
 {
+	setCanAdvance(false);
+	setCanHideTank(false);
+	setCanShootThrough(false);
+	setHP(1);
 	tankTexture.loadFromFile("../resources/tank.png");
 	tankHiddenTexture.loadFromFile("../resources/tankHidden.png");
 	tankOnIceTexture.loadFromFile("../resources/tankOnIce.png");
