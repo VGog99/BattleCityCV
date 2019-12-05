@@ -3,6 +3,8 @@
 Bullet::Bullet()
 {
 	bulletTexture.loadFromFile("../resources/bullet.png");
+	bulletTexture.loadFromFile("../resources/bulletOnWater.png");
+	bulletTexture.loadFromFile("../resources/bulletOnIce.png");
 }
 
 Bullet::~Bullet()
@@ -21,7 +23,15 @@ char Bullet::getDirection() const
 
 sf::Sprite Bullet::createSprite()
 {
-	sf::Sprite sprite(bulletTexture);
+	sf::Sprite sprite;
+
+	if (getIsOnWater())
+		sprite.setTexture(bulletOnWaterTexture);
+	else
+		if (getIsOnIce())
+			sprite.setTexture(bulletOnIceTexture);
+		else
+			sprite.setTexture(bulletTexture);
 
 	sprite.setOrigin(sf::Vector2f(35 * 0.5, 35 * 0.5));
 
@@ -50,4 +60,21 @@ sf::Sprite Bullet::createSprite()
 std::string Bullet::getType() const
 {
 	return "bullet";
+}
+
+void Bullet::setIsOnWater(bool isOnWater)
+{
+	m_isOnWater = isOnWater;
+}
+bool Bullet::getIsOnWater() const
+{
+	return m_isOnWater;
+}
+void Bullet::setIsOnIce(bool isOnIce)
+{
+	m_isOnIce = isOnIce;
+}
+bool Bullet::getIsOnIce() const
+{
+	return m_isOnIce;
 }

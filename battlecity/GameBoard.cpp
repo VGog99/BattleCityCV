@@ -183,7 +183,14 @@ void GameBoard::enemyLogic() {
 								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
 							}
 							else
-								if (tileUnderEnemy == "ice")
+								if (tileUnderEnemy == "ice" && boardVec.at((enemyPosX - 2) * MATRIX_SIZE + enemyPosY)->getType() == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 2) * MATRIX_SIZE + enemyPosY));
+									enemyPosX = enemyPosX - 2;
+									boardVec.at((enemyPosX + 2) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+								else
 								{
 									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX - 1) * MATRIX_SIZE + enemyPosY));
 									enemyPosX--;
@@ -278,7 +285,14 @@ void GameBoard::enemyLogic() {
 								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
 							}
 							else
-								if (tileUnderEnemy == "ice")
+								if (tileUnderEnemy == "ice" && boardVec.at((enemyPosX + 2) * MATRIX_SIZE + enemyPosY)->getType() == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 2) * MATRIX_SIZE + enemyPosY));
+									enemyPosX = enemyPosX + 2;
+									boardVec.at((enemyPosX - 2) * MATRIX_SIZE + enemyPosY) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+								else
 								{
 									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at((enemyPosX + 1) * MATRIX_SIZE + enemyPosY));
 									enemyPosX++;
@@ -374,7 +388,14 @@ void GameBoard::enemyLogic() {
 								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
 							}
 							else
-								if (tileUnderEnemy == "ice")
+								if (tileUnderEnemy == "ice" && boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 2))->getType() == "ice")
+								{
+									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 2)));
+									enemyPosY = enemyPosY - 2;
+									boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 2)) = std::make_unique<Ice>();
+									tileUnderEnemy = "ice";
+								}
+								else
 								{
 									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 1)));
 									enemyPosY--;
@@ -470,7 +491,14 @@ void GameBoard::enemyLogic() {
 								((Enemy*)boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY).get())->setIsHidden(false);
 							}
 							else
-								if (tileUnderEnemy == "ice")
+						if (tileUnderEnemy == "ice" && boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 2))->getType() == "ice")
+						{
+							std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 2)));
+							enemyPosY = enemyPosY + 2;
+							boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY - 2)) = std::make_unique<Ice>();
+							tileUnderEnemy = "ice";
+						}
+						else
 								{
 									std::swap(boardVec.at(enemyPosX * MATRIX_SIZE + enemyPosY), boardVec.at(enemyPosX * MATRIX_SIZE + (enemyPosY + 1)));
 									enemyPosY++;
