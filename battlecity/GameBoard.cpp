@@ -56,13 +56,6 @@ void GameBoard::createLevel() {
 				playerPosY = j;
 				break;
 
-			case 5:
-
-				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Enemy>();
-				enemyPosX = i;
-				enemyPosY = j;
-				break;
-
 			case 6:
 
 				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Bush>();
@@ -76,6 +69,27 @@ void GameBoard::createLevel() {
 			case 8:
 
 				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Ice>();
+				break;
+
+			case 11:		//locatie sapwn 1
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Enemy>();
+				enemyPosX = i;
+				enemyPosY = j;
+				break;
+
+			case 12:		//locatie spawn 2
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Enemy>();
+				enemyPosX = i;
+				enemyPosY = j;
+				break;
+
+			case 13:		//locatie spawn 3
+
+				boardVec.at(i * MATRIX_SIZE + j) = std::make_unique<Enemy>();
+				enemyPosX = i;
+				enemyPosY = j;
 				break;
 
 			default:
@@ -961,6 +975,42 @@ void GameBoard::executeOnKeyRight() {
 	((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->setFuturePosition(std::make_pair(playerPosX, playerPosY + 1));
 }
 
+void GameBoard::executeOnKeySpace()
+{
+	char direction = ((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->getDirection();
+
+			switch (direction) {
+
+			case DIR_UP:
+
+				if(boardVec.at((playerPosX - 1) * 15 + playerPosY)->getType() == "road")
+					std::cout << "- shoot -";
+				break;
+
+			case  DIR_DOWN:
+
+				if(boardVec.at((playerPosX + 1) * 15 + playerPosY)->getType() == "road")
+					std::cout << "- shoot -";
+				break;
+
+			case DIR_LEFT:
+
+				if(boardVec.at(playerPosX * 15 + (playerPosY - 1))->getType() == "road")
+					std::cout << "- shoot -";
+				break;
+
+			case DIR_RIGHT:
+
+				if(boardVec.at(playerPosX * 15 + (playerPosY + 1))->getType() == "road")
+					std::cout << "- shoot -";
+				break;
+			}
+		
+	
+}
+
+
+
 void GameBoard::setStage(const uint16_t stage)
 {
 	stageChosen = stage;
@@ -1207,6 +1257,7 @@ void GameBoard::draw() {
 							case sf::Keyboard::Right: executeOnKeyRight(); break;
 							case sf::Keyboard::Escape: window.close(); break;				
 							case sf::Keyboard::P: menu.setIsInMenu(true); break;
+							case sf::Keyboard::Space: executeOnKeySpace(); break;
 						}
 					}
 				}

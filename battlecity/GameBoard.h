@@ -37,6 +37,7 @@ public:
 	void executeOnKeyDown();
 	void executeOnKeyLeft();
 	void executeOnKeyRight();
+	void executeOnKeySpace();  //shoot
 	void setStage(const uint16_t stage);
 	uint16_t getStage() const;
 	std::vector<sf::Sprite> setUpSprites();

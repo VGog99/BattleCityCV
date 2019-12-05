@@ -5,7 +5,10 @@
 
 class Object
 {
+
 protected:
+
+
 
 	Object();
 	Object(const Object&);
