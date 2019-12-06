@@ -14,15 +14,14 @@ namespace BCUnitTesting
 		TEST_METHOD(Constructor)
 		{
 			Enemy enemy(1, 1, 1, 1, '1');
-			Assert::IsTrue(true);
-			//Assert::AreEqual(L"Ionel", L"Ionel");
+			Assert::IsFalse(false,L"mere");
 
 		}
-		TEST_METHOD(getCanAdvanceBrick)
+		/*TEST_METHOD(getCanAdvanceBrick)
 		{
 			Brick b;
 			b.setCanAdvance(0);
 			Assert::AreEqual(false,false);
-		}
+		}*/
 	};
 }
