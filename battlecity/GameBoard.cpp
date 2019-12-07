@@ -983,25 +983,25 @@ void GameBoard::executeOnKeySpace()
 
 			case DIR_UP:
 
-				if(boardVec.at((playerPosX - 1) * 15 + playerPosY)->getType() == "road")
+				if(boardVec.at((playerPosX - 1) * 15 + playerPosY)->getCanShootThrough())
 					std::cout << "- shoot -";
 				break;
 
 			case  DIR_DOWN:
 
-				if(boardVec.at((playerPosX + 1) * 15 + playerPosY)->getType() == "road")
+				if(boardVec.at((playerPosX + 1) * 15 + playerPosY)->getCanShootThrough())
 					std::cout << "- shoot -";
 				break;
 
 			case DIR_LEFT:
 
-				if(boardVec.at(playerPosX * 15 + (playerPosY - 1))->getType() == "road")
+				if(boardVec.at(playerPosX * 15 + (playerPosY - 1))->getCanShootThrough())
 					std::cout << "- shoot -";
 				break;
 
 			case DIR_RIGHT:
 
-				if(boardVec.at(playerPosX * 15 + (playerPosY + 1))->getType() == "road")
+				if(boardVec.at(playerPosX * 15 + (playerPosY + 1))->getCanShootThrough())
 					std::cout << "- shoot -";
 				break;
 			}

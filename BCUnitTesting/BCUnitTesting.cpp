@@ -24,5 +24,36 @@ namespace BCUnitTesting
 			b.setCanAdvance(0);
 			Assert::AreEqual(false,false);
 		}
+		TEST_METHOD(getCanAdvanceIce)
+		{
+			Ice i;
+			i.setCanAdvance(0);
+			Assert::AreEqual(false, false);
+		}
+		TEST_METHOD(getCanAdvanceBush)
+		{
+			Bush b;
+			b.setCanAdvance(1);
+			Assert::AreEqual(false, false);
+		}
+		TEST_METHOD(getCanAdvanceWater)
+		{
+			Water w;
+			w.setCanAdvance(1);
+			Assert::AreEqual(false, false);
+		}
+		TEST_METHOD(setCanHideTank)
+		{
+			Bush b;
+			b.setCanHideTank(1);
+			Assert::AreEqual(false, false);
+		};
+		TEST_METHOD(setCanShootThrough)
+		{
+			Brick b;
+			b.setCanShootThrough(1);
+			Assert::AreEqual(false, false);
+		};
+		
 	};
 }
