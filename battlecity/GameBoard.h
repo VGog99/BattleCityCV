@@ -21,8 +21,14 @@ private:
 	uint16_t enemyPosX = 13;
 	uint16_t enemyPosY = 9;
 
+	// initializam si salvam pozitia bullet-ului 
+	uint16_t bulletPosX = 13;
+	uint16_t bulletPosY = 9;
+
+
 	std::string tileUnderTank = "road";
 	std::string tileUnderEnemy = "road";
+	std::string tileUnderBullet = "road";
 
 	uint16_t stageChosen = 0;
 
@@ -38,6 +44,7 @@ public:
 	void executeOnKeyLeft();
 	void executeOnKeyRight();
 	void executeOnKeySpace();  //shoot
+	void bulletLogic();
 	void setStage(const uint16_t stage);
 	uint16_t getStage() const;
 	std::vector<sf::Sprite> setUpSprites();

@@ -7,8 +7,8 @@ Bullet::Bullet()
 	setCanShootThrough(false);
 	setHP(1);
 	bulletTexture.loadFromFile("../resources/bullet.png");
-	bulletTexture.loadFromFile("../resources/bulletOnWater.png");
-	bulletTexture.loadFromFile("../resources/bulletOnIce.png");
+	bulletOnWaterTexture.loadFromFile("../resources/bulletOnWater.png");
+	bulletOnIceTexture.loadFromFile("../resources/bulletOnIce.png");
 }
 
 Bullet::~Bullet()
@@ -36,7 +36,7 @@ sf::Sprite Bullet::createSprite()
 			sprite.setTexture(bulletOnIceTexture);
 		else
 			sprite.setTexture(bulletTexture);
-
+	
 	sprite.setOrigin(sf::Vector2f(35 * 0.5, 35 * 0.5));
 
 	switch (m_direction) {

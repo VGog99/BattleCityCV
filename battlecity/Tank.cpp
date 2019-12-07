@@ -30,7 +30,6 @@ uint16_t Tank::getSpeed() const
 sf::Sprite Tank::createSprite()
 {
 	sf::Sprite sprite;
-
 	if(getIsHidden())
 		sprite.setTexture(tankHiddenTexture);
 	else

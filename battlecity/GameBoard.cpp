@@ -977,37 +977,79 @@ void GameBoard::executeOnKeyRight() {
 
 void GameBoard::executeOnKeySpace()
 {
-	char direction = ((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->getDirection();
 
-			switch (direction) {
-
-			case DIR_UP:
-
-				if(boardVec.at((playerPosX - 1) * 15 + playerPosY)->getCanShootThrough())
-					std::cout << "- shoot -";
-				break;
-
-			case  DIR_DOWN:
-
-				if(boardVec.at((playerPosX + 1) * 15 + playerPosY)->getCanShootThrough())
-					std::cout << "- shoot -";
-				break;
-
-			case DIR_LEFT:
-
-				if(boardVec.at(playerPosX * 15 + (playerPosY - 1))->getCanShootThrough())
-					std::cout << "- shoot -";
-				break;
-
-			case DIR_RIGHT:
-
-				if(boardVec.at(playerPosX * 15 + (playerPosY + 1))->getCanShootThrough())
-					std::cout << "- shoot -";
-				break;
-			}
+		char direction = ((Tank*)boardVec.at(playerPosX * MATRIX_SIZE + playerPosY).get())->getDirection();
+		lastMoveTime += dt;
+		switch (direction) {
 		
-	
+		case DIR_UP:
+
+			bulletPosX = (playerPosX - 1);
+			bulletPosY = playerPosY;
+			
+			while (boardVec.at((playerPosX - 1) * MATRIX_SIZE + playerPosY)->getCanShootThrough())
+			{
+				
+					boardVec.at((playerPosX - 1) * MATRIX_SIZE + playerPosY) = std::make_unique<Bullet>();
+
+					if (tileUnderBullet == "road")
+					{
+						std::swap(boardVec.at(bulletPosX * MATRIX_SIZE + bulletPosY), boardVec.at((bulletPosX - 1) * MATRIX_SIZE + bulletPosY));
+						bulletPosX--;
+						tileUnderBullet = "road";
+					}
+					else if (tileUnderBullet == "water")
+					{
+						std::swap(boardVec.at(bulletPosX * MATRIX_SIZE + bulletPosY), boardVec.at((bulletPosX - 1) * MATRIX_SIZE + bulletPosY));
+						bulletPosX--;
+						tileUnderBullet = "water";
+					}
+					else if (tileUnderBullet == "ice")
+					{
+						std::swap(boardVec.at(bulletPosX * MATRIX_SIZE + bulletPosY), boardVec.at((bulletPosX - 1) * MATRIX_SIZE + bulletPosY));
+						bulletPosX--;
+						tileUnderBullet = "ice";
+					}
+					else if (tileUnderBullet == "bush")
+					{
+						std::swap(boardVec.at(bulletPosX * MATRIX_SIZE + bulletPosY), boardVec.at((bulletPosX - 1) * MATRIX_SIZE + bulletPosY));
+						bulletPosX--;
+						tileUnderBullet = "bush";
+					}
+
+					
+				
+			}
+			break;
+
+		case  DIR_DOWN:
+
+			if (boardVec.at((playerPosX + 1) * 15 + playerPosY)->getCanShootThrough())
+				std::cout << "- shoot -";
+			break;
+
+		case DIR_LEFT:
+
+			if (boardVec.at(playerPosX * 15 + (playerPosY - 1))->getCanShootThrough())
+				std::cout << "- shoot -";
+			break;
+
+		case DIR_RIGHT:
+
+			if (boardVec.at(playerPosX * 15 + (playerPosY + 1))->getCanShootThrough())
+				std::cout << "- shoot -";
+			break;
+		}
+		
+	}
+
+void GameBoard::bulletLogic()
+{
+
+
+
 }
+
 
 
 
