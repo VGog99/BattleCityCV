@@ -1,8 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Object.h"
+#include "Bush.h"
+#include "Road.h"
+#include "Ice.h"
 
-using position = std::pair<double, double>;
+
+using position = std::pair<uint16_t, uint16_t>;
 
 class Tank : public Object
 {
@@ -20,6 +24,7 @@ protected:
 	std::pair<uint16_t, uint16_t> m_futurePosition;
 	bool m_isHidden = false;
 	bool m_isOnIce = false;
+	std::string m_tileUnderTank = "road";
 
 public:
 
@@ -43,6 +48,9 @@ public:
 	bool getIsHidden() const;
 	void setIsOnIce(bool isOnIce);
 	bool getIsOnIce() const;
+	std::string getTileUnderTank() const;
+	void setTileUnderTank(const std::string tileUnderTank);
+	bool movePlayerTank(std::vector<std::unique_ptr<Object>>& boardVec, position from, position to, char direction);
 
 };
 

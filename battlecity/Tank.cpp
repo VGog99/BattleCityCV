@@ -1,5 +1,5 @@
 #include "Tank.h"
-
+#include <iostream>
 Tank::Tank()
 {
 	setCanAdvance(false);
@@ -112,4 +112,94 @@ void Tank::setIsOnIce(bool isOnIce)
 bool Tank::getIsOnIce() const
 {
 	return m_isOnIce;
+}
+
+std::string Tank::getTileUnderTank() const
+{
+	return m_tileUnderTank;
+}
+
+void Tank::setTileUnderTank(const std::string tileUnderTank)
+{
+	m_tileUnderTank = tileUnderTank;
+}
+
+bool Tank::movePlayerTank(std::vector<std::unique_ptr<Object>>& boardVec, position from, position to, char direction)
+{
+	((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->setDirection(direction);
+
+	if ((((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "road" && 
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "road") || 
+		(((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "ice" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "ice") ||
+		(((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "bush" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "bush")) {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		return true;
+	}
+	else 
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "bush" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "road") {
+		
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Bush>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("road");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsHidden(false);
+		return true;
+	}
+	else
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "road" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "bush") {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Road>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("bush");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsHidden(true);
+		return true;
+	}
+	else
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "ice" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "road") {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Ice>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("road");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsOnIce(false);
+		return true;
+	}
+	else
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "road" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "ice") {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Road>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("ice");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsOnIce(true);
+		return true;
+	}
+	else
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "ice" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "bush") {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Ice>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("bush");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsHidden(true);
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsOnIce(false);
+		return true;
+	}
+	else
+	if (((Tank*)boardVec.at(from.first * MATRIX_SIZE + from.second).get())->getTileUnderTank() == "bush" &&
+		boardVec.at(to.first * MATRIX_SIZE + to.second)->getType() == "ice") {
+
+		std::swap(boardVec.at(from.first * MATRIX_SIZE + from.second), boardVec.at(to.first * MATRIX_SIZE + to.second));
+		boardVec.at(from.first * MATRIX_SIZE + from.second) = std::make_unique<Bush>();
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setTileUnderTank("ice");
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsHidden(false);
+		((Tank*)boardVec.at(to.first * MATRIX_SIZE + to.second).get())->setIsOnIce(true);
+		return true;
+	}
+
+	return false;
 }

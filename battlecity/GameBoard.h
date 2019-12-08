@@ -25,7 +25,6 @@ private:
 	uint16_t bulletPosX = 13;
 	uint16_t bulletPosY = 9;
 
-
 	std::string tileUnderTank = "road";
 	std::string tileUnderEnemy = "road";
 	std::string tileUnderBullet = "road";
@@ -37,7 +36,6 @@ public:
 	~GameBoard() {};
 
 	void createLevel();
-	void playerLogic();
 	void enemyLogic();
 	void executeOnKeyUp();
 	void executeOnKeyDown();

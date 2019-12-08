@@ -12,7 +12,6 @@ public:
 	Brick();
 	~Brick();
 
-	void drawBrick(); //deseneaza cuburile de caramida(se sparg)
 	sf::Sprite createSprite();
 	std::string getType() const;
 

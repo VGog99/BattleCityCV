@@ -24,5 +24,6 @@ public:
 	bool getIsOnIce() const;
 	void setIsOnIce(bool isOnIce);
 
+
 };
 

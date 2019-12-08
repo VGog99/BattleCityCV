@@ -15,10 +15,8 @@ Enemy::Enemy(double posX, double posY, uint16_t speed, uint16_t damage, uint16_t
 
 char Enemy::randomMovement()
 {
-	std::cout << (char)(std::rand() % 4 + 48);
 	return (char)(std::rand() % 4 + 48);
 }
-
 
 sf::Sprite Enemy::createSprite()
 {

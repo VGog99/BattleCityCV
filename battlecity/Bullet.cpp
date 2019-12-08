@@ -78,6 +78,7 @@ void Bullet::setIsOnIce(bool isOnIce)
 {
 	m_isOnIce = isOnIce;
 }
+
 bool Bullet::getIsOnIce() const
 {
 	return m_isOnIce;
