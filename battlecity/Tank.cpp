@@ -26,4 +26,14 @@ Position Tank::getPosition() const
 	return m_tankPosition;
 }
 
+Position Tank::getLastNonCollidedPosition() const
+{
+	return m_tankLastNonCollidedPosition;
+}
+
+void Tank::setLastNonCollidedPosition(const Position lastNonCollidedPosition)
+{
+	m_tankLastNonCollidedPosition = lastNonCollidedPosition;
+}
+
 

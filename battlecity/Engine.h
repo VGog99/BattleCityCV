@@ -25,7 +25,9 @@ public:
 	Engine();
 	~Engine();
 	void runGame();
-	void moveSprite(sf::Sprite& spriteToMove, const char direction);
-	bool handleCollision(sf::Sprite& firstSprite);
+	bool moveTank(Tank* tankToMove, const char direction);
+	bool handleCollision(Tank* tankToCheck);
 	void setUpWorld();
 };
+
+extern Engine gameEngine;

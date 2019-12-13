@@ -13,11 +13,13 @@ Engine::~Engine()
 
 void Engine::runGame() {
 
-	sf::RenderWindow window(sf::VideoMode(730, 730), "World of Tanks Vaslui");
+	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
+	window.setFramerateLimit(60);
 	setUpWorld();
 
 	while (window.isOpen())
 	{
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -25,16 +27,16 @@ void Engine::runGame() {
 				window.close();
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				moveSprite(m_localPlayerTank->m_tankSprite, DIR_UP);
+				moveTank(m_localPlayerTank, DIR_UP);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				moveSprite(m_localPlayerTank->m_tankSprite, DIR_DOWN);
+				moveTank(m_localPlayerTank, DIR_DOWN);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				moveSprite(m_localPlayerTank->m_tankSprite, DIR_LEFT);
+				moveTank(m_localPlayerTank, DIR_LEFT);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				moveSprite(m_localPlayerTank->m_tankSprite, DIR_RIGHT);
+				moveTank(m_localPlayerTank, DIR_RIGHT);
 			}
 		}
 
@@ -43,8 +45,9 @@ void Engine::runGame() {
 		//draw stuff
 		window.draw(m_localPlayerTank->m_tankSprite);
 		
-		//draw enemies
+		//do movement and draw enemies
 		for (auto enemyTank : m_enemyTanks) {
+			enemyTank->doMovement();
 			window.draw(enemyTank->m_tankSprite);
 		}
 
@@ -57,65 +60,67 @@ void Engine::runGame() {
 	}
 }
 
-void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
+bool Engine::moveTank(Tank* tankToMove, const char direction)
 {
 
 	switch (direction) {
 	case DIR_UP:
 		
-		if (handleCollision(spriteToMove))
-			return;
+		if (handleCollision(tankToMove))
+			return false;
 
-		spriteToMove.move(0, -3);
+		tankToMove->m_tankSprite.move(0, -3);
 
-		if (spriteToMove.getRotation() != 0)
-			spriteToMove.setRotation(0.f);
-
+		if (tankToMove->m_tankSprite.getRotation() != 0)
+			tankToMove->m_tankSprite.setRotation(0.f);
+		
 		break;
 
 	case DIR_DOWN:
 
-		if (handleCollision(spriteToMove))
-			return;
+		if (handleCollision(tankToMove))
+			return false;
 
-		spriteToMove.move(0, 3);
+		tankToMove->m_tankSprite.move(0, 3);
 
-		if (spriteToMove.getRotation() != 180)
-			spriteToMove.setRotation(180.f);
+		if (tankToMove->m_tankSprite.getRotation() != 180)
+			tankToMove->m_tankSprite.setRotation(180.f);
 
 		break;
 
 	case DIR_LEFT:
 
-		if (handleCollision(spriteToMove))
-			return;
+		if (handleCollision(tankToMove))
+			return false;
 
-		spriteToMove.move(-3, 0);
+		tankToMove->m_tankSprite.move(-3, 0);
 
-		if (spriteToMove.getRotation() != -90)
-			spriteToMove.setRotation(-90.f);
+		if (tankToMove->m_tankSprite.getRotation() != -90)
+			tankToMove->m_tankSprite.setRotation(-90.f);
 
 		break;
 
 	case DIR_RIGHT:
 
-		if (handleCollision(spriteToMove))
-			return;
+		if (handleCollision(tankToMove))
+			return false;
 
-		spriteToMove.move(3, 0);
+		tankToMove->m_tankSprite.move(3, 0);
 
-		if (spriteToMove.getRotation() != 90)
-			spriteToMove.setRotation(90.f);
+		if (tankToMove->m_tankSprite.getRotation() != 90)
+			tankToMove->m_tankSprite.setRotation(90.f);
 
 		break;
 
 	}
+
+	// daca s-a executat miscarea, returnam true
+	return true;
 }
 
-bool Engine::handleCollision(sf::Sprite& firstSprite)
+bool Engine::handleCollision(Tank* tankToCheck)
 {
-	sf::FloatRect firstSpriteBounds = firstSprite.getGlobalBounds();
-	static Position lastNonCollidedPosition;
+	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
 
 	for (auto entity : m_worldEntities) {
 
@@ -125,26 +130,32 @@ bool Engine::handleCollision(sf::Sprite& firstSprite)
 		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
 
 		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
+			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
 			return true;
 		}
 	}
 
 	for (auto enemyTank : m_enemyTanks) {
 
-		if (firstSprite.getPosition() == enemyTank->m_tankSprite.getPosition())
+		if (tankToCheck == enemyTank)
 			continue;
 
 		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
 
 		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
+			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
 			return true;
 		}
 	}
 
-	lastNonCollidedPosition.first = firstSprite.getPosition().x;
-	lastNonCollidedPosition.second = firstSprite.getPosition().y;
+	if (tankToCheck != m_localPlayerTank) {
+		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
+			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+			return true;
+		}
+	}
+
+	tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
 	return false;
 }
 

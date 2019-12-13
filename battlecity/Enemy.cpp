@@ -1,4 +1,7 @@
 #include "Enemy.h"
+#include "Engine.h"
+#include <ctime>
+
 
 Enemy::Enemy()
 {
@@ -11,4 +14,11 @@ Enemy::Enemy(float posX, float posY)
 	m_tankSprite.setTexture(m_tankTexture);
 	m_tankSprite.setOrigin(sf::Vector2f(m_tankTexture.getSize().x * 0.5, m_tankTexture.getSize().y * 0.5));
 	m_tankSprite.setPosition(m_tankPosition.first, m_tankPosition.second);
+}
+
+void Enemy::doMovement()
+{
+	if (!gameEngine.moveTank(this, m_tankDirection)) {
+		m_tankDirection = (char)(std::rand() % 4 + 48);
+	}
 }
