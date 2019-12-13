@@ -42,10 +42,9 @@ void Engine::runGame() {
 
 		//draw stuff
 		window.draw(m_localPlayerSprite);
-		window.draw(testSprite);
 
 		for (auto entity : m_worldEntities) {
-			window.draw(entity.getSprite());
+			window.draw(entity->getSprite());
 		}
 
 		window.display();
@@ -57,8 +56,10 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 
 	switch (direction) {
 	case DIR_UP:
+		
+		if (handleCollision(m_localPlayerSprite))
+			return;
 
-		handleCollision(m_localPlayerSprite, testSprite);
 		spriteToMove.move(0, -2);
 
 		if (spriteToMove.getRotation() != 0)
@@ -67,8 +68,10 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		break;
 
 	case DIR_DOWN:
-		
-		handleCollision(m_localPlayerSprite, testSprite);
+
+		if (handleCollision(m_localPlayerSprite))
+			return;
+
 		spriteToMove.move(0, 2);
 
 		if (spriteToMove.getRotation() != 180)
@@ -77,8 +80,10 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		break;
 
 	case DIR_LEFT:
-		
-		handleCollision(m_localPlayerSprite, testSprite);
+
+		if (handleCollision(m_localPlayerSprite))
+			return;
+
 		spriteToMove.move(-2, 0);
 
 		if (spriteToMove.getRotation() != -90)
@@ -87,8 +92,10 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		break;
 
 	case DIR_RIGHT:
-		
-		handleCollision(m_localPlayerSprite, testSprite);
+
+		if (handleCollision(m_localPlayerSprite))
+			return;
+
 		spriteToMove.move(2, 0);
 
 		if (spriteToMove.getRotation() != 90)
@@ -99,24 +106,31 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 	}
 }
 
-void Engine::handleCollision(sf::Sprite& firstSprite, sf::Sprite secondSprite)
+bool Engine::handleCollision(sf::Sprite& firstSprite)
 {
 	sf::FloatRect firstSpriteBounds = firstSprite.getGlobalBounds();
-	sf::FloatRect secondSpriteBounds = secondSprite.getGlobalBounds();
 	static Position lastNonCollidedPosition;
 
-	if (!(firstSprite.getPosition().x < secondSprite.getPosition().x + secondSpriteBounds.width &&
-		firstSprite.getPosition().x + firstSpriteBounds.width > secondSprite.getPosition().x &&
-		firstSprite.getPosition().y < secondSprite.getPosition().y + secondSpriteBounds.height &&
-		firstSpriteBounds.height + firstSprite.getPosition().y > secondSprite.getPosition().y))
-	{
-		lastNonCollidedPosition.first = firstSprite.getPosition().x;
-		lastNonCollidedPosition.second = firstSprite.getPosition().y;
+	for (auto entity : m_worldEntities) {
+
+		if (entity->getType() == entityType::Bush)
+			continue;
+
+		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
+
+		if (firstSprite.getPosition().x < entity->getSprite().getPosition().x + secondSpriteBounds.width &&
+			firstSprite.getPosition().x + firstSpriteBounds.width > entity->getSprite().getPosition().x &&
+			firstSprite.getPosition().y < entity->getSprite().getPosition().y + secondSpriteBounds.height &&
+			firstSpriteBounds.height + firstSprite.getPosition().y > entity->getSprite().getPosition().y) {
+
+			firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
+			return true;
+		}
 	}
-	else
-	{
-		firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
-	}
+
+	lastNonCollidedPosition.first = firstSprite.getPosition().x;
+	lastNonCollidedPosition.second = firstSprite.getPosition().y;
+	return false;
 }
 
 void Engine::setUpTextures()
@@ -125,10 +139,10 @@ void Engine::setUpTextures()
 	m_localPlayerSprite.setOrigin(sf::Vector2f(m_localPlayerTank->m_tankTexture.getSize().x * 0.5, m_localPlayerTank->m_tankTexture.getSize().y * 0.5));
 	m_localPlayerSprite.setPosition(100.f, 100.f);
 
-	testSprite.setTexture(m_localPlayerTank->m_tankTexture);
-	testSprite.setOrigin(sf::Vector2f(m_localPlayerTank->m_tankTexture.getSize().x * 0.5, m_localPlayerTank->m_tankTexture.getSize().y * 0.5));
+	m_worldEntities.push_back(new WorldEntity(entityType::Brick, 50.f, 50.f));
+	m_worldEntities.push_back(new WorldEntity(entityType::Steel, 150.f, 50.f));
+	m_worldEntities.push_back(new WorldEntity(entityType::Ice, 200.f, 50.f));
+	m_worldEntities.push_back(new WorldEntity(entityType::Bush, 250.f, 50.f));
 
-	testSprite.setPosition(200.f, 200.f);
 
-	m_worldEntities.emplace_back(entityType::Brick, 50.f, 50.f);
 }
