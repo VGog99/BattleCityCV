@@ -529,8 +529,10 @@ void GameBoard::enemyLogic() {
 }
 
 void GameBoard::executeOnKeyUp() {
-
-	if(((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->movePlayerTank(boardVec, std::make_pair(playerPosX, playerPosY), std::make_pair(playerPosX - 1, playerPosY), DIR_UP))
+	std::ofstream logFile("log.log", std::ios::app);
+	Logger logger(std::cout, Logger::Level::Info);
+	logger.Logi("Player moved upwards");
+    if(((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->movePlayerTank(boardVec, std::make_pair(playerPosX, playerPosY), std::make_pair(playerPosX - 1, playerPosY), DIR_UP))
 		playerPosX--;
 
 	if (((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->getIsMoving())
@@ -541,6 +543,9 @@ void GameBoard::executeOnKeyUp() {
 }
 
 void GameBoard::executeOnKeyDown() {
+	std::ofstream logFile("log.log", std::ios::app);
+	Logger logger(std::cout, Logger::Level::Info);
+	logger.Logi("Player moved downwards");
 	if(((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->movePlayerTank(boardVec, std::make_pair(playerPosX, playerPosY), std::make_pair(playerPosX + 1, playerPosY), DIR_DOWN))
 		playerPosX++;
 
@@ -553,6 +558,9 @@ void GameBoard::executeOnKeyDown() {
 }
 
 void GameBoard::executeOnKeyLeft() {
+	std::ofstream logFile("log.log", std::ios::app);
+	Logger logger(std::cout, Logger::Level::Info);
+	logger.Logi("Player moved to the left");
 	if(((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->movePlayerTank(boardVec, std::make_pair(playerPosX, playerPosY), std::make_pair(playerPosX, playerPosY - 1), DIR_LEFT))
 		playerPosY--;
 
@@ -565,6 +573,9 @@ void GameBoard::executeOnKeyLeft() {
 }
 
 void GameBoard::executeOnKeyRight() {
+	std::ofstream logFile("log.log", std::ios::app);
+	Logger logger(std::cout, Logger::Level::Info);
+	logger.Logi("Player moved to the right");
 	if(((Tank*)boardVec.at(playerPosX * 15 + playerPosY).get())->movePlayerTank(boardVec, std::make_pair(playerPosX, playerPosY), std::make_pair(playerPosX, playerPosY + 1), DIR_RIGHT))
 		playerPosY++;
 

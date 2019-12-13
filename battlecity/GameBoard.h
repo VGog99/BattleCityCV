@@ -4,6 +4,7 @@
 #include "SDK.h"
 #include <chrono>
 #include <thread>
+#include "../Logging/Logger.h"
 
 class GameBoard {
 

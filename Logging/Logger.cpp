@@ -28,6 +28,15 @@ void Logger::Log(const std::string& message, Level level)
 	m_out << message << std::endl;
 	//m_out.flush();
 }
+/*template<class ... Args>
+void Logger::Logi(Args&& ... params)
+{
+	std::cout << "[Info]";
+	std::time_t crtTime = std::time(nullptr);
+	std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
+	((std::cout << ' ' << std::forward<Args>(params)), ...);
+	std::cout << '\n';
+}*/
 
 Logger::~Logger()
 {
