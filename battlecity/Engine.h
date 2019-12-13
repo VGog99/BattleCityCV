@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "WorldEntity.h"
+#include "Enemy.h"
 
 class Engine {
 
@@ -13,8 +14,9 @@ private:
 	bool m_gameOver;
 	unsigned int m_localPlayerKills;
 
-	sf::Sprite m_localPlayerSprite;
+	
 	Tank* m_localPlayerTank = new Tank(265.f, 650.f);
+	Enemy* enemyTest = new Enemy(645.f, 75.f);
 
 	std::vector<WorldEntity*> m_worldEntities;
 

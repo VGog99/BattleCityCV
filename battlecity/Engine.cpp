@@ -25,23 +25,24 @@ void Engine::runGame() {
 				window.close();
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				moveSprite(m_localPlayerSprite, DIR_UP);
+				moveSprite(m_localPlayerTank->m_tankSprite, DIR_UP);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				moveSprite(m_localPlayerSprite, DIR_DOWN);
+				moveSprite(m_localPlayerTank->m_tankSprite, DIR_DOWN);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				moveSprite(m_localPlayerSprite, DIR_LEFT);
+				moveSprite(m_localPlayerTank->m_tankSprite, DIR_LEFT);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				moveSprite(m_localPlayerSprite, DIR_RIGHT);
+				moveSprite(m_localPlayerTank->m_tankSprite, DIR_RIGHT);
 			}
 		}
 
 		window.clear();
 
 		//draw stuff
-		window.draw(m_localPlayerSprite);
+		window.draw(m_localPlayerTank->m_tankSprite);
+		window.draw(enemyTest->m_tankSprite);
 		//sf::FloatRect bounding_box = m_localPlayerSprite.getGlobalBounds();
 		//sf::RectangleShape tankRect;
 		//tankRect.setSize(sf::Vector2f(bounding_box.width, bounding_box.height));
@@ -73,7 +74,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 	switch (direction) {
 	case DIR_UP:
 		
-		if (handleCollision(m_localPlayerSprite))
+		if (handleCollision(spriteToMove))
 			return;
 
 		spriteToMove.move(0, -2);
@@ -85,7 +86,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 
 	case DIR_DOWN:
 
-		if (handleCollision(m_localPlayerSprite))
+		if (handleCollision(spriteToMove))
 			return;
 
 		spriteToMove.move(0, 2);
@@ -97,7 +98,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 
 	case DIR_LEFT:
 
-		if (handleCollision(m_localPlayerSprite))
+		if (handleCollision(spriteToMove))
 			return;
 
 		spriteToMove.move(-2, 0);
@@ -109,7 +110,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 
 	case DIR_RIGHT:
 
-		if (handleCollision(m_localPlayerSprite))
+		if (handleCollision(spriteToMove))
 			return;
 
 		spriteToMove.move(2, 0);
@@ -155,10 +156,6 @@ bool Engine::handleCollision(sf::Sprite& firstSprite)
 
 void Engine::setUpTextures()
 {
-	m_localPlayerSprite.setTexture(m_localPlayerTank->m_tankTexture);
-	m_localPlayerSprite.setOrigin(sf::Vector2f(m_localPlayerTank->m_tankTexture.getSize().x * 0.5, m_localPlayerTank->m_tankTexture.getSize().y * 0.5));
-	//m_localPlayerSprite.setPosition(100.f, 100.f);
-	m_localPlayerSprite.setPosition(m_localPlayerTank->getPosition().first, m_localPlayerTank->getPosition().second);
 
 	//m_worldEntities.push_back(new WorldEntity(entityType::Brick, 50.f, 50.f));
 	//m_worldEntities.push_back(new WorldEntity(entityType::Steel, 150.f, 50.f));
