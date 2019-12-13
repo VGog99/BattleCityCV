@@ -14,7 +14,7 @@ Engine::~Engine()
 void Engine::runGame() {
 
 	sf::RenderWindow window(sf::VideoMode(730, 730), "World of Tanks Vaslui");
-	setUpTextures();
+	setUpWorld();
 
 	while (window.isOpen())
 	{
@@ -42,26 +42,15 @@ void Engine::runGame() {
 
 		//draw stuff
 		window.draw(m_localPlayerTank->m_tankSprite);
-		window.draw(enemyTest->m_tankSprite);
-		//sf::FloatRect bounding_box = m_localPlayerSprite.getGlobalBounds();
-		//sf::RectangleShape tankRect;
-		//tankRect.setSize(sf::Vector2f(bounding_box.width, bounding_box.height));
-		//tankRect.setFillColor(sf::Color::Transparent);
-		//tankRect.setOutlineColor(sf::Color::Red);
-		//tankRect.setPosition(sf::Vector2f(bounding_box.left, bounding_box.top));
-		//tankRect.setOutlineThickness(2.f);
-		//window.draw(tankRect);
+		
+		//draw enemies
+		for (auto enemyTank : m_enemyTanks) {
+			window.draw(enemyTank->m_tankSprite);
+		}
 
+		//draw world entities
 		for (auto entity : m_worldEntities) {
 			window.draw(entity->getSprite());
-	/*		sf::FloatRect bounding_box = entity->getSprite().getGlobalBounds();
-			sf::RectangleShape rect;
-			rect.setSize(sf::Vector2f(bounding_box.width, bounding_box.height));
-			rect.setFillColor(sf::Color::Transparent);
-			rect.setOutlineColor(sf::Color::Red);
-			rect.setPosition(sf::Vector2f(bounding_box.left, bounding_box.top));
-			rect.setOutlineThickness(2.f);*/
-			//window.draw(rect);
 		}
 
 		window.display();
@@ -77,7 +66,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		if (handleCollision(spriteToMove))
 			return;
 
-		spriteToMove.move(0, -2);
+		spriteToMove.move(0, -3);
 
 		if (spriteToMove.getRotation() != 0)
 			spriteToMove.setRotation(0.f);
@@ -89,7 +78,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		if (handleCollision(spriteToMove))
 			return;
 
-		spriteToMove.move(0, 2);
+		spriteToMove.move(0, 3);
 
 		if (spriteToMove.getRotation() != 180)
 			spriteToMove.setRotation(180.f);
@@ -101,7 +90,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		if (handleCollision(spriteToMove))
 			return;
 
-		spriteToMove.move(-2, 0);
+		spriteToMove.move(-3, 0);
 
 		if (spriteToMove.getRotation() != -90)
 			spriteToMove.setRotation(-90.f);
@@ -113,7 +102,7 @@ void Engine::moveSprite(sf::Sprite& spriteToMove, const char direction)
 		if (handleCollision(spriteToMove))
 			return;
 
-		spriteToMove.move(2, 0);
+		spriteToMove.move(3, 0);
 
 		if (spriteToMove.getRotation() != 90)
 			spriteToMove.setRotation(90.f);
@@ -135,13 +124,18 @@ bool Engine::handleCollision(sf::Sprite& firstSprite)
 
 		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
 
-		//if (firstSprite.getPosition().x < entity->getSprite().getPosition().x + secondSpriteBounds.width &&
-		//	firstSprite.getPosition().x + firstSpriteBounds.width > entity->getSprite().getPosition().x &&
-		//	firstSprite.getPosition().y < entity->getSprite().getPosition().y + secondSpriteBounds.height &&
-		//	firstSpriteBounds.height + firstSprite.getPosition().y > entity->getSprite().getPosition().y) {
-		//	firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
-		//	return true;
-		//}
+		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
+			firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
+			return true;
+		}
+	}
+
+	for (auto enemyTank : m_enemyTanks) {
+
+		if (firstSprite.getPosition() == enemyTank->m_tankSprite.getPosition())
+			continue;
+
+		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
 
 		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
 			firstSprite.setPosition(lastNonCollidedPosition.first, lastNonCollidedPosition.second);
@@ -154,14 +148,8 @@ bool Engine::handleCollision(sf::Sprite& firstSprite)
 	return false;
 }
 
-void Engine::setUpTextures()
+void Engine::setUpWorld()
 {
-
-	//m_worldEntities.push_back(new WorldEntity(entityType::Brick, 50.f, 50.f));
-	//m_worldEntities.push_back(new WorldEntity(entityType::Steel, 150.f, 50.f));
-	//m_worldEntities.push_back(new WorldEntity(entityType::Ice, 200.f, 50.f));
-	//m_worldEntities.push_back(new WorldEntity(entityType::Bush, 250.f, 50.f));
-
 	unsigned short x = 0;
 	unsigned short y = 0;
 
@@ -221,6 +209,9 @@ void Engine::setUpTextures()
 				case 'a': {
 					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
 					break;
+				}
+				case 'h': {
+					m_enemyTanks.push_back(new Enemy(x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
 				}
 			}
 

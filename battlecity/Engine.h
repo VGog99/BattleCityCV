@@ -16,9 +16,9 @@ private:
 
 	
 	Tank* m_localPlayerTank = new Tank(265.f, 650.f);
-	Enemy* enemyTest = new Enemy(645.f, 75.f);
 
 	std::vector<WorldEntity*> m_worldEntities;
+	std::vector<Enemy*> m_enemyTanks;
 
 public:
 	
@@ -27,5 +27,5 @@ public:
 	void runGame();
 	void moveSprite(sf::Sprite& spriteToMove, const char direction);
 	bool handleCollision(sf::Sprite& firstSprite);
-	void setUpTextures();
+	void setUpWorld();
 };
