@@ -11,15 +11,12 @@ class Engine {
 private:
 	bool m_gameStarted;
 	bool m_gameOver;
-
 	unsigned int m_localPlayerKills;
+
 	sf::Sprite m_localPlayerSprite;
-	Tank* m_localPlayerTank = new Tank(100.f, 100.f);
+	Tank* m_localPlayerTank = new Tank(265.f, 650.f);
 
 	std::vector<WorldEntity*> m_worldEntities;
-
-	sf::Sprite testSprite;
-
 
 public:
 	

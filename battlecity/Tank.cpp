@@ -18,4 +18,9 @@ sf::Texture Tank::getTexture()
 	return m_tankTexture;
 }
 
+Position Tank::getPosition() const
+{
+	return m_tankPosition;
+}
+
 

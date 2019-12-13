@@ -8,7 +8,8 @@ enum entityType {
 	Bush,
 	Water,
 	Ice,
-	Eagle
+	Eagle,
+	WorldBound
 };
 
 class WorldEntity

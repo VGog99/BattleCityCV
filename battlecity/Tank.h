@@ -18,5 +18,6 @@ public:
 
 	sf::Texture m_tankTexture;
 	sf::Texture getTexture();
+	Position getPosition() const;
 };
 
