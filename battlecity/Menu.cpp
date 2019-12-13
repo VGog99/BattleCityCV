@@ -53,6 +53,16 @@ bool Menu::getStageChooser() const
 	return stageChooser;
 }
 
+void Menu::setPaused(const bool pause)
+{
+	isPaused = pause;
+}
+
+bool Menu::getPaused() const
+{
+	return isPaused;
+}
+
 sf::Font Menu::getMenuFont()
 {
 	return menuFont;

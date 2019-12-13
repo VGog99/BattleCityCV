@@ -7,7 +7,8 @@ class Menu
 {
 private:
 
-	bool isInMenu=true;
+	bool isInMenu = true;
+	bool isPaused = false;
 	sf::Texture titleTexture;
 	int menuOption = 0;
 	bool stageChooser = false;
@@ -26,6 +27,9 @@ public:
 
 	void setStageChooser(const bool stageChooser);
 	bool getStageChooser() const;
+
+	void setPaused(const bool pause);
+	bool getPaused() const;
 
 	sf::Font getMenuFont();
 };

@@ -753,7 +753,7 @@ void GameBoard::draw() {
 	sf::Font menuFont = menu.getMenuFont();
 	sf::Text startText("Start", menuFont);
 	sf::Text exitText("Exit", menuFont);
-	sf::Text pauseText("Pause", menuFont);
+	sf::Text pauseText("Paused", menuFont);
 	sf::Text stageText("Choose your stage \n(use arrow keys)", menuFont);
 	sf::Text stageOne("Stage 1", menuFont);
 	sf::Text stageTwo("Stage 2", menuFont);
@@ -772,6 +772,7 @@ void GameBoard::draw() {
 
 	startText.setPosition(200, 310);
 	exitText.setPosition(215, 380);
+	pauseText.setPosition(170, 250);
 	stageText.setCharacterSize(25.f);
 	stageText.setPosition(50, 150);
 	stageOne.setCharacterSize(20.f);
@@ -791,6 +792,7 @@ void GameBoard::draw() {
 
 	while (window.isOpen())
 	{
+
 		dt = deltaClock.restart();
 
 		sf::Event event;	
@@ -810,7 +812,7 @@ void GameBoard::draw() {
 
 		}
 
-		if (!menu.getIsInMenu()) {
+		if (!menu.getIsInMenu() && !menu.getPaused()) {
 			enemyLogic();
 			bulletLogic();
 		}
@@ -908,7 +910,7 @@ void GameBoard::draw() {
 							case sf::Keyboard::Left: executeOnKeyLeft(); break;
 							case sf::Keyboard::Right: executeOnKeyRight(); break;
 							case sf::Keyboard::Escape: window.close(); break;				
-							case sf::Keyboard::P: menu.setIsInMenu(true); break;
+							case sf::Keyboard::P: menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true); break;
 							case sf::Keyboard::Space: executeOnKeySpace(); break;
 						}
 					}
@@ -936,6 +938,9 @@ void GameBoard::draw() {
 				window.draw(stageFour);
 			}
 			
+		}
+		else if (menu.getPaused()) {
+			window.draw(pauseText);
 		}
 		else {		
 			for (auto const& sprite : spriteVec) {
