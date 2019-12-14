@@ -6,6 +6,7 @@
 #include <vector>
 #include "WorldEntity.h"
 #include "Enemy.h"
+#include "Menu.h"
 
 class Engine {
 

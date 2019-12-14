@@ -12,6 +12,43 @@ Engine::~Engine()
 }
 
 void Engine::runGame() {
+	Menu menu;
+	int savedMenuOption = menu.getMenuOption();
+	sf::Sprite menuSprite = menu.createSprite();
+
+	sf::Font menuFont = menu.getMenuFont();
+	sf::Text startText("Start", menuFont);
+	sf::Text exitText("Exit", menuFont);
+	sf::Text pauseText("Paused", menuFont);
+	sf::Text stageText("Choose your stage \n(use arrow keys)", menuFont);
+	sf::Text stageOne("Stage 1", menuFont);
+	sf::Text stageTwo("Stage 2", menuFont);
+	sf::Text stageThree("Stage 3", menuFont);
+	sf::Text stageFour("Stage 4", menuFont);
+
+	sf::Music menuMusic;
+
+	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
+	{
+		std::cout << "Nu s-a putut incarca fisierul de muzica.";
+	}
+
+	menuMusic.setVolume(0.60f);
+	menuMusic.play();
+
+	startText.setPosition(287, 310);
+	exitText.setPosition(302, 380);
+	pauseText.setPosition(270, 360);
+	stageText.setCharacterSize(25.f);
+	stageText.setPosition(50, 150);
+	stageOne.setCharacterSize(20.f);
+	stageOne.setPosition(200, 250);
+	stageTwo.setCharacterSize(20.f);
+	stageTwo.setPosition(200, 300);
+	stageThree.setCharacterSize(20.f);
+	stageThree.setPosition(200, 350);
+	stageFour.setCharacterSize(20.f);
+	stageFour.setPosition(200, 400);
 
 	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
@@ -19,43 +56,131 @@ void Engine::runGame() {
 
 	while (window.isOpen())
 	{
+		if (menu.getIsInMenu()) {
+			startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
+			exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
+			stageOne.setFillColor(menu.getMenuOption() == 0 ? sf::Color::Yellow : sf::Color::White);
+			stageTwo.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
+			stageThree.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
+			stageFour.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
+
+		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+			if (menu.getIsInMenu())
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				moveTank(m_localPlayerTank, DIR_UP);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				moveTank(m_localPlayerTank, DIR_DOWN);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				moveTank(m_localPlayerTank, DIR_LEFT);
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				moveTank(m_localPlayerTank, DIR_RIGHT);
-			}
+				switch (event.type)
+				{
+				case sf::Event::Closed: {
+					window.close();
+					break;
+				}
+				case sf::Event::KeyReleased: {
+
+					switch (event.key.code) {
+
+					case sf::Keyboard::Up:
+						
+							savedMenuOption = menu.getMenuOption();
+						savedMenuOption--;
+						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+						
+							menu.setMenuOption(savedMenuOption);
+						std::cout << menu.getMenuOption();
+						break;
+						
+					case sf::Keyboard::Down:
+						
+							savedMenuOption = menu.getMenuOption();
+						savedMenuOption++;
+						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+						
+							menu.setMenuOption(savedMenuOption);
+						std::cout << menu.getMenuOption();
+						break;
+						
+					case sf::Keyboard::Enter:
+						
+							if (!menu.getMenuOption())
+							 {
+							menu.setIsInMenu(false);
+							}
+						else
+							 {
+							window.close();
+							}
+						break;
+
+					}
+				}
+				}
+			else
+				if (event.type == sf::Event::Closed)
+					window.close();
+				else
+				{
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+						moveTank(m_localPlayerTank, DIR_UP);
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+						moveTank(m_localPlayerTank, DIR_DOWN);
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+						moveTank(m_localPlayerTank, DIR_LEFT);
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+						moveTank(m_localPlayerTank, DIR_RIGHT);
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+						menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
+					}
+				}
 		}
 
 		window.clear();
 
 		//draw stuff
-		window.draw(m_localPlayerTank->m_tankSprite);
-		
-		//do movement and draw enemies
-		for (auto enemyTank : m_enemyTanks) {
-			enemyTank->doMovement();
-			window.draw(enemyTank->m_tankSprite);
-		}
+		if (menu.getIsInMenu())
+		{
+			if (!menu.getStageChooser()) {
+				window.draw(menuSprite);
+				window.draw(startText);
+				window.draw(exitText);
+			}
+			else
+			{
+				window.draw(stageText);
+				window.draw(stageOne);
+				window.draw(stageTwo);
+				window.draw(stageThree);
+				window.draw(stageFour);
+				//De incarcat stage-urile
+			}
 
-		//draw world entities
-		for (auto entity : m_worldEntities) {
-			window.draw(entity->getSprite());
 		}
+		else
+		if (menu.getPaused()) {
+			window.draw(pauseText);
+			}
+		else
+		{
+			window.draw(m_localPlayerTank->m_tankSprite);
 
+			//do movement and draw enemies
+			for (auto enemyTank : m_enemyTanks) {
+				enemyTank->doMovement();
+				window.draw(enemyTank->m_tankSprite);
+			}
+
+			//draw world entities
+			for (auto entity : m_worldEntities) {
+				window.draw(entity->getSprite());
+			}
+
+			
+		}
 		window.display();
 	}
 }
