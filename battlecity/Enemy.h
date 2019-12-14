@@ -3,6 +3,9 @@
 
 class Enemy : public Tank
 {
+protected:
+
+	float m_enemySpeed = 1.0f;
 
 public:
 	Enemy();
@@ -10,5 +13,7 @@ public:
 
 	void doMovement();
 
+	float getEnemySpeed();
+	void setEnemySpeed(float speed);
 };
 

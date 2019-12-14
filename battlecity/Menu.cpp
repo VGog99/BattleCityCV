@@ -29,7 +29,7 @@ void Menu::setIsInMenu(const bool set)
 sf::Sprite Menu::createSprite()
 {
 	sf::Sprite sprite(titleTexture);
-	sprite.setPosition(50, 40);
+	sprite.setPosition(140, 60);
 	return sprite;
 }
 

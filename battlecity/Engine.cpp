@@ -126,20 +126,23 @@ void Engine::runGame() {
 					logger.Logi("The game was closed");
 				}
 				{
+
+				float tankSpeed = 10.0f;
+
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						moveTank(m_localPlayerTank, DIR_UP);
+						moveTank(m_localPlayerTank, DIR_UP, tankSpeed);
 						logger.Logi("The player moved upwards");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-						moveTank(m_localPlayerTank, DIR_DOWN);
+						moveTank(m_localPlayerTank, DIR_DOWN, tankSpeed);
 						logger.Logi("The player moved downwards");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-						moveTank(m_localPlayerTank, DIR_LEFT);
+						moveTank(m_localPlayerTank, DIR_LEFT, tankSpeed);
 						logger.Logi("The player moved to the left");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-						moveTank(m_localPlayerTank, DIR_RIGHT);
+						moveTank(m_localPlayerTank, DIR_RIGHT, tankSpeed);
 						logger.Logi("The player moved to the right");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -205,7 +208,7 @@ void Engine::runGame() {
 	}
 }
 
-bool Engine::moveTank(Tank* tankToMove, const char direction)
+bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 {
 
 	switch (direction) {
@@ -214,7 +217,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction)
 		if (handleCollision(tankToMove))
 			return false;
 
-		tankToMove->m_tankSprite.move(0, -3);
+		tankToMove->m_tankSprite.move(0, -speed);
 
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 		{
@@ -228,7 +231,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction)
 		if (handleCollision(tankToMove))
 			return false;
 
-		tankToMove->m_tankSprite.move(0, 3);
+		tankToMove->m_tankSprite.move(0, speed);
 
 		if (tankToMove->m_tankSprite.getRotation() != 180)
 			tankToMove->m_tankSprite.setRotation(180.f);
@@ -240,7 +243,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction)
 		if (handleCollision(tankToMove))
 			return false;
 
-		tankToMove->m_tankSprite.move(-3, 0);
+		tankToMove->m_tankSprite.move(-speed, 0);
 
 		if (tankToMove->m_tankSprite.getRotation() != -90)
 			tankToMove->m_tankSprite.setRotation(-90.f);
@@ -252,7 +255,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction)
 		if (handleCollision(tankToMove))
 			return false;
 
-		tankToMove->m_tankSprite.move(3, 0);
+		tankToMove->m_tankSprite.move(speed, 0);
 
 		if (tankToMove->m_tankSprite.getRotation() != 90)
 			tankToMove->m_tankSprite.setRotation(90.f);

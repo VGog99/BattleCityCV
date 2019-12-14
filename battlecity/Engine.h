@@ -27,7 +27,7 @@ public:
 	Engine();
 	~Engine();
 	void runGame();
-	bool moveTank(Tank* tankToMove, const char direction);
+	bool moveTank(Tank* tankToMove, const char direction, float speed);
 	bool handleCollision(Tank* tankToCheck);
 	void setUpWorld();
 };
