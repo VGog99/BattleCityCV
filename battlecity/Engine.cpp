@@ -3,6 +3,7 @@
 #include "Macros.h"
 #include <fstream>
 
+
 Engine::Engine()
 {
 }
@@ -154,15 +155,24 @@ void Engine::runGame() {
 							logger.Logi("The game was paused");
 						}
 					}
+
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+						bulletLogic(m_bullet, m_localPlayerTank, m_localPlayerTank->getTankDirection());
+						logger.Logi("Playeru o tras cu glontu");  // trage de doua ori ??
+					}
+
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
 					{
 						window.close();
 						logger.Logi("Gata pe azi?");
-					}
+					}	
 				}
 		}
 
 		window.clear();
+
+		
+
 
 		//draw stuff
 		if (menu.getIsInMenu())
@@ -202,7 +212,7 @@ void Engine::runGame() {
 				window.draw(entity->getSprite());
 			}
 
-			
+			window.draw(m_bullet->m_bulletSprite);
 		}
 		window.display();
 	}
@@ -266,6 +276,32 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 	// daca s-a executat miscarea, returnam true
 	return true;
+}
+
+bool Engine::bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction)
+{	
+		switch (direction) {
+		case DIR_UP:
+
+			bullet->m_bulletSprite.move(0, -15);
+			break;
+
+		case DIR_DOWN:
+
+			bullet->m_bulletSprite.move(0, 15);
+			break;
+
+		case DIR_LEFT:
+
+			bullet->m_bulletSprite.move(-15 ,0);
+			break;
+
+		case DIR_RIGHT:
+
+			bullet->m_bulletSprite.move(15 ,0);
+			break;
+		}
+		return true;
 }
 
 bool Engine::handleCollision(Tank* tankToCheck)

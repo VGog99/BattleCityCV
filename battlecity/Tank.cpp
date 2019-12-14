@@ -27,6 +27,11 @@ Position Tank::getPosition() const
 	return m_tankPosition;
 }
 
+char Tank::getTankDirection()
+{
+	return m_tankDirection;
+}
+
 Position Tank::getLastNonCollidedPosition() const
 {
 	return m_tankLastNonCollidedPosition;
