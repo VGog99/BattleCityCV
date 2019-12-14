@@ -7,6 +7,7 @@
 #include "WorldEntity.h"
 #include "Enemy.h"
 #include "Menu.h"
+#include "../Logging/Logger.h"
 
 class Engine {
 

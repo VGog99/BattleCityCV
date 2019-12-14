@@ -10,12 +10,13 @@ Engine::Engine()
 Engine::~Engine()
 {
 }
+std::ofstream logFile("log.log", std::ios::app);
+Logger logger(std::cout, Logger::Level::Info);
 
 void Engine::runGame() {
 	Menu menu;
 	int savedMenuOption = menu.getMenuOption();
 	sf::Sprite menuSprite = menu.createSprite();
-
 	sf::Font menuFont = menu.getMenuFont();
 	sf::Text startText("Start", menuFont);
 	sf::Text exitText("Exit", menuFont);
@@ -105,10 +106,12 @@ void Engine::runGame() {
 						
 							if (!menu.getMenuOption())
 							 {
+							logger.Logi("Game started");
 							menu.setIsInMenu(false);
 							}
 						else
 							 {
+							logger.Logi("You didn't want to play our game :(");
 							window.close();
 							}
 						break;
@@ -118,23 +121,40 @@ void Engine::runGame() {
 				}
 			else
 				if (event.type == sf::Event::Closed)
+				{
 					window.close();
-				else
+					logger.Logi("The game was closed");
+				}
 				{
 					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 						moveTank(m_localPlayerTank, DIR_UP);
+						logger.Logi("The player moved upwards");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 						moveTank(m_localPlayerTank, DIR_DOWN);
+						logger.Logi("The player moved downwards");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 						moveTank(m_localPlayerTank, DIR_LEFT);
+						logger.Logi("The player moved to the left");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 						moveTank(m_localPlayerTank, DIR_RIGHT);
+						logger.Logi("The player moved to the right");
 					}
 					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-						menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
+						if (menu.getPaused())
+							menu.setPaused(false);
+						else
+						{
+							menu.setPaused(true);
+							logger.Logi("The game was paused");
+						}
+					}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+					{
+						window.close();
+						logger.Logi("Gata pe azi?");
 					}
 				}
 		}
@@ -197,7 +217,9 @@ bool Engine::moveTank(Tank* tankToMove, const char direction)
 		tankToMove->m_tankSprite.move(0, -3);
 
 		if (tankToMove->m_tankSprite.getRotation() != 0)
+		{
 			tankToMove->m_tankSprite.setRotation(0.f);
+		}
 		
 		break;
 
