@@ -34,6 +34,7 @@ public:
 	bool bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction);
 	bool handleCollision(Tank* tankToCheck);
 	void setUpWorld();
+	void doLocalPlayerMovement();
 };
 
 extern Engine gameEngine;

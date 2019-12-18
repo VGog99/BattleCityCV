@@ -10,7 +10,7 @@ protected:
 	Position m_tankPosition;
 	Position m_tankLastNonCollidedPosition;
 	char m_tankDirection = DIR_UP;
-	float m_tankSpeed = 2.f;
+	float m_tankSpeed = 1.f;
 
 public:
 	Tank();
@@ -22,6 +22,7 @@ public:
 	
 	Position getPosition() const;
 	char getTankDirection();
+	void setTankDirection(char direction);
 	
 	Position getLastNonCollidedPosition() const;
 	void setLastNonCollidedPosition(const Position lastNonCollidedPosition);

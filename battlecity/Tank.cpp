@@ -27,6 +27,11 @@ char Tank::getTankDirection()
 	return m_tankDirection;
 }
 
+void Tank::setTankDirection(char direction)
+{
+	m_tankDirection = direction;
+}
+
 Position Tank::getLastNonCollidedPosition() const
 {
 	return m_tankLastNonCollidedPosition;

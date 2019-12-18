@@ -56,8 +56,8 @@ void Engine::runGame() {
 					menu.setMenuOption(savedMenuOption);
 				}
 
-				moveTank(m_localPlayerTank, DIR_UP, m_localPlayerTank->getTankSpeed());
-				logger.Logi("The player moved upwards");
+				m_localPlayerTank->setTankDirection(DIR_UP);
+				logger.Logi("The player is moving upwards");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 				
@@ -68,17 +68,17 @@ void Engine::runGame() {
 					menu.setMenuOption(savedMenuOption);
 				}
 
-				moveTank(m_localPlayerTank, DIR_DOWN, m_localPlayerTank->getTankSpeed());
+				m_localPlayerTank->setTankDirection(DIR_DOWN);
 				logger.Logi("The player moved downwards");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
-				moveTank(m_localPlayerTank, DIR_LEFT, m_localPlayerTank->getTankSpeed());
+				m_localPlayerTank->setTankDirection(DIR_LEFT);
 				logger.Logi("The player moved to the left");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 
-				moveTank(m_localPlayerTank, DIR_RIGHT, m_localPlayerTank->getTankSpeed());
+				m_localPlayerTank->setTankDirection(DIR_RIGHT);
 				logger.Logi("The player moved to the right");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
@@ -132,6 +132,9 @@ void Engine::runGame() {
 		}
 
 		if (!menu.getIsInMenu()) {
+
+			//do movement and draw local player
+			doLocalPlayerMovement();
 			window.draw(m_localPlayerTank->m_tankSprite);
 
 			//do movement and draw enemies
@@ -240,6 +243,7 @@ bool Engine::bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction
 
 bool Engine::handleCollision(Tank* tankToCheck)
 {
+	// todo: ramane blocat sometimes, presupun ca salveaza un lastNonCollided gresit in anumite cazuri, o sa rezolv candva
 	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
 
 	for (auto enemyTank : m_enemyTanks) {
@@ -250,8 +254,8 @@ bool Engine::handleCollision(Tank* tankToCheck)
 		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
 
 		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			//tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
-			//return true;
+			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+			return true;
 		}
 	}
 
@@ -274,11 +278,14 @@ bool Engine::handleCollision(Tank* tankToCheck)
 			return true;
 		}
 	}
-
-
-			tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
-
+	
+	tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
 	return false;
+}
+
+void Engine::doLocalPlayerMovement()
+{
+	gameEngine.moveTank(m_localPlayerTank, m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
 }
 
 void Engine::setUpWorld()
@@ -355,3 +362,5 @@ void Engine::setUpWorld()
 		y++;
 	}
 }
+
+
