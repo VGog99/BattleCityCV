@@ -9,6 +9,7 @@
 #define API_LOGGER __declspec(dllimport)
 #endif//LOGGING_EXPORTS
 #pragma warning(disable::4996)
+
 class API_LOGGER Logger
 {
 public:

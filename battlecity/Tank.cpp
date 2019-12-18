@@ -17,11 +17,6 @@ Tank::Tank(float posX, float posY) : m_tankPosition(std::make_pair(posX, posY))
 	m_tankSprite.setPosition(m_tankPosition.first, m_tankPosition.second);
 }
 
-sf::Texture Tank::getTexture() 
-{
-	return m_tankTexture;
-}
-
 Position Tank::getPosition() const
 {
 	return m_tankPosition;
@@ -40,6 +35,16 @@ Position Tank::getLastNonCollidedPosition() const
 void Tank::setLastNonCollidedPosition(const Position lastNonCollidedPosition)
 {
 	m_tankLastNonCollidedPosition = lastNonCollidedPosition;
+}
+
+float Tank::getTankSpeed()
+{
+	return m_tankSpeed;
+}
+
+void Tank::setTankSpeed(float speed)
+{
+	m_tankSpeed = speed;
 }
 
 

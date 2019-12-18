@@ -10,6 +10,7 @@ protected:
 	Position m_tankPosition;
 	Position m_tankLastNonCollidedPosition;
 	char m_tankDirection = DIR_UP;
+	float m_tankSpeed = 2.f;
 
 public:
 	Tank();
@@ -18,11 +19,15 @@ public:
 	
 	sf::Texture m_tankTexture;
 	sf::Sprite m_tankSprite;
-	sf::Texture getTexture();
+	
 	Position getPosition() const;
 	char getTankDirection();
+	
 	Position getLastNonCollidedPosition() const;
 	void setLastNonCollidedPosition(const Position lastNonCollidedPosition);
 	
+	float getTankSpeed();
+	void setTankSpeed(float speed);
+
 };
 

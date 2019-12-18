@@ -24,7 +24,6 @@ private:
 
 	Bullet* m_bullet = new Bullet(265.f, 650.f);
 	//std::vector<Bullet*> m_bullet;
-	
 
 public:
 	

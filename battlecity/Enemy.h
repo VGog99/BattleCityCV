@@ -5,7 +5,7 @@ class Enemy : public Tank
 {
 protected:
 
-	float m_enemySpeed = 1.0f;
+	float m_enemySpeed = 2.0f;
 
 public:
 	Enemy();

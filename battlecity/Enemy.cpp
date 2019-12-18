@@ -28,3 +28,8 @@ float Enemy::getEnemySpeed()
 {
 	return m_enemySpeed;
 }
+
+void Enemy::setEnemySpeed(float speed)
+{
+	m_enemySpeed = speed;
+}

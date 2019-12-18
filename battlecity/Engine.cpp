@@ -3,202 +3,135 @@
 #include "Macros.h"
 #include <fstream>
 
+std::ofstream logFile("log.log", std::ios::app);
+Logger logger(std::cout, Logger::Level::Info);
 
 Engine::Engine()
 {
+	m_gameOver = false;
+	m_gameStarted = false;
+	m_localPlayerKills = 0;
 }
 
 Engine::~Engine()
 {
 }
-std::ofstream logFile("log.log", std::ios::app);
-Logger logger(std::cout, Logger::Level::Info);
 
 void Engine::runGame() {
+
 	Menu menu;
-	int savedMenuOption = menu.getMenuOption();
-	sf::Sprite menuSprite = menu.createSprite();
-	sf::Font menuFont = menu.getMenuFont();
-	sf::Text startText("Start", menuFont);
-	sf::Text exitText("Exit", menuFont);
-	sf::Text pauseText("Paused", menuFont);
-	sf::Text stageText("Choose your stage \n(use arrow keys)", menuFont);
-	sf::Text stageOne("Stage 1", menuFont);
-	sf::Text stageTwo("Stage 2", menuFont);
-	sf::Text stageThree("Stage 3", menuFont);
-	sf::Text stageFour("Stage 4", menuFont);
 
 	sf::Music menuMusic;
 
 	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
-	{
-		std::cout << "Nu s-a putut incarca fisierul de muzica.";
-	}
+		logger.Logi("Nu s-a putut incarca fisierul de muzica.");
 
 	menuMusic.setVolume(0.60f);
 	menuMusic.play();
 
-	startText.setPosition(287, 310);
-	exitText.setPosition(302, 380);
-	pauseText.setPosition(270, 360);
-	stageText.setCharacterSize(25.f);
-	stageText.setPosition(50, 150);
-	stageOne.setCharacterSize(20.f);
-	stageOne.setPosition(200, 250);
-	stageTwo.setCharacterSize(20.f);
-	stageTwo.setPosition(200, 300);
-	stageThree.setCharacterSize(20.f);
-	stageThree.setPosition(200, 350);
-	stageFour.setCharacterSize(20.f);
-	stageFour.setPosition(200, 400);
+	int savedMenuOption = menu.getMenuOption();
 
 	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
+
+	// load map
 	setUpWorld();
 
 	while (window.isOpen())
 	{
 		if (menu.getIsInMenu()) {
-			startText.setFillColor(menu.getMenuOption() ? sf::Color::White : sf::Color::Yellow);
-			exitText.setFillColor(menu.getMenuOption() ? sf::Color::Yellow : sf::Color::White);
-			stageOne.setFillColor(menu.getMenuOption() == 0 ? sf::Color::Yellow : sf::Color::White);
-			stageTwo.setFillColor(menu.getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
-			stageThree.setFillColor(menu.getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
-			stageFour.setFillColor(menu.getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
-
+			menu.updateMenuColor();
 		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (menu.getIsInMenu())
 
-				switch (event.type)
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+
+				if (menu.getIsInMenu()) {
+					savedMenuOption = menu.getMenuOption();
+					savedMenuOption--;
+					savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+					menu.setMenuOption(savedMenuOption);
+				}
+
+				moveTank(m_localPlayerTank, DIR_UP, m_localPlayerTank->getTankSpeed());
+				logger.Logi("The player moved upwards");
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				
+				if (menu.getIsInMenu()) {
+					savedMenuOption = menu.getMenuOption();
+					savedMenuOption++;
+					savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+					menu.setMenuOption(savedMenuOption);
+				}
+
+				moveTank(m_localPlayerTank, DIR_DOWN, m_localPlayerTank->getTankSpeed());
+				logger.Logi("The player moved downwards");
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+
+				moveTank(m_localPlayerTank, DIR_LEFT, m_localPlayerTank->getTankSpeed());
+				logger.Logi("The player moved to the left");
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+
+				moveTank(m_localPlayerTank, DIR_RIGHT, m_localPlayerTank->getTankSpeed());
+				logger.Logi("The player moved to the right");
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+
+				if (!menu.getMenuOption())
 				{
-				case sf::Event::Closed: {
+					logger.Logi("Game started");
+					menu.setIsInMenu(false);
+				}
+				else
+				{
+					logger.Logi("You didn't want to play our game :(");
 					window.close();
-					break;
 				}
-				case sf::Event::KeyReleased: {
-
-					switch (event.key.code) {
-
-					case sf::Keyboard::Up:
-						
-							savedMenuOption = menu.getMenuOption();
-						savedMenuOption--;
-						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
-						
-							menu.setMenuOption(savedMenuOption);
-						std::cout << menu.getMenuOption();
-						break;
-						
-					case sf::Keyboard::Down:
-						
-							savedMenuOption = menu.getMenuOption();
-						savedMenuOption++;
-						savedMenuOption = std::clamp(savedMenuOption, 0, 1);
-						
-							menu.setMenuOption(savedMenuOption);
-						std::cout << menu.getMenuOption();
-						break;
-						
-					case sf::Keyboard::Enter:
-						
-							if (!menu.getMenuOption())
-							 {
-							logger.Logi("Game started");
-							menu.setIsInMenu(false);
-							}
-						else
-							 {
-							logger.Logi("You didn't want to play our game :(");
-							window.close();
-							}
-						break;
-
-					}
-				}
-				}
-			else
-				if (event.type == sf::Event::Closed)
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+				
+				if (menu.getPaused())
+					menu.setPaused(false);
+				else
 				{
-					window.close();
-					logger.Logi("The game was closed");
+					menu.setPaused(true);
+					logger.Logi("The game was paused");
 				}
-				{
-
-				float tankSpeed = 10.0f;
-
-					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-						moveTank(m_localPlayerTank, DIR_UP, tankSpeed);
-						logger.Logi("The player moved upwards");
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-						moveTank(m_localPlayerTank, DIR_DOWN, tankSpeed);
-						logger.Logi("The player moved downwards");
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-						moveTank(m_localPlayerTank, DIR_LEFT, tankSpeed);
-						logger.Logi("The player moved to the left");
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-						moveTank(m_localPlayerTank, DIR_RIGHT, tankSpeed);
-						logger.Logi("The player moved to the right");
-					}
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-						if (menu.getPaused())
-							menu.setPaused(false);
-						else
-						{
-							menu.setPaused(true);
-							logger.Logi("The game was paused");
-						}
-					}
-
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-						bulletLogic(m_bullet, m_localPlayerTank, m_localPlayerTank->getTankDirection());
-						logger.Logi("Playeru o tras cu glontu");  // trage de doua ori ??
-					}
-
-					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
-					{
-						window.close();
-						logger.Logi("Gata pe azi?");
-					}	
-				}
+			}
 		}
 
 		window.clear();
 
-		
-
-
 		//draw stuff
-		if (menu.getIsInMenu())
-		{
+		if (menu.getIsInMenu()) {
+
 			if (!menu.getStageChooser()) {
-				window.draw(menuSprite);
-				window.draw(startText);
-				window.draw(exitText);
+				window.draw(menu.getMenuSprite());
+				window.draw(menu.getStartText());
+				window.draw(menu.getExitText());
 			}
-			else
-			{
-				window.draw(stageText);
-				window.draw(stageOne);
-				window.draw(stageTwo);
-				window.draw(stageThree);
-				window.draw(stageFour);
+			else {
+				window.draw(menu.getStageText());
+				window.draw(menu.getStageOneText());
+				window.draw(menu.getStageTwoText());
+				window.draw(menu.getStageThreeText());
+				window.draw(menu.getStageFourText());
 				//De incarcat stage-urile
 			}
 
 		}
-		else
+
 		if (menu.getPaused()) {
-			window.draw(pauseText);
-			}
-		else
-		{
+			window.draw(menu.getPauseText());
+		}
+
+		if (!menu.getIsInMenu()) {
 			window.draw(m_localPlayerTank->m_tankSprite);
 
 			//do movement and draw enemies
@@ -214,6 +147,7 @@ void Engine::runGame() {
 
 			window.draw(m_bullet->m_bulletSprite);
 		}
+
 		window.display();
 	}
 }
@@ -308,6 +242,26 @@ bool Engine::handleCollision(Tank* tankToCheck)
 {
 	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
 
+	for (auto enemyTank : m_enemyTanks) {
+
+		if (tankToCheck == enemyTank)
+			continue;
+
+		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
+
+		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
+			//tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+			//return true;
+		}
+	}
+
+	if (tankToCheck != m_localPlayerTank) {
+		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
+			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+			return true;
+		}
+	}
+
 	for (auto entity : m_worldEntities) {
 
 		if (entity->getType() == entityType::Bush)
@@ -321,27 +275,9 @@ bool Engine::handleCollision(Tank* tankToCheck)
 		}
 	}
 
-	for (auto enemyTank : m_enemyTanks) {
 
-		if (tankToCheck == enemyTank)
-			continue;
+			tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
 
-		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
-
-		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
-			return true;
-		}
-	}
-
-	if (tankToCheck != m_localPlayerTank) {
-		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
-			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
-			return true;
-		}
-	}
-
-	tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
 	return false;
 }
 
@@ -349,6 +285,7 @@ void Engine::setUpWorld()
 {
 	unsigned short x = 0;
 	unsigned short y = 0;
+	float worldEntitySize = 48;
 
 	std::string inputFromFile;
 	std::ifstream file("../stages/stage1.txt");
@@ -360,34 +297,35 @@ void Engine::setUpWorld()
 			switch (chr) {
 				case 'w': {
 
-					m_worldEntities.push_back(new WorldEntity(entityType::WorldBound, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::WorldBound, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'b': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 's': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * WORLD_ENTITY_SIZE + 2 * (WORLD_ENTITY_SIZE / 3), y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 3));					break;
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));					
+					break;
 				}
 				case 'e': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Eagle, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Eagle, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 
 					break;
 				}
@@ -396,19 +334,19 @@ void Engine::setUpWorld()
 					break;
 				}
 				case 'g': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'i': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'a': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'h': {
-					m_enemyTanks.push_back(new Enemy(x * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2, y * WORLD_ENTITY_SIZE + WORLD_ENTITY_SIZE / 2));
+					m_enemyTanks.push_back(new Enemy(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 				}
 			}
 

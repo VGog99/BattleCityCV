@@ -14,6 +14,16 @@ private:
 	bool m_stageChooser = false;
 	sf::Font menuFont;
 
+	sf::Text startText;
+	sf::Text exitText;
+	sf::Text pauseText;
+	sf::Text stageText;
+	sf::Text stageOne;
+	sf::Text stageTwo;
+	sf::Text stageThree;
+	sf::Text stageFour;
+	sf::Sprite menuSprite;
+
 public:
 	Menu();
 	~Menu();
@@ -30,5 +40,18 @@ public:
 
 	void setPaused(const bool pause);
 	bool getPaused() const;
+
+	void updateMenuColor();
+
+	sf::Text getStartText();
+	sf::Sprite getMenuSprite();
+	sf::Text getExitText();
+	sf::Text getStageText();
+	sf::Text getStageOneText();
+	sf::Text getStageTwoText();
+	sf::Text getStageThreeText();
+	sf::Text getStageFourText();
+	sf::Text getPauseText();
+
 	sf::Font getMenuFont();
 };
