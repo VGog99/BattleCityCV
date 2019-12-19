@@ -157,14 +157,17 @@ void Engine::runGame() {
 
 bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 {
+	sf::FloatRect intersection;
 
 	switch (direction) {
 	case DIR_UP:
 		
-		if (handleCollision(tankToMove))
-			return false;
-
 		tankToMove->m_tankSprite.move(0, -speed);
+
+		if (handleCollision(tankToMove, intersection)) {
+			tankToMove->m_tankSprite.move(0, intersection.height);
+			return false;
+		}
 
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 		{
@@ -175,10 +178,12 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 	case DIR_DOWN:
 
-		if (handleCollision(tankToMove))
-			return false;
-
 		tankToMove->m_tankSprite.move(0, speed);
+
+		if (handleCollision(tankToMove, intersection)) {
+			tankToMove->m_tankSprite.move(0, -intersection.height);
+			return false;
+		}
 
 		if (tankToMove->m_tankSprite.getRotation() != 180)
 			tankToMove->m_tankSprite.setRotation(180.f);
@@ -187,10 +192,12 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 	case DIR_LEFT:
 
-		if (handleCollision(tankToMove))
-			return false;
-
 		tankToMove->m_tankSprite.move(-speed, 0);
+
+		if (handleCollision(tankToMove, intersection)) {
+			tankToMove->m_tankSprite.move(intersection.width, 0);
+			return false;
+		}
 
 		if (tankToMove->m_tankSprite.getRotation() != -90)
 			tankToMove->m_tankSprite.setRotation(-90.f);
@@ -199,10 +206,12 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 	case DIR_RIGHT:
 
-		if (handleCollision(tankToMove))
-			return false;
-
 		tankToMove->m_tankSprite.move(speed, 0);
+
+		if (handleCollision(tankToMove, intersection)) {
+			tankToMove->m_tankSprite.move(-intersection.width, 0);
+			return false;
+		}
 
 		if (tankToMove->m_tankSprite.getRotation() != 90)
 			tankToMove->m_tankSprite.setRotation(90.f);
@@ -241,9 +250,8 @@ bool Engine::bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction
 		return true;
 }
 
-bool Engine::handleCollision(Tank* tankToCheck)
+bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 {
-	// todo: ramane blocat sometimes, presupun ca salveaza un lastNonCollided gresit in anumite cazuri, o sa rezolv candva
 	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
 
 	for (auto enemyTank : m_enemyTanks) {
@@ -253,15 +261,14 @@ bool Engine::handleCollision(Tank* tankToCheck)
 
 		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
 
-		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+		if (firstSpriteBounds.intersects(secondSpriteBounds, intersection)) {
+			//tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
 			return true;
 		}
 	}
 
 	if (tankToCheck != m_localPlayerTank) {
-		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
-			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds(), intersection)) {
 			return true;
 		}
 	}
@@ -273,13 +280,11 @@ bool Engine::handleCollision(Tank* tankToCheck)
 
 		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
 
-		if (firstSpriteBounds.intersects(secondSpriteBounds)) {
-			tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
+		if (firstSpriteBounds.intersects(secondSpriteBounds, intersection)) {
 			return true;
 		}
 	}
 	
-	tankToCheck->setLastNonCollidedPosition(std::make_pair(tankToCheck->m_tankSprite.getPosition().x, tankToCheck->m_tankSprite.getPosition().y));
 	return false;
 }
 

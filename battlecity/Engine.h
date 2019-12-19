@@ -32,7 +32,7 @@ public:
 	void runGame();
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
 	bool bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction);
-	bool handleCollision(Tank* tankToCheck);
+	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
 	void setUpWorld();
 	void doLocalPlayerMovement();
 };
