@@ -34,9 +34,6 @@ void Engine::runGame() {
 	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
 
-	// load map
-	setUpWorld();
-
 	while (window.isOpen())
 	{
 		if (menu.getIsInMenu()) {
@@ -46,92 +43,88 @@ void Engine::runGame() {
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption--;
-					savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
 					menu.setMenuOption(savedMenuOption);
+					continue;
 				}
-
-				m_localPlayerTank->setTankDirection(DIR_UP);
-				logger.Logi("The player is moving upwards");
+				else {
+					m_localPlayerTank->setTankDirection(DIR_UP);
+					logger.Logi("The player is moving upwards");
+				}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 				
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption++;
-					savedMenuOption = std::clamp(savedMenuOption, 0, 1);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 					menu.setMenuOption(savedMenuOption);
 				}
+				else {
+					m_localPlayerTank->setTankDirection(DIR_DOWN);
+					logger.Logi("The player moved downwards");
+				}
 
-				m_localPlayerTank->setTankDirection(DIR_DOWN);
-				logger.Logi("The player moved downwards");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
-				m_localPlayerTank->setTankDirection(DIR_LEFT);
-				logger.Logi("The player moved to the left");
+				if (!menu.getIsInMenu()) {
+					m_localPlayerTank->setTankDirection(DIR_LEFT);
+					logger.Logi("The player moved to the left");
+				}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 
-				m_localPlayerTank->setTankDirection(DIR_RIGHT);
-				logger.Logi("The player moved to the right");
+				if (!menu.getIsInMenu()) {
+					m_localPlayerTank->setTankDirection(DIR_RIGHT);
+					logger.Logi("The player moved to the right");
+				}
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter) {
 
-				if (!menu.getMenuOption())
-				{
-					logger.Logi("Game started");
+				if (menu.getIsInMenu() && menu.getMenuOption() == 0 && !menu.getStageChooser())
+					menu.setStageChooser(true);
+				else if (menu.getStageChooser() && menu.getIsInMenu()) {
+					setUpWorld(menu.getMenuOption());
+					menu.setStageChooser(false);
 					menu.setIsInMenu(false);
 				}
-				else
-				{
-					logger.Logi("You didn't want to play our game :(");
-					window.close();
-				}
+
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P) {
 				
-				if (menu.getPaused())
-					menu.setPaused(false);
-				else
-				{
-					menu.setPaused(true);
-					logger.Logi("The game was paused");
-				}
+				menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				window.close();
 			}
 		}
 
 		window.clear();
 
 		//draw stuff
-		if (menu.getIsInMenu()) {
-
-			if (!menu.getStageChooser()) {
-				window.draw(menu.getMenuSprite());
-				window.draw(menu.getStartText());
-				window.draw(menu.getExitText());
-			}
-			else {
-				window.draw(menu.getStageText());
-				window.draw(menu.getStageOneText());
-				window.draw(menu.getStageTwoText());
-				window.draw(menu.getStageThreeText());
-				window.draw(menu.getStageFourText());
-				//De incarcat stage-urile
-			}
-
+		if (menu.getIsInMenu() && !menu.getStageChooser()) {
+			window.draw(menu.getMenuSprite());
+			window.draw(menu.getStartText());
+			window.draw(menu.getExitText());
 		}
-
-		if (menu.getPaused()) {
+		else if (menu.getStageChooser()) {
+			window.draw(menu.getStageText());
+			window.draw(menu.getStageOneText());
+			window.draw(menu.getStageTwoText());
+			window.draw(menu.getStageThreeText());
+			window.draw(menu.getStageFourText());
+		}
+		else if (menu.getPaused()) {
+			std::cout << "Game paused";
 			window.draw(menu.getPauseText());
 		}
-
-		if (!menu.getIsInMenu()) {
+		else if (!menu.getIsInMenu()) {
 
 			//do movement and draw local player
 			doLocalPlayerMovement();
@@ -170,9 +163,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		}
 
 		if (tankToMove->m_tankSprite.getRotation() != 0)
-		{
 			tankToMove->m_tankSprite.setRotation(0.f);
-		}
 		
 		break;
 
@@ -217,7 +208,6 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 			tankToMove->m_tankSprite.setRotation(90.f);
 
 		break;
-
 	}
 
 	// daca s-a executat miscarea, returnam true
@@ -295,14 +285,14 @@ void Engine::doLocalPlayerMovement()
 	gameEngine.moveTank(m_localPlayerTank, m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
 }
 
-void Engine::setUpWorld()
+void Engine::setUpWorld(unsigned short stage)
 {
 	unsigned short x = 0;
 	unsigned short y = 0;
 	float worldEntitySize = 48;
-
+	std::vector<std::string> fileNames = { "../stages/stage1.txt", "../stages/stage2.txt", "../stages/stage3.txt", "../stages/stage4.txt" };
 	std::string inputFromFile;
-	std::ifstream file("../stages/stage3.txt");
+	std::ifstream file(fileNames.at(stage));
 
 	while (std::getline(file, inputFromFile)) {
 		x = 0;

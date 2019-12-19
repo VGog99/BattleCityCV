@@ -15,6 +15,7 @@ class Engine {
 private:
 	bool m_gameStarted;
 	bool m_gameOver;
+	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
 	
 	Tank* m_localPlayerTank = new Tank(265.f, 650.f);
@@ -33,7 +34,7 @@ public:
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
 	bool bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction);
 	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
-	void setUpWorld();
+	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();
 };
 

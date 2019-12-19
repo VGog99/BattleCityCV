@@ -19,19 +19,19 @@ Menu::Menu()
 	stageThree = sf::Text("Stage 3", menuFont);
 	stageFour = sf::Text("Stage 4", menuFont);
 
-	startText.setPosition(287, 310);
-	exitText.setPosition(302, 380);
+	startText.setPosition(287, 350);
+	exitText.setPosition(302, 420);
 	pauseText.setPosition(270, 360);
 	stageText.setCharacterSize(25);
-	stageText.setPosition(50, 150);
+	stageText.setPosition(150, 150);
 	stageOne.setCharacterSize(20);
-	stageOne.setPosition(200, 250);
+	stageOne.setPosition(280, 300);
 	stageTwo.setCharacterSize(20);
-	stageTwo.setPosition(200, 300);
+	stageTwo.setPosition(280, 350);
 	stageThree.setCharacterSize(20);
-	stageThree.setPosition(200, 350);
+	stageThree.setPosition(280, 400);
 	stageFour.setCharacterSize(20);
-	stageFour.setPosition(200, 400);
+	stageFour.setPosition(280, 450);
 }
 
 Menu::~Menu()
