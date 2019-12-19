@@ -1,15 +1,17 @@
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-1 11 0 0 1 0 0 12 1 0 0 0 0 13 1
-1 0 2 0 1 0 0 0 2 0 2 0 2 0 1
-1 0 2 0 0 0 0 2 2 0 2 1 2 0 1
-1 0 0 0 2 0 0 0 0 0 1 0 2 0 1
-1 6 0 0 2 0 0 1 0 0 2 6 2 1 1
-1 6 6 0 0 0 2 0 2 0 0 6 0 0 1
-1 0 2 2 2 6 6 6 0 0 0 6 2 0 1
-1 0 0 0 1 6 2 0 2 0 2 0 2 0 1
-1 1 2 0 1 0 2 0 2 0 0 0 2 0 1
-1 0 2 0 2 0 2 2 2 0 2 1 2 0 1
-1 0 2 0 2 0 0 0 0 0 0 0 0 0 1
-1 0 2 0 0 0 2 2 2 0 2 0 2 0 1
-1 0 2 0 2 4 2 3 2 0 2 2 2 0 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+wwwwwwwwwwwwwww
+wh  b  hs    hw
+w b s   b b b w
+w b    bb bsb w
+w   b     s b w
+wg  b  s  bgbsw
+wgg   bgb  gggw
+wgbbbggg   gb w
+w   sgb b b b w
+wsb s b b   b w
+w b b bbb bsb w
+w b b         w
+w b   bbb b b w
+w b bpbeb bbb w
+wwwwwwwwwwwwwww
+
+

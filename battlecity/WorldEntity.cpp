@@ -37,7 +37,7 @@ WorldEntity::WorldEntity(entityType type, float posX, float posY) : m_entityType
 	}
 
 	m_worldEntitySprite.setTexture(m_worldEntityTexture);
-	if (type != entityType::Brick && type != entityType::Steel)
+	if (type != entityType::Brick && type != entityType::Steel && type != entityType::Bush && type != entityType::Water && type != entityType::Ice)
 		m_worldEntitySprite.setOrigin(sf::Vector2f(m_worldEntityTexture.getSize().x * 0.5, m_worldEntityTexture.getSize().y * 0.5));
 
 	m_worldEntitySprite.setPosition(m_entityPosition.first, m_entityPosition.second);

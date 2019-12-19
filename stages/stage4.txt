@@ -1,15 +1,15 @@
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
-1 11 0 0 0 0 0 12 0 0 0 0 0 13 1
-1 0 2 0 2 2 0 0 8 8 8 2 2 0 1
-1 0 2 0 0 2 0 1 8 8 8 8 8 0 1
-1 8 8 8 1 2 0 0 2 8 8 8 8 0 1
-1 8 8 8 8 8 8 2 2 2 0 0 0 0 1
-1 0 0 0 1 8 8 8 2 2 0 0 1 1 1
-1 2 2 2 2 2 8 8 8 8 8 8 2 2 1
-1 0 0 0 0 2 2 8 8 8 1 0 0 0 1
-1 0 2 2 2 0 8 8 8 2 2 0 2 0 1
-1 8 8 8 2 8 0 0 0 0 2 0 2 0 1
-1 8 8 8 8 8 1 0 1 0 0 2 2 0 1
-1 2 8 8 8 8 2 2 2 0 0 2 0 0 1
-1 2 2 1 0 4 2 3 2 0 2 0 2 0 1
-1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+wwwwwwwwwwwwwww
+wh     h     hw
+w b bb  iiibb w
+w b  b siiiii w
+wiiisb  biiii w
+wiiiiiibbb    w
+w   siiibb  ssw
+wbbbbbiiiiiibbw
+w    bbiiis   w
+w bbb iiibb b w
+wiiibi    b b w
+wiiiiis s  bb w
+wbiiiibbb  b  w
+wbbs pbeb b b w
+wwwwwwwwwwwwwww

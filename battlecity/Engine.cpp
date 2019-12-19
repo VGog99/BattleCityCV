@@ -277,6 +277,8 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 
 		if (entity->getType() == entityType::Bush)
 			continue;
+		if (entity->getType() == entityType::Ice)
+			continue;
 
 		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
 
@@ -300,7 +302,7 @@ void Engine::setUpWorld()
 	float worldEntitySize = 48;
 
 	std::string inputFromFile;
-	std::ifstream file("../stages/stage1.txt");
+	std::ifstream file("../stages/stage3.txt");
 
 	while (std::getline(file, inputFromFile)) {
 		x = 0;
@@ -346,15 +348,39 @@ void Engine::setUpWorld()
 					break;
 				}
 				case 'g': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'i': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'a': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'h': {
