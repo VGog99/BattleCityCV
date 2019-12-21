@@ -43,7 +43,12 @@ void Engine::runGame() {
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (event.type == sf::Event::Closed)
+			{
+				logger.Logi("See you later");
+				window.close();
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
@@ -94,13 +99,23 @@ void Engine::runGame() {
 					menu.setStageChooser(false);
 					menu.setIsInMenu(false);
 				}
+				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 1) {
+					logger.Logi("You don't want to play our game :'(");
+					window.close();
+				}
+
 
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P) {
 				
 				menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
+				if (menu.getPaused() == false)
+					logger.Logi("Game resumed");
+				else
+					logger.Logi("Game paused");
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				logger.Logi("Game closed");
 				window.close();
 			}
 		}
@@ -121,7 +136,6 @@ void Engine::runGame() {
 			window.draw(menu.getStageFourText());
 		}
 		else if (menu.getPaused()) {
-			std::cout << "Game paused";
 			window.draw(menu.getPauseText());
 		}
 		else if (!menu.getIsInMenu()) {

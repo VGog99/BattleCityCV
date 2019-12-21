@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CppUnitTest.h"
+#include "../battlecity/Tank.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -9,51 +10,11 @@ namespace BCUnitTesting
 	{
 	public:
 		
-		//TEST_METHOD(Constructor)
-		//{
-		//	//Enemy enemy(1, 1, 1, 1, '1');
-		//	Assert::IsTrue(true);
-		//	//Assert::AreEqual(L"Ionel", L"Ionel");
-
-		//}
-		//TEST_METHOD(getCanAdvanceBrick)
-		//{
-		//	//Brick b;
-		//	//b.setCanAdvance(0);
-		//	Assert::AreEqual(false,false);
-		//}
-		/*
-		TEST_METHOD(getCanAdvanceIce)
+		TEST_METHOD(Constructor)
 		{
-			Ice i;
-			i.setCanAdvance(0);
-			Assert::AreEqual(false, false);
+			Tank tank;
+			tank.setTankDirection('0');
+			Assert::AreEqual(tank.getTankDirection(), '0');
 		}
-
-		TEST_METHOD(getCanAdvanceBush)
-		{
-			Bush b;
-			b.setCanAdvance(0);
-			Assert::AreEqual(false, false);
-		}
-		TEST_METHOD(getCanAdvanceWater)
-		{
-			Water w;
-			w.setCanAdvance(0);
-			Assert::AreEqual(false, false);
-		}
-		TEST_METHOD(setCanHideTank)
-		{
-			Bush b;
-			b.setCanHideTank(0);
-			Assert::AreEqual(false, false);
-		};
-		TEST_METHOD(setCanShootThrough)
-		{
-			Brick b;
-			b.setCanShootThrough(0);
-			Assert::AreEqual(false, false);
-		};
-		*/
 	};
 }
