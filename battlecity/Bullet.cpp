@@ -41,7 +41,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		case DIR_UP: this->m_bulletSprite.move(0, -1); break;
 		case DIR_DOWN: this->m_bulletSprite.move(0, 1); break;
 		case DIR_LEFT: this->m_bulletSprite.move(-1, 0); break;
-		case DIR_RIGHT: this->m_bulletSprite.move(-1, 0); break;
+		case DIR_RIGHT: this->m_bulletSprite.move(1, 0); break;
 	}
 
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();

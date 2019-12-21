@@ -25,7 +25,7 @@ void Engine::runGame() {
 	sf::Music menuMusic;
 
 	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
-		logger.Logi("Nu s-a putut incarca fisierul de muzica.");
+		logger.Logi(Logger::Level::Error,"Nu s-a putut incarca fisierul de muzica.");
 
 	menuMusic.setVolume(0.60f);
 	menuMusic.play();
@@ -46,7 +46,7 @@ void Engine::runGame() {
 
 			if(!menu.getIsInMenu()) {
 				m_localPlayerTank->setTankDirection(DIR_UP);
-				logger.Logi("The player is moving upwards");
+				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
 				m_localPlayerTankIsMoving = true;
 			}
 		}
@@ -54,7 +54,7 @@ void Engine::runGame() {
 
 			if (!menu.getIsInMenu()) {
 				m_localPlayerTank->setTankDirection(DIR_DOWN);
-				logger.Logi("The player moved downwards");
+				logger.Logi(Logger::Level::Debug,"The player moved downwards");
 				m_localPlayerTankIsMoving = true;
 			}
 
@@ -63,7 +63,7 @@ void Engine::runGame() {
 
 			if (!menu.getIsInMenu()) {
 				m_localPlayerTank->setTankDirection(DIR_LEFT);
-				logger.Logi("The player moved to the left");
+				logger.Logi(Logger::Level::Debug,"The player moved to the left");
 				m_localPlayerTankIsMoving = true;
 			}
 		}
@@ -71,12 +71,12 @@ void Engine::runGame() {
 
 			if (!menu.getIsInMenu()) {
 				m_localPlayerTank->setTankDirection(DIR_RIGHT);
-				logger.Logi("The player moved to the right");
+				logger.Logi(Logger::Level::Debug,"The player moved to the right");
 				m_localPlayerTankIsMoving = true;
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			logger.Logi("Game closed");
+			logger.Logi(Logger::Level::Info,"Game closed");
 			window.close();
 		}
 
@@ -85,7 +85,7 @@ void Engine::runGame() {
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				logger.Logi("See you later");
+				logger.Logi(Logger::Level::Info,"See you later");
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Up)
@@ -132,7 +132,7 @@ void Engine::runGame() {
 					menu.setIsInMenu(false);
 				}
 				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 1) {
-					logger.Logi("You don't want to play our game :'(");
+					logger.Logi(Logger::Level::Error, "Really, you don't want to play our game? :'(");
 					window.close();
 				}
 
@@ -142,11 +142,12 @@ void Engine::runGame() {
 				
 				menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
 				if (menu.getPaused() == false)
-					logger.Logi("Game resumed");
+					logger.Logi(Logger::Level::Info, "Game resumed");
 				else
-					logger.Logi("Game paused");
+					logger.Logi(Logger::Level::Info, "Game paused");
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+				logger.Logi(Logger::Level::Debug, "Fire");
 				char tempDirection = m_localPlayerTank->getTankDirection();
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
 				
@@ -322,6 +323,7 @@ void Engine::doLocalPlayerMovement()
 
 void Engine::setUpWorld(unsigned short stage)
 {
+	logger.Logi(Logger::Level::Info, "Game Started");
 	unsigned short x = 0;
 	unsigned short y = 0;
 	float worldEntitySize = 48;
@@ -421,6 +423,7 @@ void Engine::setUpWorld(unsigned short stage)
 		}
 		y++;
 	}
+	logger.Logi(Logger::Level::Info, m_worldEntities.size(), " elements were loaded in this stage ");
 }
 
 

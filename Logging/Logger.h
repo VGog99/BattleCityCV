@@ -26,15 +26,50 @@ private:
 public:
 	Level m_minLogLevel;
 	Logger(std::ostream& out, Level minLogLevel = Level::Warning);
-	void Log(const std::string& message, Level level);
 	template<class ... Args>
-	void Logi(Args&& ... params)
+	void Logi(Level level, Args&& ... params)
 	{
-		std::cout << "[Info]";
-		std::time_t crtTime = std::time(nullptr);
-		std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
-		((std::cout << ' ' << std::forward<Args>(params)), ...);
-		std::cout << '\n';
+		if (level < m_minLogLevel)
+			return;
+		switch (level)
+		{
+		case Logger::Level::Debug:
+		{
+			std::cout << "[Debug]";
+			std::time_t crtTime = std::time(nullptr);
+			std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
+			((std::cout << ' ' << std::forward<Args>(params)), ...);
+			std::cout << '\n';
+			break;
+		}
+		case Logger::Level::Info:
+		{
+			std::cout << "[Info]";
+			std::time_t crtTime = std::time(nullptr);
+			std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
+			((std::cout << ' ' << std::forward<Args>(params)), ...);
+			std::cout << '\n';
+			break;
+		}
+		case Logger::Level::Warning:
+		{
+			std::cout << "[Warning]";
+			std::time_t crtTime = std::time(nullptr);
+			std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
+			((std::cout << ' ' << std::forward<Args>(params)), ...);
+			std::cout << '\n';
+			break;
+		}
+		case Logger::Level::Error:
+		{
+			std::cout << "[Error]";
+			std::time_t crtTime = std::time(nullptr);
+			std::cout << '[' << std::put_time(std::localtime(&crtTime), "%Y-%m-%d %H:%M:%S") << ']';
+			((std::cout << ' ' << std::forward<Args>(params)), ...);
+			std::cout << '\n';
+			break;
+		}
+		}
 	}
 	~Logger();
 };
