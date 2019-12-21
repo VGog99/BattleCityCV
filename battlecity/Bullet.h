@@ -4,25 +4,27 @@
 #include <SFML\Graphics.hpp>
 #include <SFML/Graphics.hpp>
 #include "Macros.h"
+#include "WorldEntity.h"
+#include "Enemy.h"
+#include <algorithm>
 
 class Bullet
 {
 protected:
 
 	Position m_bulletPosition;
-	Position m_bulletLastNonCollidedPosition;
 	char m_bulletDirection = DIR_UP;
 
 public:
 	Bullet();
 	~Bullet();
-	Bullet(float posX, float posY);
+	Bullet(Position position, char direction);
 
 	sf::Texture m_bulletTexture;
 	sf::Sprite m_bulletSprite;
 	sf::Texture getTexture();
 	Position getPosition() const;
-	Position getLastNonCollidedPosition() const;
-	void setLastNonCollidedPosition(const Position lastNonCollidedPosition);
+	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& m_enemyTanks);
+
 };
 

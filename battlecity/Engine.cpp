@@ -75,6 +75,10 @@ void Engine::runGame() {
 				m_localPlayerTankIsMoving = true;
 			}
 		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			logger.Logi("Game closed");
+			window.close();
+		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -142,10 +146,18 @@ void Engine::runGame() {
 				else
 					logger.Logi("Game paused");
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				logger.Logi("Game closed");
-				window.close();
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+				char tempDirection = m_localPlayerTank->getTankDirection();
+				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
+				
+				switch (tempDirection) {
+					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 25), tempDirection)); break;
+					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 25), tempDirection)); break;
+					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 25, tempPos.y), tempDirection)); break;
+					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 25, tempPos.y), tempDirection)); break;
+				}
 			}
+
 		}
 
 		window.clear();
@@ -183,7 +195,14 @@ void Engine::runGame() {
 				window.draw(entity->getSprite());
 			}
 
-			window.draw(m_bullet->m_bulletSprite);
+			//bullet logic and draw bullets
+			for (auto& bullets : m_bulletVec) {
+
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks))
+					break;
+
+				window.draw(bullets.get()->m_bulletSprite);
+			}
 		}
 
 		window.display();
@@ -256,32 +275,6 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 	return true;
 }
 
-bool Engine::bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction)
-{	
-		switch (direction) {
-		case DIR_UP:
-
-			bullet->m_bulletSprite.move(0, -15);
-			break;
-
-		case DIR_DOWN:
-
-			bullet->m_bulletSprite.move(0, 15);
-			break;
-
-		case DIR_LEFT:
-
-			bullet->m_bulletSprite.move(-15 ,0);
-			break;
-
-		case DIR_RIGHT:
-
-			bullet->m_bulletSprite.move(15 ,0);
-			break;
-		}
-		return true;
-}
-
 bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 {
 	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
@@ -294,7 +287,6 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
 
 		if (firstSpriteBounds.intersects(secondSpriteBounds, intersection)) {
-			//tankToCheck->m_tankSprite.setPosition(tankToCheck->getLastNonCollidedPosition().first, tankToCheck->getLastNonCollidedPosition().second);
 			return true;
 		}
 	}

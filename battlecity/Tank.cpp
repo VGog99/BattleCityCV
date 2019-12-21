@@ -32,15 +32,6 @@ void Tank::setTankDirection(char direction)
 	m_tankDirection = direction;
 }
 
-Position Tank::getLastNonCollidedPosition() const
-{
-	return m_tankLastNonCollidedPosition;
-}
-
-void Tank::setLastNonCollidedPosition(const Position lastNonCollidedPosition)
-{
-	m_tankLastNonCollidedPosition = lastNonCollidedPosition;
-}
 
 float Tank::getTankSpeed()
 {

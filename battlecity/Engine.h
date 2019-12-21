@@ -21,8 +21,9 @@ private:
 	Tank* m_localPlayerTank;
 	std::vector<WorldEntity*> m_worldEntities;
 	std::vector<Enemy*> m_enemyTanks;
+	std::vector<std::unique_ptr<Bullet>> m_bulletVec;
 
-	Bullet* m_bullet = new Bullet(265.f, 650.f);
+	Bullet* m_bullet = new Bullet(std::make_pair(297.f, 564.f), DIR_RIGHT);
 	//std::vector<Bullet*> m_bullet;
 
 public:
@@ -31,7 +32,6 @@ public:
 	~Engine();
 	void runGame();
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
-	bool bulletLogic(Bullet* bullet, Tank* tankToShoot, const char direction);
 	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
 	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();

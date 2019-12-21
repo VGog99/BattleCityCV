@@ -23,10 +23,7 @@ public:
 	Position getPosition() const;
 	char getTankDirection();
 	void setTankDirection(char direction);
-	
-	Position getLastNonCollidedPosition() const;
-	void setLastNonCollidedPosition(const Position lastNonCollidedPosition);
-	
+
 	float getTankSpeed();
 	void setTankSpeed(float speed);
 
