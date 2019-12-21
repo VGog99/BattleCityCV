@@ -38,10 +38,10 @@ Position Bullet::getPosition() const
 bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& m_enemyTanks)
 {
 	switch (m_bulletDirection) {
-		case DIR_UP: this->m_bulletSprite.move(0, -1); break;
-		case DIR_DOWN: this->m_bulletSprite.move(0, 1); break;
-		case DIR_LEFT: this->m_bulletSprite.move(-1, 0); break;
-		case DIR_RIGHT: this->m_bulletSprite.move(1, 0); break;
+		case DIR_UP: this->m_bulletSprite.move(0, -4); break;
+		case DIR_DOWN: this->m_bulletSprite.move(0, 4); break;
+		case DIR_LEFT: this->m_bulletSprite.move(-4, 0); break;
+		case DIR_RIGHT: this->m_bulletSprite.move(4, 0); break;
 	}
 
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
@@ -56,11 +56,14 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			continue;
 
 		sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
-		auto itr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
+		auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
+		auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [entity](WorldEntity* element) {return entity == element; });
 
 		if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
 
-			bullets.erase(itr);
+			bullets.erase(bulletItr);
+			if (entity->getType() == entityType::Brick)
+				worldEntities.erase(worldEntityItr);
 
 			return false;
 		}
