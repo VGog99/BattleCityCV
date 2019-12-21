@@ -11,6 +11,7 @@ Engine::Engine()
 	m_gameOver = false;
 	m_gameStarted = false;
 	m_localPlayerKills = 0;
+	m_localPlayerTankIsMoving = false;
 }
 
 Engine::~Engine()
@@ -40,6 +41,41 @@ void Engine::runGame() {
 			menu.updateMenuColor();
 		}
 
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+
+			if(!menu.getIsInMenu()) {
+				m_localPlayerTank->setTankDirection(DIR_UP);
+				logger.Logi("The player is moving upwards");
+				m_localPlayerTankIsMoving = true;
+			}
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+
+			if (!menu.getIsInMenu()) {
+				m_localPlayerTank->setTankDirection(DIR_DOWN);
+				logger.Logi("The player moved downwards");
+				m_localPlayerTankIsMoving = true;
+			}
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+
+			if (!menu.getIsInMenu()) {
+				m_localPlayerTank->setTankDirection(DIR_LEFT);
+				logger.Logi("The player moved to the left");
+				m_localPlayerTankIsMoving = true;
+			}
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+
+			if (!menu.getIsInMenu()) {
+				m_localPlayerTank->setTankDirection(DIR_RIGHT);
+				logger.Logi("The player moved to the right");
+				m_localPlayerTankIsMoving = true;
+			}
+		}
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -48,47 +84,39 @@ void Engine::runGame() {
 				logger.Logi("See you later");
 				window.close();
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Up)
+			{
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption--;
-					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 4 : 1);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 					menu.setMenuOption(savedMenuOption);
-					continue;
 				}
-				else {
-					m_localPlayerTank->setTankDirection(DIR_UP);
-					logger.Logi("The player is moving upwards");
+				else
+				{
+					m_localPlayerTankIsMoving = false;
 				}
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Down)
+			{
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption++;
 					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
 					menu.setMenuOption(savedMenuOption);
 				}
-				else {
-					m_localPlayerTank->setTankDirection(DIR_DOWN);
-					logger.Logi("The player moved downwards");
-				}
-
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-
-				if (!menu.getIsInMenu()) {
-					m_localPlayerTank->setTankDirection(DIR_LEFT);
-					logger.Logi("The player moved to the left");
+				else
+				{
+					m_localPlayerTankIsMoving = false;
 				}
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-
-				if (!menu.getIsInMenu()) {
-					m_localPlayerTank->setTankDirection(DIR_RIGHT);
-					logger.Logi("The player moved to the right");
-				}
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)
+			{
+				m_localPlayerTankIsMoving = false;
+			}
+			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Right)
+			{
+				m_localPlayerTankIsMoving = false;
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter) {
 
@@ -296,7 +324,8 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 
 void Engine::doLocalPlayerMovement()
 {
-	gameEngine.moveTank(m_localPlayerTank, m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
+	if (m_localPlayerTankIsMoving)
+		gameEngine.moveTank(m_localPlayerTank, m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
 }
 
 void Engine::setUpWorld(unsigned short stage)
@@ -389,6 +418,10 @@ void Engine::setUpWorld(unsigned short stage)
 				}
 				case 'h': {
 					m_enemyTanks.push_back(new Enemy(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					break;
+				}
+				case 'p': {
+					m_localPlayerTank = new Tank(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2);
 				}
 			}
 

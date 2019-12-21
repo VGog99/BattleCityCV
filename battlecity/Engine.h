@@ -17,9 +17,8 @@ private:
 	bool m_gameOver;
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
-	
-	Tank* m_localPlayerTank = new Tank(265.f, 650.f);
-
+	bool m_localPlayerTankIsMoving;
+	Tank* m_localPlayerTank;
 	std::vector<WorldEntity*> m_worldEntities;
 	std::vector<Enemy*> m_enemyTanks;
 
