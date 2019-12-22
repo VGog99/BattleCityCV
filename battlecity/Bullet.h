@@ -24,9 +24,11 @@ public:
 	sf::Texture m_bulletTexture;
 	sf::Sprite m_bulletSprite;
 
+	Tank* getFiredBy() const;
+
 	sf::Texture getTexture();
 	Position getPosition() const;
-	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, Tank* localPlayerTank);
+	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, const Tank* localPlayerTank);
 
 };
 

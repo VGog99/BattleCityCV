@@ -31,6 +31,7 @@ public:
 	~Engine();
 	void runGame();
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
+	bool tankAlreadyFired(Tank* tankToCheck);
 	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
 	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();

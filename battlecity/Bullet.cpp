@@ -25,6 +25,11 @@ Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosit
 	}
 }
 
+Tank* Bullet::getFiredBy() const
+{
+	return m_firedBy;
+}
+
 sf::Texture Bullet::getTexture()
 {
 	return m_bulletTexture;
@@ -35,7 +40,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, Tank* localPlayerTank)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, const Tank* localPlayerTank)
 {
 	switch (m_bulletDirection) {
 		case DIR_UP: this->m_bulletSprite.move(0, -4); break;

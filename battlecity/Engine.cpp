@@ -150,6 +150,9 @@ void Engine::runGame() {
 				if (menu.getIsInMenu())
 					continue;
 
+				if (tankAlreadyFired(m_localPlayerTank))
+					continue;
+
 				logger.Logi(Logger::Level::Debug, "Fire");
 				auto tempDirection = m_localPlayerTank->getTankDirection();
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
@@ -277,6 +280,17 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 	// daca s-a executat miscarea, returnam true
 	return true;
+}
+
+bool Engine::tankAlreadyFired(Tank* tankToCheck)
+{
+	for (auto& bullet : m_bulletVec) {
+		if (bullet->getFiredBy() == tankToCheck) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
