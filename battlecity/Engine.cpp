@@ -41,7 +41,6 @@ void Engine::runGame() {
 			menu.updateMenuColor();
 		}
 
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
 			if(!menu.getIsInMenu()) {
@@ -147,15 +146,19 @@ void Engine::runGame() {
 					logger.Logi(Logger::Level::Info, "Game paused");
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+
+				if (menu.getIsInMenu())
+					continue;
+
 				logger.Logi(Logger::Level::Debug, "Fire");
-				char tempDirection = m_localPlayerTank->getTankDirection();
+				auto tempDirection = m_localPlayerTank->getTankDirection();
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
 				
 				switch (tempDirection) {
-					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection)); break;
-					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection)); break;
-					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection)); break;
-					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection)); break;
+					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, m_localPlayerTank)); break;
+					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, m_localPlayerTank)); break;
+					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank)); break;
+					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank)); break;
 				}
 			}
 
@@ -199,7 +202,7 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_localPlayerTank))
 					break;
 
 				window.draw(bullets.get()->m_bulletSprite);

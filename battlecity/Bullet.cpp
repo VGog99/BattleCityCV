@@ -9,7 +9,7 @@ Bullet::~Bullet()
 {
 }
 
-Bullet::Bullet(Position position, char direction): m_bulletPosition(position), m_bulletDirection(direction)
+Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy)
 {
 	m_bulletTexture.loadFromFile("../resources/bullet.png");
 	m_bulletSprite.setTexture(m_bulletTexture);
@@ -35,7 +35,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& m_enemyTanks)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, Tank* localPlayerTank)
 {
 	switch (m_bulletDirection) {
 		case DIR_UP: this->m_bulletSprite.move(0, -4); break;
@@ -45,6 +45,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 	}
 
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
+	auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
 
 	for (auto entity : worldEntities) {
 
@@ -56,7 +57,6 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			continue;
 
 		sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
-		auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
 		auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [entity](WorldEntity* element) {return entity == element; });
 
 		if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
@@ -68,6 +68,34 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			return false;
 		}
 	}
+
+	for (auto enemy : enemyTanks) {
+
+		if (m_firedBy == enemy)
+			continue;
+
+		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
+		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [enemy](Enemy* element) {return enemy == element; });
+		
+		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
+			bullets.erase(bulletItr);
+			enemyTanks.erase(enemyItr);
+
+			return false;
+		}
+	}
+
+	sf::FloatRect localPlayerBounds = localPlayerTank->m_tankSprite.getGlobalBounds();
+
+	if (bulletSpriteBounds.intersects(localPlayerBounds)) {
+
+		if (m_firedBy == localPlayerTank)
+			return true;
+
+		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
+		std::cout << "[!] Local player was shot! \n";
+	}
+
 
 	return true;
 }

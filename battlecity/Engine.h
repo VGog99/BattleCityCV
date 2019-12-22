@@ -23,7 +23,6 @@ private:
 	std::vector<Enemy*> m_enemyTanks;
 	std::vector<std::unique_ptr<Bullet>> m_bulletVec;
 
-	Bullet* m_bullet = new Bullet(std::make_pair(297.f, 564.f), DIR_RIGHT);
 	//std::vector<Bullet*> m_bullet;
 
 public:
