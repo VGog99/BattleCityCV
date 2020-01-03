@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML\Graphics.hpp>
 #include "Macros.h"
+#include "Animation.h"
 
 class Tank
 {
@@ -10,7 +11,7 @@ protected:
 	Position m_tankPosition;
 	Position m_tankLastNonCollidedPosition;
 	char m_tankDirection = DIR_UP;
-	float m_tankSpeed = 1.5f;
+	float m_tankSpeed = 1.7f;
 
 public:
 	Tank();

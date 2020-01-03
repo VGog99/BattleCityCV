@@ -9,6 +9,7 @@
 #include "Menu.h"
 #include "../Logging/Logger.h"
 #include "Bullet.h"
+#include "Animation.h"
 
 class Engine {
 

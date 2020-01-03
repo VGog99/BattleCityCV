@@ -7,6 +7,7 @@
 #include "WorldEntity.h"
 #include "Enemy.h"
 #include <algorithm>
+#include "Animation.h"
 
 class Bullet
 {

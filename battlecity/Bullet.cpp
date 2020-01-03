@@ -43,10 +43,10 @@ Position Bullet::getPosition() const
 bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, const Tank* localPlayerTank)
 {
 	switch (m_bulletDirection) {
-		case DIR_UP: this->m_bulletSprite.move(0, -4); break;
-		case DIR_DOWN: this->m_bulletSprite.move(0, 4); break;
-		case DIR_LEFT: this->m_bulletSprite.move(-4, 0); break;
-		case DIR_RIGHT: this->m_bulletSprite.move(4, 0); break;
+		case DIR_UP: this->m_bulletSprite.move(0, -5); break;
+		case DIR_DOWN: this->m_bulletSprite.move(0, 5); break;
+		case DIR_LEFT: this->m_bulletSprite.move(-5, 0); break;
+		case DIR_RIGHT: this->m_bulletSprite.move(5, 0); break;
 	}
 
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
@@ -67,6 +67,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
 
 			bullets.erase(bulletItr);
+	
 			if (entity->getType() == entityType::Brick)
 				worldEntities.erase(worldEntityItr);
 

@@ -35,8 +35,10 @@ void Engine::runGame() {
 	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
 
+
 	while (window.isOpen())
 	{
+
 		if (menu.getIsInMenu()) {
 			menu.updateMenuColor();
 		}
@@ -166,7 +168,7 @@ void Engine::runGame() {
 			}
 
 		}
-
+		
 		window.clear();
 
 		//draw stuff
@@ -211,6 +213,7 @@ void Engine::runGame() {
 				window.draw(bullets.get()->m_bulletSprite);
 			}
 		}
+		
 
 		window.display();
 	}
@@ -219,10 +222,10 @@ void Engine::runGame() {
 bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 {
 	sf::FloatRect intersection;
-
+	
 	switch (direction) {
 	case DIR_UP:
-		
+
 		tankToMove->m_tankSprite.move(0, -speed);
 
 		if (handleCollision(tankToMove, intersection)) {
@@ -232,7 +235,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 			tankToMove->m_tankSprite.setRotation(0.f);
-		
+
 		break;
 
 	case DIR_DOWN:
