@@ -52,27 +52,51 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
 	auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
 
-	for (auto &entity : worldEntities) {
+	//for (auto &entity : worldEntities) {
 
-		if (entity->getType() == entityType::Bush)
-			continue;
-		if (entity->getType() == entityType::Ice)
-			continue;
-		if (entity->getType() == entityType::Water)
-			continue;
+	//	if (entity->getType() == entityType::Bush)
+	//		continue;
+	//	if (entity->getType() == entityType::Ice)
+	//		continue;
+	//	if (entity->getType() == entityType::Water)
+	//		continue;
 
-		sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
-		auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [&entity](std::unique_ptr<WorldEntity>& element) {return entity == element; });
+	//	sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
+	//	auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [&entity](std::unique_ptr<WorldEntity>& element) { return entity == element; });
 
-		if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
+	//	if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
 
-			bullets.erase(bulletItr);
-	
-			if (entity->getType() == entityType::Brick)
-				worldEntities.erase(worldEntityItr);
+	//		bullets.erase(bulletItr);
+	//
+	//		if (entity->getType() == entityType::Brick)
+	//			worldEntities.erase(worldEntityItr);
 
-			return false;
-		}
+	//		return false;
+	//	}
+	//}
+
+	std::vector<std::unique_ptr<WorldEntity>>::iterator it;
+
+	for (it = worldEntities.begin(); it < worldEntities.end(); it++) {
+
+			if (it->get()->getType() == entityType::Bush)
+				continue;
+			if (it->get()->getType() == entityType::Ice)
+				continue;
+			if (it->get()->getType() == entityType::Water)
+				continue;
+
+			sf::FloatRect worldEntitySpriteBounds = it->get()->getSprite().getGlobalBounds();
+			
+			if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
+
+				bullets.erase(bulletItr);
+
+				if (it->get()->getType() == entityType::Brick)
+					worldEntities.erase(it);
+
+				return false;
+			}
 	}
 
 	for (auto &enemy : enemyTanks) {
