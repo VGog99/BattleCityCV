@@ -10,6 +10,7 @@
 #include "../Logging/Logger.h"
 #include "Bullet.h"
 #include "Animation.h"
+#include "Macros.h"
 
 class Engine {
 
@@ -19,12 +20,11 @@ private:
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
 	bool m_localPlayerTankIsMoving;
-	Tank* m_localPlayerTank;
-	std::vector<WorldEntity*> m_worldEntities;
-	std::vector<Enemy*> m_enemyTanks;
+	std::unique_ptr<Tank> m_localPlayerTank;
+	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
+	std::vector<std::unique_ptr<Enemy>> m_enemyTanks;
 	std::vector<std::unique_ptr<Bullet>> m_bulletVec;
-
-	//std::vector<Bullet*> m_bullet;
+	std::vector<Position> m_enemySpawnPoints;
 
 public:
 	

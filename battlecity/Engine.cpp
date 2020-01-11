@@ -152,7 +152,7 @@ void Engine::runGame() {
 				if (menu.getIsInMenu())
 					continue;
 
-				if (tankAlreadyFired(m_localPlayerTank))
+				if (tankAlreadyFired(m_localPlayerTank.get()))
 					continue;
 
 				logger.Logi(Logger::Level::Debug, "Fire");
@@ -160,10 +160,10 @@ void Engine::runGame() {
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
 				
 				switch (tempDirection) {
-					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, m_localPlayerTank)); break;
-					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, m_localPlayerTank)); break;
-					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank)); break;
-					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank)); break;
+					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, m_localPlayerTank.get())); break;
+					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, m_localPlayerTank.get())); break;
+					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
+					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
 				}
 			}
 
@@ -194,24 +194,31 @@ void Engine::runGame() {
 			window.draw(m_localPlayerTank->m_tankSprite);
 
 			//do movement and draw enemies
-			for (auto enemyTank : m_enemyTanks) {
+			for (auto &enemyTank : m_enemyTanks) {
 				enemyTank->doMovement();
 				window.draw(enemyTank->m_tankSprite);
 			}
 
 			//draw world entities
-			for (auto entity : m_worldEntities) {
+			for (auto &entity : m_worldEntities) {
 				window.draw(entity->getSprite());
 			}
 
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_localPlayerTank))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_localPlayerTank.get()))
 					break;
 
 				window.draw(bullets.get()->m_bulletSprite);
 			}
+
+			if (m_enemyTanks.size() < 4) {
+
+				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
+				m_enemyTanks.push_back(std::make_unique<Enemy>(generatedPos.first, generatedPos.second));
+			}
+
 		}
 		
 
@@ -300,9 +307,9 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 {
 	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
 
-	for (auto enemyTank : m_enemyTanks) {
+	for (auto &enemyTank : m_enemyTanks) {
 
-		if (tankToCheck == enemyTank)
+		if (tankToCheck == enemyTank.get())
 			continue;
 
 		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
@@ -312,13 +319,13 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 		}
 	}
 
-	if (tankToCheck != m_localPlayerTank) {
+	if (tankToCheck != m_localPlayerTank.get()) {
 		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds(), intersection)) {
 			return true;
 		}
 	}
 
-	for (auto entity : m_worldEntities) {
+	for (auto &entity : m_worldEntities) {
 
 		if (entity->getType() == entityType::Bush)
 			continue;
@@ -338,7 +345,7 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 void Engine::doLocalPlayerMovement()
 {
 	if (m_localPlayerTankIsMoving)
-		gameEngine.moveTank(m_localPlayerTank, m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
+		gameEngine.moveTank(m_localPlayerTank.get(), m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
 }
 
 void Engine::setUpWorld(unsigned short stage)
@@ -358,36 +365,35 @@ void Engine::setUpWorld(unsigned short stage)
 			switch (chr) {
 				case 'w': {
 
-					m_worldEntities.push_back(new WorldEntity(entityType::WorldBound, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::WorldBound, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'b': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Brick, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 's': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));					
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Steel, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'e': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Eagle, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
-
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Eagle, x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case ' ': {
@@ -395,47 +401,48 @@ void Engine::setUpWorld(unsigned short stage)
 					break;
 				}
 				case 'g': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'i': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'a': {
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(new WorldEntity(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Water, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'h': {
-					m_enemyTanks.push_back(new Enemy(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_enemyTanks.push_back(std::make_unique<Enemy>(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_enemySpawnPoints.push_back(std::make_pair(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}
 				case 'p': {
-					m_localPlayerTank = new Tank(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2);
+					m_localPlayerTank = std::make_unique<Tank>(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2);
 				}
 			}
 
@@ -444,6 +451,10 @@ void Engine::setUpWorld(unsigned short stage)
 		y++;
 	}
 	logger.Logi(Logger::Level::Info, m_worldEntities.size(), " elements were loaded in this stage ");
+	
+	for (auto spawnPoint : m_enemySpawnPoints) {
+		logger.Logi(Logger::Level::Info, spawnPoint.first, spawnPoint.second);
+	}
 }
 
 

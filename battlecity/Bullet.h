@@ -29,7 +29,7 @@ public:
 
 	sf::Texture getTexture();
 	Position getPosition() const;
-	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, const Tank* localPlayerTank);
+	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, const Tank* localPlayerTank);
 
 };
 

@@ -40,7 +40,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<WorldEntity*>& worldEntities, std::vector<Enemy*>& enemyTanks, const Tank* localPlayerTank)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, const Tank* localPlayerTank)
 {
 	switch (m_bulletDirection) {
 		case DIR_UP: this->m_bulletSprite.move(0, -5); break;
@@ -52,7 +52,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
 	auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
 
-	for (auto entity : worldEntities) {
+	for (auto &entity : worldEntities) {
 
 		if (entity->getType() == entityType::Bush)
 			continue;
@@ -62,7 +62,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			continue;
 
 		sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
-		auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [entity](WorldEntity* element) {return entity == element; });
+		auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [&entity](std::unique_ptr<WorldEntity>& element) {return entity == element; });
 
 		if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
 
@@ -75,13 +75,13 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		}
 	}
 
-	for (auto enemy : enemyTanks) {
+	for (auto &enemy : enemyTanks) {
 
-		if (m_firedBy == enemy)
+		if (m_firedBy == enemy.get())
 			continue;
 
 		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
-		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [enemy](Enemy* element) {return enemy == element; });
+		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [&enemy](std::unique_ptr<Enemy>& element) {return enemy == element; });
 		
 		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
 			bullets.erase(bulletItr);
