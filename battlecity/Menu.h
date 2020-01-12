@@ -23,6 +23,7 @@ private:
 	sf::Text stageThree;
 	sf::Text stageFour;
 	sf::Sprite menuSprite;
+	sf::Text gameOver;
 
 public:
 	Menu();

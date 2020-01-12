@@ -32,8 +32,12 @@ private:
 	sf::Sound tankMoving;
 	sf::SoundBuffer bulletBuffer;
 	sf::SoundBuffer tankIdleBuffer;
+	sf::SoundBuffer gameOverBuffer;
 	sf::Sound bulletSound;
+	sf::Sound gameOver;
 	sf::Sound tankIdle;
+
+	bool m_playedMusic;
 
 	sf::Texture m_enemyLifeTexture;
 	std::vector<sf::Sprite> enemyLifeSprites;
@@ -51,6 +55,7 @@ public:
 	void setlocalPlayerKills(const unsigned int localPlayerKills);
 	unsigned int getLocalPlayerKills() const;
 	void onStageStartPresets();
+	void setGameOver(bool gameOver);
 };
 
 extern Engine gameEngine;

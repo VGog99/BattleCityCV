@@ -17,10 +17,16 @@ Engine::Engine()
 	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
+	if (!gameOverBuffer.loadFromFile("../resources/gameOver.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 
 	tankMoving.setBuffer(tankMovingBuffer);
 	tankMoving.setVolume(1.5f);
+
+	gameOver.setBuffer(gameOverBuffer);
+	gameOver.setVolume(1.5f);
 
 	bulletSound.setBuffer(bulletBuffer);
 	bulletSound.setVolume(1.0f);
@@ -43,26 +49,6 @@ void Engine::runGame() {
 	rightSideBg.setPosition(sf::Vector2f(720, 0));
 
 	sf::Music menuMusic;
-
-	sf::SoundBuffer bulletBuffer;
-	if (!bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
-		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
-
-
-
-	sf::SoundBuffer tankIdleBuffer;
-	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
-		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
-
-	sf::Sound bulletSound;
-	bulletSound.setBuffer(bulletBuffer);
-	bulletSound.setVolume(1.0f);
-
-
-
-	sf::Sound tankIdle;
-	tankIdle.setBuffer(tankIdleBuffer);
-	tankIdle.setVolume(1.0f);
 
 	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
 		logger.Logi(Logger::Level::Error,"Nu s-a putut incarca fisierul de muzica.");
@@ -248,6 +234,16 @@ void Engine::runGame() {
 		}
 		else if (menu.getPaused()) {
 			window.draw(menu.getPauseText());
+		}
+		else if (m_gameOver)
+		{
+			tankIdle.stop();
+			if (gameOver.getStatus() != sf::Sound::Playing && m_playedMusic == false)
+			{
+				gameOver.play();
+				m_playedMusic = true;
+			}
+			
 		}
 		else if (!menu.getIsInMenu()) {
 
@@ -465,6 +461,12 @@ void Engine::onStageStartPresets()
 	m_gameStarted = false;
 	m_localPlayerKills = 0;
 	m_localPlayerTankIsMoving = false;
+	m_playedMusic = false;
+}
+
+void Engine::setGameOver(bool gameOver)
+{
+	m_gameOver = gameOver;
 }
 
 void Engine::setUpWorld(unsigned short stage)

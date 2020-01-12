@@ -74,6 +74,11 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 				if (it->get()->getType() == entityType::Brick)
 					worldEntities.erase(it);
+				else if (it->get()->getType() == entityType::Eagle)
+				{
+					worldEntities.erase(it);
+					gameEngine.setGameOver(true);
+				}
 
 				return false;
 			}
