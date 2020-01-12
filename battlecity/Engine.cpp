@@ -189,6 +189,11 @@ void Engine::runGame() {
 		}
 		else if (!menu.getIsInMenu()) {
 
+			//draw ice first - tank should be over ice so we have to draw ice first
+			for (auto& entity : m_iceVec) {
+				window.draw(entity->getSprite());
+			}
+
 			//do movement and draw local player
 			doLocalPlayerMovement();
 			window.draw(m_localPlayerTank->m_tankSprite);
@@ -204,6 +209,11 @@ void Engine::runGame() {
 				window.draw(entity->getSprite());
 			}
 
+			//draw bush - bullet should be under bush so we have to draw bush first
+			for (auto& entity : m_bushVec) {
+				window.draw(entity->getSprite());
+			}
+
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
@@ -211,6 +221,11 @@ void Engine::runGame() {
 					break;
 
 				window.draw(bullets.get()->m_bulletSprite);
+
+				//draw bush - bullet should be under bush so we have to draw bush first
+				for (auto& entity : m_bushVec) {
+					window.draw(entity->getSprite());
+				}
 			}
 
 			if (m_enemyTanks.size() < 4) {
@@ -401,27 +416,27 @@ void Engine::setUpWorld(unsigned short stage)
 					break;
 				}
 				case 'g': {
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_bushVec.push_back(std::make_unique<WorldEntity>(entityType::Bush, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'i': {
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
-					m_worldEntities.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + 2 * (worldEntitySize / 3)));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize, y * worldEntitySize + worldEntitySize / 3));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + worldEntitySize / 3, y * worldEntitySize + worldEntitySize / 3));
+					m_iceVec.push_back(std::make_unique<WorldEntity>(entityType::Ice, x * worldEntitySize + 2 * (worldEntitySize / 3), y * worldEntitySize + worldEntitySize / 3));
 					break;
 				}
 				case 'a': {

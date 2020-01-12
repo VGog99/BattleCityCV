@@ -22,6 +22,8 @@ private:
 	bool m_localPlayerTankIsMoving;
 	std::unique_ptr<Tank> m_localPlayerTank;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
+	std::vector<std::unique_ptr<WorldEntity>> m_iceVec;
+	std::vector<std::unique_ptr<WorldEntity>> m_bushVec;
 	std::vector<std::unique_ptr<Enemy>> m_enemyTanks;
 	std::vector<std::unique_ptr<Bullet>> m_bulletVec;
 	std::vector<Position> m_enemySpawnPoints;
