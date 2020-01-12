@@ -8,10 +8,27 @@ Logger logger(std::cout, Logger::Level::Info);
 
 Engine::Engine()
 {
-	m_gameOver = false;
-	m_gameStarted = false;
-	m_localPlayerKills = 0;
-	m_localPlayerTankIsMoving = false;
+	if (!tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	if (!bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
+
+	tankMoving.setBuffer(tankMovingBuffer);
+	tankMoving.setVolume(1.5f);
+
+	bulletSound.setBuffer(bulletBuffer);
+	bulletSound.setVolume(1.0f);
+
+	tankIdle.setBuffer(tankIdleBuffer);
+	tankIdle.setVolume(1.0f);
+
+	onStageStartPresets();
 }
 
 Engine::~Engine()
@@ -31,9 +48,7 @@ void Engine::runGame() {
 	if (!bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	sf::SoundBuffer tankMovingBuffer;
-	if (!tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
-		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
 
 	sf::SoundBuffer tankIdleBuffer;
 	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
@@ -43,9 +58,7 @@ void Engine::runGame() {
 	bulletSound.setBuffer(bulletBuffer);
 	bulletSound.setVolume(1.0f);
 
-	sf::Sound tankMoving;
-	tankMoving.setBuffer(tankMovingBuffer);
-    tankMoving.setVolume(0.4f);
+
 
 	sf::Sound tankIdle;
 	tankIdle.setBuffer(tankIdleBuffer);
@@ -75,8 +88,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_UP);
 				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
 				m_localPlayerTankIsMoving = true;
-				tankMoving.play();
 				tankIdle.stop();
+				tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -85,8 +98,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_DOWN);
 				logger.Logi(Logger::Level::Debug,"The player moved downwards");
 				m_localPlayerTankIsMoving = true;
-				tankMoving.play();
 				tankIdle.stop();
+				tankMoving.play();
 			}
 
 		}
@@ -96,8 +109,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_LEFT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the left");
 				m_localPlayerTankIsMoving = true;
-				tankMoving.play();
 				tankIdle.stop();
+				tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -106,8 +119,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_RIGHT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the right");
 				m_localPlayerTankIsMoving = true;
-				tankMoving.play();
 				tankIdle.stop();
+				tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -260,11 +273,6 @@ void Engine::runGame() {
 				window.draw(entity->getSprite());
 			}
 
-			//draw bush - bullet should be under bush so we have to draw bush first
-			for (auto& entity : m_bushVec) {
-				window.draw(entity->getSprite());
-			}
-
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
@@ -272,22 +280,29 @@ void Engine::runGame() {
 					break;
 
 				window.draw(bullets.get()->m_bulletSprite);
-
-				//draw bush - bullet should be under bush so we have to draw bush first
-				for (auto& entity : m_bushVec) {
-					window.draw(entity->getSprite());
-				}
 			}
 
+			//draw bush - bullet should be under bush so we have to draw bush first
+			for (auto& entity : m_bushVec) {
+				window.draw(entity->getSprite());
+			}
+
+			//we should always have 3 enemies on the map
 			if (m_enemyTanks.size() < 3) {
 
 				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
 				m_enemyTanks.push_back(std::make_unique<Enemy>(generatedPos.first, generatedPos.second));
+				
+				if (!enemyLifeSprites.empty())
+					enemyLifeSprites.pop_back();
+			}
+
+			for (auto enemyLife : enemyLifeSprites) {
+				window.draw(enemyLife);
 			}
 
 		}
 		
-
 		window.display();
 	}
 }
@@ -410,8 +425,10 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 
 void Engine::doLocalPlayerMovement()
 {
-	if (m_localPlayerTankIsMoving)
+	if (m_localPlayerTankIsMoving) {
 		gameEngine.moveTank(m_localPlayerTank.get(), m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
+		//tankMoving.play();
+	}
 }
 
 void Engine::setlocalPlayerKills(const unsigned int localPlayerKills)
@@ -422,6 +439,32 @@ void Engine::setlocalPlayerKills(const unsigned int localPlayerKills)
 unsigned int Engine::getLocalPlayerKills() const
 {
 	return m_localPlayerKills;
+}
+
+void Engine::onStageStartPresets()
+{
+	unsigned short x = 630;
+	unsigned short y = 20;
+
+	for (int i = 0; i < 20; i++) {
+		sf::Sprite enemyLifeSprite;
+		enemyLifeSprite.setTexture(m_enemyLifeTexture);
+		if (i % 2 == 0) {
+			x = 730;
+			y += 30;
+		}
+		else {
+			x = 760;
+		}
+			
+		enemyLifeSprite.setPosition(x, y);
+		enemyLifeSprites.push_back(enemyLifeSprite);
+	}
+
+	m_gameOver = false;
+	m_gameStarted = false;
+	m_localPlayerKills = 0;
+	m_localPlayerTankIsMoving = false;
 }
 
 void Engine::setUpWorld(unsigned short stage)
