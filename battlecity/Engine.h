@@ -38,6 +38,8 @@ public:
 	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
 	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();
+	void setlocalPlayerKills(const unsigned int localPlayerKills);
+	unsigned int getLocalPlayerKills() const;
 };
 
 extern Engine gameEngine;

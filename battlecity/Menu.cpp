@@ -19,19 +19,19 @@ Menu::Menu()
 	stageThree = sf::Text("Stage 3", menuFont);
 	stageFour = sf::Text("Stage 4", menuFont);
 
-	startText.setPosition(287, 350);
-	exitText.setPosition(302, 420);
-	pauseText.setPosition(270, 360);
+	startText.setPosition(387, 350);
+	exitText.setPosition(402, 420);
+	pauseText.setPosition(370, 360);
 	stageText.setCharacterSize(25);
-	stageText.setPosition(150, 150);
+	stageText.setPosition(250, 150);
 	stageOne.setCharacterSize(20);
-	stageOne.setPosition(280, 300);
+	stageOne.setPosition(380, 300);
 	stageTwo.setCharacterSize(20);
-	stageTwo.setPosition(280, 350);
+	stageTwo.setPosition(380, 350);
 	stageThree.setCharacterSize(20);
-	stageThree.setPosition(280, 400);
+	stageThree.setPosition(380, 400);
 	stageFour.setCharacterSize(20);
-	stageFour.setPosition(280, 450);
+	stageFour.setPosition(380, 450);
 }
 
 Menu::~Menu()
@@ -96,7 +96,7 @@ void Menu::setIsInMenu(const bool set)
 sf::Sprite Menu::createSprite()
 {
 	sf::Sprite sprite(titleTexture);
-	sprite.setPosition(140, 60);
+	sprite.setPosition(240, 60);
 	return sprite;
 }
 
@@ -121,14 +121,14 @@ bool Menu::getStageChooser() const
 }
 
 void Menu::setPaused(const bool pause)
- {
+{
 	m_isPaused = pause;
- }
+}
 
 bool Menu::getPaused() const
- {
+{
 	return m_isPaused;
- }
+}
 
 void Menu::updateMenuColor()
 {

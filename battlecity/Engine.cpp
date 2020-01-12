@@ -21,6 +21,9 @@ Engine::~Engine()
 void Engine::runGame() {
 
 	Menu menu;
+	sf::RectangleShape rightSideBg(sf::Vector2f(180, 720));
+	rightSideBg.setFillColor(sf::Color(127, 127, 127, 255));
+	rightSideBg.setPosition(sf::Vector2f(720, 0));
 
 	sf::Music menuMusic;
 
@@ -32,7 +35,7 @@ void Engine::runGame() {
 
 	int savedMenuOption = menu.getMenuOption();
 
-	sf::RenderWindow window(sf::VideoMode(720, 720), "World of Tanks Vaslui");
+	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
 
 
@@ -189,6 +192,8 @@ void Engine::runGame() {
 		}
 		else if (!menu.getIsInMenu()) {
 
+			window.draw(rightSideBg);
+
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
 				window.draw(entity->getSprite());
@@ -228,7 +233,7 @@ void Engine::runGame() {
 				}
 			}
 
-			if (m_enemyTanks.size() < 4) {
+			if (m_enemyTanks.size() < 3) {
 
 				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
 				m_enemyTanks.push_back(std::make_unique<Enemy>(generatedPos.first, generatedPos.second));
@@ -361,6 +366,16 @@ void Engine::doLocalPlayerMovement()
 {
 	if (m_localPlayerTankIsMoving)
 		gameEngine.moveTank(m_localPlayerTank.get(), m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
+}
+
+void Engine::setlocalPlayerKills(const unsigned int localPlayerKills)
+{
+	m_localPlayerKills = localPlayerKills;
+}
+
+unsigned int Engine::getLocalPlayerKills() const
+{
+	return m_localPlayerKills;
 }
 
 void Engine::setUpWorld(unsigned short stage)

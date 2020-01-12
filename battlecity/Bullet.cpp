@@ -1,5 +1,5 @@
 #include "Bullet.h"
-
+#include "Engine.h"
 
 Bullet::Bullet()
 {
@@ -52,29 +52,6 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
 	auto bulletItr = std::find_if(bullets.begin(), bullets.end(), [this](std::unique_ptr<Bullet>& element) {return this == element.get(); });
 
-	//for (auto &entity : worldEntities) {
-
-	//	if (entity->getType() == entityType::Bush)
-	//		continue;
-	//	if (entity->getType() == entityType::Ice)
-	//		continue;
-	//	if (entity->getType() == entityType::Water)
-	//		continue;
-
-	//	sf::FloatRect worldEntitySpriteBounds = entity->getSprite().getGlobalBounds();
-	//	auto worldEntityItr = std::find_if(worldEntities.begin(), worldEntities.end(), [&entity](std::unique_ptr<WorldEntity>& element) { return entity == element; });
-
-	//	if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
-
-	//		bullets.erase(bulletItr);
-	//
-	//		if (entity->getType() == entityType::Brick)
-	//			worldEntities.erase(worldEntityItr);
-
-	//		return false;
-	//	}
-	//}
-
 	std::vector<std::unique_ptr<WorldEntity>>::iterator it;
 
 	for (it = worldEntities.begin(); it < worldEntities.end(); it++) {
@@ -110,7 +87,8 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
 			bullets.erase(bulletItr);
 			enemyTanks.erase(enemyItr);
-
+		
+			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
 			return false;
 		}
 	}
