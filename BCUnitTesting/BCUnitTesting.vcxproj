@@ -101,7 +101,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)/SFML/lib;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories);%(AdditionalLibraryDirectories);$(SolutionDir)/SFML/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\Animation.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\PowerUps.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\WorldEntity.obj;$(SolutionDir)battlecity\Debug\Menu.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\Animation.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)/SFML/lib;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories);$(SolutionDir)/SFML/lib;%(AdditionalLibraryDirectories);$(SolutionDir)/SFML/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\Animation.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\PowerUps.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\WorldEntity.obj;$(SolutionDir)battlecity\Debug\Menu.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\Animation.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,7 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories);$(SolutionDir)/SFML/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;D:\BattleCityGH\battlecity\battlecity\Debug\Tank.obj;$(SolutionDir)/battlecity/Debug/Brick.obj;$(SolutionDir)/battlecity/Debug/Object.obj;$(SolutionDir)/battlecity/Debug/Enemy.obj;$(SolutionDir)/battlecity/Debug/Tank.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\PowerUps.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\WorldEntity.obj;$(SolutionDir)battlecity\Debug\Menu.obj;D:\BattleCityGH\battlecity\battlecity\Debug\Tank.obj;$(SolutionDir)/battlecity/Debug/Brick.obj;$(SolutionDir)/battlecity/Debug/Object.obj;$(SolutionDir)/battlecity/Debug/Enemy.obj;$(SolutionDir)/battlecity/Debug/Tank.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +160,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)/SFML/lib;%(AdditionalLibraryDirectories);$(SolutionDir)/SFML/lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;D:\BattleCityGH\battlecity\battlecity\Debug\Tank.obj;$(SolutionDir)/battlecity/Debug/Brick.obj;$(SolutionDir)/battlecity/Debug/Object.obj;$(SolutionDir)/battlecity/Debug/Enemy.obj;$(SolutionDir)/battlecity/Debug/Tank.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-main-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;sfml-network-d.lib;$(SolutionDir)battlecity\Debug\PowerUps.obj;$(SolutionDir)battlecity\Debug\Tank.obj;$(SolutionDir)battlecity\Debug\WorldEntity.obj;$(SolutionDir)battlecity\Debug\Menu.obj;D:\BattleCityGH\battlecity\battlecity\Debug\Tank.obj;$(SolutionDir)/battlecity/Debug/Brick.obj;$(SolutionDir)/battlecity/Debug/Object.obj;$(SolutionDir)/battlecity/Debug/Enemy.obj;$(SolutionDir)/battlecity/Debug/Tank.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
