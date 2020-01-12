@@ -27,6 +27,30 @@ void Engine::runGame() {
 
 	sf::Music menuMusic;
 
+	sf::SoundBuffer bulletBuffer;
+	if (!bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	sf::SoundBuffer tankMovingBuffer;
+	if (!tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	sf::SoundBuffer tankIdleBuffer;
+	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	sf::Sound bulletSound;
+	bulletSound.setBuffer(bulletBuffer);
+	bulletSound.setVolume(1.0f);
+
+	sf::Sound tankMoving;
+	tankMoving.setBuffer(tankMovingBuffer);
+    tankMoving.setVolume(0.4f);
+
+	sf::Sound tankIdle;
+	tankIdle.setBuffer(tankIdleBuffer);
+	tankIdle.setVolume(1.0f);
+
 	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
 		logger.Logi(Logger::Level::Error,"Nu s-a putut incarca fisierul de muzica.");
 
@@ -37,7 +61,6 @@ void Engine::runGame() {
 
 	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
-
 
 	while (window.isOpen())
 	{
@@ -52,6 +75,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_UP);
 				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
 				m_localPlayerTankIsMoving = true;
+				tankMoving.play();
+				tankIdle.stop();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -60,6 +85,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_DOWN);
 				logger.Logi(Logger::Level::Debug,"The player moved downwards");
 				m_localPlayerTankIsMoving = true;
+				tankMoving.play();
+				tankIdle.stop();
 			}
 
 		}
@@ -69,6 +96,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_LEFT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the left");
 				m_localPlayerTankIsMoving = true;
+				tankMoving.play();
+				tankIdle.stop();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -77,6 +106,8 @@ void Engine::runGame() {
 				m_localPlayerTank->setTankDirection(DIR_RIGHT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the right");
 				m_localPlayerTankIsMoving = true;
+				tankMoving.play();
+				tankIdle.stop();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -103,6 +134,9 @@ void Engine::runGame() {
 				else
 				{
 					m_localPlayerTankIsMoving = false;
+					tankMoving.stop();
+					tankIdle.setLoop(true);
+					tankIdle.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Down)
@@ -116,15 +150,24 @@ void Engine::runGame() {
 				else
 				{
 					m_localPlayerTankIsMoving = false;
+					tankMoving.stop();
+					tankIdle.setLoop(true);
+					tankIdle.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)
 			{
 				m_localPlayerTankIsMoving = false;
+				tankMoving.stop();
+				tankIdle.setLoop(true);
+				tankIdle.play();
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Right)
 			{
 				m_localPlayerTankIsMoving = false;
+				tankMoving.stop();
+				tankIdle.setLoop(true);
+				tankIdle.play();
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter) {
 
@@ -134,6 +177,7 @@ void Engine::runGame() {
 					setUpWorld(menu.getMenuOption());
 					menu.setStageChooser(false);
 					menu.setIsInMenu(false);
+					tankIdle.play();
 				}
 				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 1) {
 					logger.Logi(Logger::Level::Error, "Really, you don't want to play our game? :'(");
@@ -168,6 +212,8 @@ void Engine::runGame() {
 					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
 					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
 				}
+
+				bulletSound.play();
 			}
 
 		}

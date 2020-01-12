@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "Engine.h"
 
+
 Bullet::Bullet()
 {
 }
@@ -8,6 +9,8 @@ Bullet::Bullet()
 Bullet::~Bullet()
 {
 }
+
+
 
 Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy)
 {
