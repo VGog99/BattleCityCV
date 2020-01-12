@@ -29,6 +29,9 @@ public:
 	Menu();
 	~Menu();
 
+	sf::Texture m_gameOverTexture;
+	sf::Sprite m_gameOverSprite;
+
 	bool getIsInMenu() const;
 	void setIsInMenu(const bool set);
 	sf::Sprite createSprite();
@@ -43,6 +46,9 @@ public:
 	bool getPaused() const;
 
 	void updateMenuColor();
+
+	void setGameOverSprite(sf::Sprite gameOverSprite);
+	sf::Sprite getGameOverSprite() const;
 
 	sf::Text getStartText();
 	sf::Sprite getMenuSprite();

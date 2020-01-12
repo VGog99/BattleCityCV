@@ -75,7 +75,9 @@ void Engine::runGame() {
 				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
 				m_localPlayerTankIsMoving = true;
 				tankIdle.stop();
-				tankMoving.play();
+
+				if (tankMoving.getStatus() != sf::Sound::Playing)
+					tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -85,7 +87,9 @@ void Engine::runGame() {
 				logger.Logi(Logger::Level::Debug,"The player moved downwards");
 				m_localPlayerTankIsMoving = true;
 				tankIdle.stop();
-				tankMoving.play();
+
+				if (tankMoving.getStatus() != sf::Sound::Playing)
+					tankMoving.play();
 			}
 
 		}
@@ -96,7 +100,9 @@ void Engine::runGame() {
 				logger.Logi(Logger::Level::Debug,"The player moved to the left");
 				m_localPlayerTankIsMoving = true;
 				tankIdle.stop();
-				tankMoving.play();
+
+				if (tankMoving.getStatus() != sf::Sound::Playing)
+					tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -106,7 +112,9 @@ void Engine::runGame() {
 				logger.Logi(Logger::Level::Debug,"The player moved to the right");
 				m_localPlayerTankIsMoving = true;
 				tankIdle.stop();
-				tankMoving.play();
+
+				if (tankMoving.getStatus() != sf::Sound::Playing)
+					tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -237,6 +245,12 @@ void Engine::runGame() {
 		}
 		else if (m_gameOver)
 		{
+			window.draw(menu.m_gameOverSprite);
+
+			if (menu.m_gameOverSprite.getPosition().y != 100) {
+				menu.m_gameOverSprite.move(0, 1);
+			}
+
 			tankIdle.stop();
 			if (gameOver.getStatus() != sf::Sound::Playing && m_playedMusic == false)
 			{

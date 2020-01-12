@@ -3,6 +3,11 @@
 Menu::Menu()
 {
 	titleTexture.loadFromFile("../resources/title.png");
+	m_gameOverTexture.loadFromFile("../resources/gameOver.png");
+
+	m_gameOverSprite.setTexture(m_gameOverTexture);
+	m_gameOverSprite.setPosition(300, 0);
+
 	if (!menuFont.loadFromFile("../resources/font.ttf"))
 	{
 		// error...
@@ -128,6 +133,15 @@ void Menu::setPaused(const bool pause)
 bool Menu::getPaused() const
 {
 	return m_isPaused;
+}
+
+sf::Sprite Menu::getGameOverSprite() const
+{
+	return m_gameOverSprite;
+}
+
+void Menu::setGameOverSprite(sf::Sprite gameOverSprite) {
+	m_gameOverSprite = gameOverSprite;
 }
 
 void Menu::updateMenuColor()
