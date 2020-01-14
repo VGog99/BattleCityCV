@@ -1,15 +1,15 @@
 wwwwwwwwwwwwwww
-wh  a bh b b hw
-w        b s  w
-w   a bs b b  w
-ws ba s b  b  w
-w  ba   b     w
-wb baa aaaa  bw
-w   b   g a ssw
-wbbbb sggga   w
-wb    bggga bbw
-w     b g a b w
-w s         g w
-w b s bbb agggw
-w    pbeb agggw
+wh   b h   b hw
+w gggb     sssw
+wbggg     b bbw
+wggggbbbbbb b w
+wgggg   g   g w
+w g     ss  g w
+w b b     ggggw
+w      bbbggggw
+w      b  ggggw
+w        bggggw
+wb s    bbggg w
+wbb   bbb ggg w
+wsbb pbeb b   w
 wwwwwwwwwwwwwww

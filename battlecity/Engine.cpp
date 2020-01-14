@@ -118,6 +118,13 @@ void Engine::runGame() {
 			logger.Logi(Logger::Level::Info,"Game closed");
 			window.close();
 		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		{
+			logger.Logi(Logger::Level::Info, "Level skipped, cheater!");
+			advanceStageSetup();
+			onStageStartPresets();
+			m_nextStageScene = true;
+		}
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -255,7 +262,7 @@ void Engine::runGame() {
 			tankMoving.stop();
 
 			if (menu.m_gameOverSprite.getPosition().y != 200) {
-				menu.m_gameOverSprite.move(0, 1);
+				menu.m_gameOverSprite.move(0, 2.5);
 			}
 			else {
 				resetGameLogic();
@@ -542,14 +549,14 @@ void Engine::setGameOver(bool gameOver)
 }
 
 
-
 void Engine::setUpWorld(unsigned short stage)
 {
 	logger.Logi(Logger::Level::Info, "Game Started");
 	unsigned short x = 0;
 	unsigned short y = 0;
 	float worldEntitySize = 48;
-	std::vector<std::string> fileNames = { "../stages/stage1.txt", "../stages/stage2.txt", "../stages/stage3.txt", "../stages/stage4.txt" };
+	std::vector<std::string> fileNames = { "../stages/stage1.txt", "../stages/stage2.txt", "../stages/stage3.txt", "../stages/stage4.txt", "../stages/stage5.txt"
+	, "../stages/stage6.txt", "../stages/stage7.txt", "../stages/stage8.txt", "../stages/stage9.txt", "../stages/stage10.txt"};
 	std::string inputFromFile;
 	std::ifstream file(fileNames.at(stage));
 
