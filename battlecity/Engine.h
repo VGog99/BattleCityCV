@@ -17,6 +17,7 @@ class Engine {
 private:
 	bool m_gameStarted;
 	bool m_gameOver;
+	unsigned int m_currentStage = 0;
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
 	bool m_localPlayerTankIsMoving;
@@ -38,6 +39,7 @@ private:
 	sf::Sound tankIdle;
 
 	bool m_playedMusic;
+	bool m_nextStageScene = true;
 
 	sf::Texture m_enemyLifeTexture;
 	std::vector<sf::Sprite> enemyLifeSprites;
@@ -56,6 +58,8 @@ public:
 	unsigned int getLocalPlayerKills() const;
 	void onStageStartPresets();
 	void setGameOver(bool gameOver);
+	void advanceStageSetup();
+	void resetGameLogic();
 };
 
 extern Engine gameEngine;

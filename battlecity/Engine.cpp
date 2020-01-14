@@ -60,13 +60,10 @@ void Engine::runGame() {
 
 	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
+	sf::Clock clock;
 
 	while (window.isOpen())
 	{
-
-		if (menu.getIsInMenu()) {
-			menu.updateMenuColor();
-		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
@@ -164,29 +161,33 @@ void Engine::runGame() {
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)
 			{
-				m_localPlayerTankIsMoving = false;
-				tankMoving.stop();
-				tankIdle.setLoop(true);
-				tankIdle.play();
+				if (!menu.getIsInMenu()) {
+					m_localPlayerTankIsMoving = false;
+					tankMoving.stop();
+					tankIdle.setLoop(true);
+					tankIdle.play();
+				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Right)
 			{
-				m_localPlayerTankIsMoving = false;
-				tankMoving.stop();
-				tankIdle.setLoop(true);
-				tankIdle.play();
+				if (!menu.getIsInMenu()) {
+					m_localPlayerTankIsMoving = false;
+					tankMoving.stop();
+					tankIdle.setLoop(true);
+					tankIdle.play();
+				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter) {
 
-				if (menu.getIsInMenu() && menu.getMenuOption() == 0 && !menu.getStageChooser())
-					menu.setStageChooser(true);
-				else if (menu.getStageChooser() && menu.getIsInMenu()) {
-					setUpWorld(menu.getMenuOption());
-					menu.setStageChooser(false);
-					menu.setIsInMenu(false);
+				if (menu.getIsInMenu() && menu.getMenuOption() == 0) {
+
+					resetGameLogic();
+					onStageStartPresets();
+					setUpWorld(0);
 					tankIdle.play();
+					menu.setIsInMenu(false);
 				}
-				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 2) {
+				else if (menu.getIsInMenu() && menu.getMenuOption() == 2) {
 					logger.Logi(Logger::Level::Error, "Really, you don't want to play our game? :'(");
 					window.close();
 				}
@@ -224,23 +225,25 @@ void Engine::runGame() {
 			}
 
 		}
-		
+
+		//advance to the next stage if player has killed 20 enemy tanks
+		if (m_localPlayerKills == 20) {
+			advanceStageSetup();
+			onStageStartPresets();
+			m_nextStageScene = true;
+		}
+
 		window.clear();
 
 		//draw stuff
-		if (menu.getIsInMenu() && !menu.getStageChooser()) {
+
+		if (menu.getIsInMenu()) {
+			menu.updateSprites();
 			window.draw(menu.getMenuSprite());
 			window.draw(menu.getTankSprite());
 			window.draw(menu.getOnePlayerText());
 			window.draw(menu.getTwoPlayersText());
 			window.draw(menu.getExitText());
-		}
-		else if (menu.getStageChooser()) {
-			window.draw(menu.getStageText());
-			window.draw(menu.getStageOneText());
-			window.draw(menu.getStageTwoText());
-			window.draw(menu.getStageThreeText());
-			window.draw(menu.getStageFourText());
 		}
 		else if (menu.getPaused()) {
 			window.draw(menu.getPauseText());
@@ -248,12 +251,18 @@ void Engine::runGame() {
 		else if (m_gameOver)
 		{
 			window.draw(menu.m_gameOverSprite);
+			tankIdle.stop();
+			tankMoving.stop();
 
-			if (menu.m_gameOverSprite.getPosition().y != 100) {
+			if (menu.m_gameOverSprite.getPosition().y != 200) {
 				menu.m_gameOverSprite.move(0, 1);
 			}
+			else {
+				resetGameLogic();
+				menu.m_gameOverSprite.setPosition(300, 0);
+				menu.setIsInMenu(true);
+			}
 
-			tankIdle.stop();
 			if (gameOver.getStatus() != sf::Sound::Playing && m_playedMusic == false)
 			{
 				gameOver.play();
@@ -261,9 +270,16 @@ void Engine::runGame() {
 			}
 			
 		}
+		else if (m_nextStageScene) {
+			menu.drawStageChangeScene(window, m_currentStage, clock, m_nextStageScene);
+			tankIdle.stop();
+			tankMoving.stop();
+			bulletSound.stop();
+		}
 		else if (!menu.getIsInMenu()) {
 
 			window.draw(rightSideBg);
+			clock.restart();
 
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
@@ -458,6 +474,8 @@ void Engine::onStageStartPresets()
 	unsigned short x = 630;
 	unsigned short y = 20;
 
+	enemyLifeSprites.clear();
+
 	for (int i = 0; i < 20; i++) {
 		sf::Sprite enemyLifeSprite;
 		enemyLifeSprite.setTexture(m_enemyLifeTexture);
@@ -474,16 +492,56 @@ void Engine::onStageStartPresets()
 	}
 
 	m_gameOver = false;
-	m_gameStarted = false;
 	m_localPlayerKills = 0;
 	m_localPlayerTankIsMoving = false;
 	m_playedMusic = false;
+}
+
+void Engine::advanceStageSetup()
+{
+	m_currentStage += 1;
+	m_worldEntities.clear();
+	m_bushVec.clear();
+	m_iceVec.clear();
+	m_enemyTanks.clear();
+	m_bulletVec.clear();
+
+	tankIdle.stop();
+	tankMoving.stop();
+	bulletSound.stop();
+	m_gameOver = false;
+	m_localPlayerKills = 0;
+
+	setUpWorld(m_currentStage);
+}
+
+void Engine::resetGameLogic()
+{
+	m_currentStage = 0;
+	m_worldEntities.clear();
+	m_bushVec.clear();
+	m_iceVec.clear();
+	m_enemyTanks.clear();
+	m_bulletVec.clear();
+	tankIdle.stop();
+	tankMoving.stop();
+	bulletSound.stop();
+	m_gameOver = false;
+	m_localPlayerKills = 0;
+	m_localPlayerTankIsMoving = false;
+	m_playedMusic = false;
+
+	tankIdle.stop();
+	tankMoving.stop();
+	bulletSound.stop();
 }
 
 void Engine::setGameOver(bool gameOver)
 {
 	m_gameOver = gameOver;
 }
+
+
 
 void Engine::setUpWorld(unsigned short stage)
 {

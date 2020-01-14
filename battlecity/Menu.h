@@ -12,8 +12,9 @@ private:
 	sf::Texture titleTexture;
 	int m_menuOption = 0;
 	bool m_stageChooser = false;
-	sf::Font menuFont;
+	float secondCounter = 0.f;
 
+	sf::Font menuFont;
 	sf::Text startText;
 	sf::Text onePlayerText;
 	sf::Text twoPlayersText;
@@ -21,14 +22,12 @@ private:
 	sf::Text exitText;
 	sf::Text pauseText;
 	sf::Text stageText;
-	sf::Text stageOne;
-	sf::Text stageTwo;
-	sf::Text stageThree;
-	sf::Text stageFour;
+
 	sf::Sprite menuSprite;
 	sf::Texture tankTexture;
 	sf::Sprite tankSprite;
 	sf::Text gameOver;
+	sf::RectangleShape grayBackground;
 
 public:
 	Menu();
@@ -50,7 +49,9 @@ public:
 	void setPaused(const bool pause);
 	bool getPaused() const;
 
-	void updateMenuColor();
+	void updateSprites();
+
+	void drawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock &clock, bool& shouldDraw);
 
 	void setGameOverSprite(sf::Sprite gameOverSprite);
 	sf::Sprite getGameOverSprite() const;

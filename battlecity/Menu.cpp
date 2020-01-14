@@ -21,11 +21,10 @@ Menu::Menu()
 	twoPlayersText = sf::Text("2 PLAYERS", menuFont);
 	exitText = sf::Text("EXIT", menuFont);
 	pauseText = sf::Text("PAUSED", menuFont);
-	stageText = sf::Text("Choose your stage \n(use arrow keys)", menuFont);
-	stageOne = sf::Text("Stage 1", menuFont);
-	stageTwo = sf::Text("Stage 2", menuFont);
-	stageThree = sf::Text("Stage 3", menuFont);
-	stageFour = sf::Text("Stage 4", menuFont);
+
+	grayBackground.setSize(sf::Vector2f(900, 720));		
+	grayBackground.setFillColor(sf::Color(127, 127, 127, 255));
+	grayBackground.setPosition(sf::Vector2f(0, 0));
 
 	tankSprite.setTexture(tankTexture);
 	tankSprite.setOrigin(sf::Vector2f(tankTexture.getSize().x * 0.5, tankTexture.getSize().y * 0.5));
@@ -36,16 +35,7 @@ Menu::Menu()
 	twoPlayersText.setPosition(337, 420);
 	exitText.setPosition(402, 490);
 	pauseText.setPosition(370, 360);
-	stageText.setCharacterSize(25);
-	stageText.setPosition(250, 150);
-	stageOne.setCharacterSize(20);
-	stageOne.setPosition(380, 300);
-	stageTwo.setCharacterSize(20);
-	stageTwo.setPosition(380, 350);
-	stageThree.setCharacterSize(20);
-	stageThree.setPosition(380, 400);
-	stageFour.setCharacterSize(20);
-	stageFour.setPosition(380, 450);
+
 }
 
 Menu::~Menu()
@@ -85,26 +75,6 @@ sf::Text Menu::getExitText()
 sf::Text Menu::getStageText()
 {
 	return stageText;
-}
-
-sf::Text Menu::getStageOneText()
-{
-	return stageOne;
-}
-
-sf::Text Menu::getStageTwoText()
-{
-	return stageTwo;
-}
-
-sf::Text Menu::getStageThreeText()
-{
-	return stageThree;
-}
-
-sf::Text Menu::getStageFourText()
-{
-	return stageFour;
 }
 
 sf::Text Menu::getPauseText()
@@ -168,7 +138,7 @@ void Menu::setGameOverSprite(sf::Sprite gameOverSprite) {
 	m_gameOverSprite = gameOverSprite;
 }
 
-void Menu::updateMenuColor()
+void Menu::updateSprites()
 {
 	if (getMenuOption() == 0) {
 		tankSprite.setPosition(onePlayerText.getPosition().x - 35, onePlayerText.getPosition().y + 15);
@@ -178,6 +148,27 @@ void Menu::updateMenuColor()
 	}
 	else {
 		tankSprite.setPosition(exitText.getPosition().x - 35, exitText.getPosition().y + 15);
+	}
+}
+
+void Menu::drawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock& clock, bool& shouldDraw)
+{
+	sf::Time elapsed = clock.restart();
+	secondCounter += elapsed.asSeconds();
+	std::string stageNumberText = "STAGE " + std::to_string(currentStage + 1);
+
+	stageText = sf::Text(stageNumberText, menuFont);
+	stageText.setCharacterSize(35);
+	stageText.setPosition(330, 320);
+	stageText.setFillColor(sf::Color::Black);
+
+	if (secondCounter <= 3) {
+		window.draw(grayBackground);
+		window.draw(stageText);
+	}
+	else {
+		secondCounter = 0;
+		shouldDraw = false;
 	}
 }
 
