@@ -135,7 +135,7 @@ void Engine::runGame() {
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption--;
-					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 2);
 					menu.setMenuOption(savedMenuOption);
 				}
 				else
@@ -151,7 +151,7 @@ void Engine::runGame() {
 				if (menu.getIsInMenu()) {
 					savedMenuOption = menu.getMenuOption();
 					savedMenuOption++;
-					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 1);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 2);
 					menu.setMenuOption(savedMenuOption);
 				}
 				else
@@ -186,7 +186,7 @@ void Engine::runGame() {
 					menu.setIsInMenu(false);
 					tankIdle.play();
 				}
-				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 1) {
+				else if (menu.getIsInMenu() && !menu.getStageChooser() && menu.getMenuOption() == 2) {
 					logger.Logi(Logger::Level::Error, "Really, you don't want to play our game? :'(");
 					window.close();
 				}
@@ -230,7 +230,9 @@ void Engine::runGame() {
 		//draw stuff
 		if (menu.getIsInMenu() && !menu.getStageChooser()) {
 			window.draw(menu.getMenuSprite());
-			window.draw(menu.getStartText());
+			window.draw(menu.getTankSprite());
+			window.draw(menu.getOnePlayerText());
+			window.draw(menu.getTwoPlayersText());
 			window.draw(menu.getExitText());
 		}
 		else if (menu.getStageChooser()) {

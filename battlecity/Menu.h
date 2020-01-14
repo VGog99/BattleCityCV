@@ -15,6 +15,9 @@ private:
 	sf::Font menuFont;
 
 	sf::Text startText;
+	sf::Text onePlayerText;
+	sf::Text twoPlayersText;
+
 	sf::Text exitText;
 	sf::Text pauseText;
 	sf::Text stageText;
@@ -23,6 +26,8 @@ private:
 	sf::Text stageThree;
 	sf::Text stageFour;
 	sf::Sprite menuSprite;
+	sf::Texture tankTexture;
+	sf::Sprite tankSprite;
 	sf::Text gameOver;
 
 public:
@@ -51,7 +56,10 @@ public:
 	sf::Sprite getGameOverSprite() const;
 
 	sf::Text getStartText();
+	sf::Text getOnePlayerText();
+	sf::Text getTwoPlayersText();
 	sf::Sprite getMenuSprite();
+	sf::Sprite getTankSprite();
 	sf::Text getExitText();
 	sf::Text getStageText();
 	sf::Text getStageOneText();
@@ -59,6 +67,5 @@ public:
 	sf::Text getStageThreeText();
 	sf::Text getStageFourText();
 	sf::Text getPauseText();
-
 	sf::Font getMenuFont();
 };

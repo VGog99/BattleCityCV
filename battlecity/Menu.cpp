@@ -3,6 +3,7 @@
 Menu::Menu()
 {
 	titleTexture.loadFromFile("../resources/title.png");
+	tankTexture.loadFromFile("../resources/tank.png");
 	m_gameOverTexture.loadFromFile("../resources/gameOver.png");
 
 	m_gameOverSprite.setTexture(m_gameOverTexture);
@@ -15,17 +16,25 @@ Menu::Menu()
 	}
 
 	menuSprite = createSprite();
-	startText = sf::Text("Start", menuFont);
-	exitText = sf::Text("Exit", menuFont);
-	pauseText = sf::Text("Paused", menuFont);
+	startText = sf::Text("START", menuFont);
+	onePlayerText = sf::Text("1 PLAYERS", menuFont);
+	twoPlayersText = sf::Text("2 PLAYERS", menuFont);
+	exitText = sf::Text("EXIT", menuFont);
+	pauseText = sf::Text("PAUSED", menuFont);
 	stageText = sf::Text("Choose your stage \n(use arrow keys)", menuFont);
 	stageOne = sf::Text("Stage 1", menuFont);
 	stageTwo = sf::Text("Stage 2", menuFont);
 	stageThree = sf::Text("Stage 3", menuFont);
 	stageFour = sf::Text("Stage 4", menuFont);
 
-	startText.setPosition(387, 350);
-	exitText.setPosition(402, 420);
+	tankSprite.setTexture(tankTexture);
+	tankSprite.setOrigin(sf::Vector2f(tankTexture.getSize().x * 0.5, tankTexture.getSize().y * 0.5));
+	tankSprite.setRotation(90.f);
+
+	//startText.setPosition(387, 350);
+	onePlayerText.setPosition(337, 350);
+	twoPlayersText.setPosition(337, 420);
+	exitText.setPosition(402, 490);
 	pauseText.setPosition(370, 360);
 	stageText.setCharacterSize(25);
 	stageText.setPosition(250, 150);
@@ -48,9 +57,24 @@ sf::Text Menu::getStartText() {
 	return startText;
 }
 
+sf::Text Menu::getOnePlayerText()
+{
+	return onePlayerText;
+}
+
+sf::Text Menu::getTwoPlayersText()
+{
+	return twoPlayersText;
+}
+
 sf::Sprite Menu::getMenuSprite()
 {
 	return menuSprite;
+}
+
+sf::Sprite Menu::getTankSprite()
+{
+	return tankSprite;
 }
 
 sf::Text Menu::getExitText()
@@ -146,12 +170,15 @@ void Menu::setGameOverSprite(sf::Sprite gameOverSprite) {
 
 void Menu::updateMenuColor()
 {
-	startText.setFillColor(getMenuOption() ? sf::Color::White : sf::Color::Yellow);
-	exitText.setFillColor(getMenuOption() ? sf::Color::Yellow : sf::Color::White);
-	stageOne.setFillColor(getMenuOption() == 0 ? sf::Color::Yellow : sf::Color::White);
-	stageTwo.setFillColor(getMenuOption() == 1 ? sf::Color::Yellow : sf::Color::White);
-	stageThree.setFillColor(getMenuOption() == 2 ? sf::Color::Yellow : sf::Color::White);
-	stageFour.setFillColor(getMenuOption() == 3 ? sf::Color::Yellow : sf::Color::White);
+	if (getMenuOption() == 0) {
+		tankSprite.setPosition(onePlayerText.getPosition().x - 35, onePlayerText.getPosition().y + 15);
+	}
+	else if (getMenuOption() == 1) {
+		tankSprite.setPosition(twoPlayersText.getPosition().x - 35, twoPlayersText.getPosition().y + 15);
+	}
+	else {
+		tankSprite.setPosition(exitText.getPosition().x - 35, exitText.getPosition().y + 15);
+	}
 }
 
 sf::Font Menu::getMenuFont()
