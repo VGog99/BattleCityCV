@@ -563,7 +563,9 @@ void Engine::setUpWorld(unsigned short stage)
 	unsigned short y = 0;
 	float worldEntitySize = 48;
 	std::vector<std::string> fileNames = { "../stages/stage1.txt", "../stages/stage2.txt", "../stages/stage3.txt", "../stages/stage4.txt", "../stages/stage5.txt"
-	, "../stages/stage6.txt", "../stages/stage7.txt", "../stages/stage8.txt", "../stages/stage9.txt", "../stages/stage10.txt"};
+	, "../stages/stage6.txt", "../stages/stage7.txt", "../stages/stage8.txt", "../stages/stage9.txt", "../stages/stage10.txt", "../stages/stage11.txt", "../stages/stage12.txt"
+	, "../stages/stage13.txt", "../stages/stage14.txt", "../stages/stage15.txt", "../stages/stage16.txt", "../stages/stage17.txt", "../stages/stage18.txt", 
+		"../stages/stage19.txt", "../stages/stage20.txt" };
 	std::string inputFromFile;
 	std::ifstream file(fileNames.at(stage));
 
