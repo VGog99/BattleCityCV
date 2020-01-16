@@ -21,7 +21,6 @@ private:
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
 	bool m_localPlayerTankIsMoving;
-	std::unique_ptr<Tank> m_localPlayerTank;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
 	std::vector<std::unique_ptr<WorldEntity>> m_iceVec;
 	std::vector<std::unique_ptr<WorldEntity>> m_bushVec;
@@ -46,6 +45,8 @@ private:
 
 public:
 	
+	std::unique_ptr<Tank> m_localPlayerTank;
+
 	Engine();
 	~Engine();
 	void runGame();

@@ -4,6 +4,11 @@
 #include "Macros.h"
 #include "Animation.h"
 
+enum tankType {
+	enemyTank,
+	localPlayerTank
+};
+
 class Tank
 {
 protected:
@@ -27,6 +32,6 @@ public:
 
 	float getTankSpeed();
 	void setTankSpeed(float speed);
-
+	virtual std::string typeName();
 };
 

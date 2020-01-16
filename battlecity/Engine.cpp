@@ -58,9 +58,10 @@ void Engine::runGame() {
 
 	int savedMenuOption = menu.getMenuOption();
 
-	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
+	sf::RenderWindow window(sf::VideoMode(850, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
 	sf::Clock clock;
+	sf::Clock enemyClock;
 
 	while (window.isOpen())
 	{
@@ -287,7 +288,7 @@ void Engine::runGame() {
 
 			window.draw(rightSideBg);
 			clock.restart();
-
+			sf::Time elapsed = enemyClock.restart();
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
 				window.draw(entity->getSprite());
@@ -299,7 +300,13 @@ void Engine::runGame() {
 
 			//do movement and draw enemies
 			for (auto &enemyTank : m_enemyTanks) {
+			
 				enemyTank->doMovement();
+
+				if (!tankAlreadyFired(enemyTank.get())) {
+					enemyTank->fireBullet(m_bulletVec, elapsed);
+				}
+
 				window.draw(enemyTank->m_tankSprite);
 			}
 
@@ -311,7 +318,7 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_localPlayerTank.get()))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, bullets->getFiredBy()))
 					break;
 
 				window.draw(bullets.get()->m_bulletSprite);

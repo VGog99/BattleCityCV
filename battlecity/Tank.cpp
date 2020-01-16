@@ -52,5 +52,10 @@ void Tank::setTankSpeed(float speed)
 	m_tankSpeed = speed;
 }
 
+std::string Tank::typeName()
+{
+	return "localPlayerTank";
+}
+
 
 

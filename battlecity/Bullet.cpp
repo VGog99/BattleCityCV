@@ -1,5 +1,5 @@
-#include "Bullet.h"
 #include "Engine.h"
+#include "Bullet.h"
 
 
 Bullet::Bullet()
@@ -9,8 +9,6 @@ Bullet::Bullet()
 Bullet::~Bullet()
 {
 }
-
-
 
 Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy)
 {
@@ -43,7 +41,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, const Tank* localPlayerTank)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, Tank* firingTank)
 {
 	switch (m_bulletDirection) {
 		case DIR_UP: this->m_bulletSprite.move(0, -5); break;
@@ -86,8 +84,8 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	for (auto &enemy : enemyTanks) {
 
-		if (m_firedBy == enemy.get())
-			continue;
+		if (firingTank->typeName() == "enemyTank")
+			break;
 
 		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
 		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [&enemy](std::unique_ptr<Enemy>& element) {return enemy == element; });
@@ -101,17 +99,18 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		}
 	}
 
-	sf::FloatRect localPlayerBounds = localPlayerTank->m_tankSprite.getGlobalBounds();
+	sf::FloatRect localPlayerBounds = gameEngine.m_localPlayerTank->m_tankSprite.getGlobalBounds();
 
 	if (bulletSpriteBounds.intersects(localPlayerBounds)) {
 
-		if (m_firedBy == localPlayerTank)
+		if (firingTank->typeName() == "localPlayerTank")
 			return true;
 
 		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
 		std::cout << "[!] Local player was shot! \n";
+		bullets.erase(bulletItr);
+		return false;
 	}
-
 
 	return true;
 }

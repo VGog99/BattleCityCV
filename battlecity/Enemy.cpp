@@ -33,3 +33,26 @@ void Enemy::setEnemySpeed(float speed)
 {
 	m_enemySpeed = speed;
 }
+
+std::string Enemy::typeName()
+{
+	return "enemyTank";
+}
+
+void Enemy::fireBullet(std::vector<std::unique_ptr<Bullet>>& m_bulletVec, sf::Time elapsed)
+{
+	auto tempDirection = getTankDirection();
+	auto tempPos = m_tankSprite.getPosition();
+	secondCounter += elapsed.asSeconds();
+	double flVal = ((rand() % 10) + 10.00) / 10.00;
+
+	if (secondCounter >= flVal) {
+		switch (tempDirection) {
+			case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, this)); break;
+			case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, this)); break;
+			case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, this)); break;
+			case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, this)); break;
+		}
+		secondCounter = 0.f;
+	}
+}
