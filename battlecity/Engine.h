@@ -29,16 +29,22 @@ private:
 	std::vector<Position> m_enemySpawnPoints;
 
 	sf::SoundBuffer tankMovingBuffer;
-	sf::Sound tankMoving;
 	sf::SoundBuffer bulletBuffer;
 	sf::SoundBuffer tankIdleBuffer;
 	sf::SoundBuffer gameOverBuffer;
+	sf::SoundBuffer wallHitSoundBuffer;
+	sf::SoundBuffer enemyHitSoundBuffer;
+	sf::Sound enemyHitSound;
+	sf::Sound tankMoving;
 	sf::Sound bulletSound;
 	sf::Sound gameOver;
 	sf::Sound tankIdle;
+	sf::Sound wallHitSound;
 
 	bool m_playedMusic;
 	bool m_nextStageScene = true;
+	bool wallHit = false;
+	bool enemyHit = false;
 
 	sf::Texture m_enemyLifeTexture;
 	std::vector<sf::Sprite> enemyLifeSprites;

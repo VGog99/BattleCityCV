@@ -41,9 +41,10 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, Tank* firingTank)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, Tank* firingTank, bool& wallHit, bool& enemyHit)
 {
-	switch (m_bulletDirection) {
+	switch (m_bulletDirection)
+	{
 		case DIR_UP: this->m_bulletSprite.move(0, -5); break;
 		case DIR_DOWN: this->m_bulletSprite.move(0, 5); break;
 		case DIR_LEFT: this->m_bulletSprite.move(-5, 0); break;
@@ -71,7 +72,10 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 				bullets.erase(bulletItr);
 
 				if (it->get()->getType() == entityType::Brick)
+				{
 					worldEntities.erase(it);
+					wallHit = true;
+				}
 				else if (it->get()->getType() == entityType::Eagle)
 				{
 					worldEntities.erase(it);
@@ -91,9 +95,9 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [&enemy](std::unique_ptr<Enemy>& element) {return enemy == element; });
 		
 		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
+			enemyHit = true;
 			bullets.erase(bulletItr);
 			enemyTanks.erase(enemyItr);
-		
 			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
 			return false;
 		}

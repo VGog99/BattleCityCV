@@ -20,7 +20,19 @@ Engine::Engine()
 	if (!gameOverBuffer.loadFromFile("../resources/gameOver.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
+	if (!wallHitSoundBuffer.loadFromFile("../resources/wallHit.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	if (!enemyHitSoundBuffer.loadFromFile("../resources/enemyHit.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
+
+	enemyHitSound.setBuffer(enemyHitSoundBuffer);
+	enemyHitSound.setVolume(1.5f);
+
+	wallHitSound.setBuffer(wallHitSoundBuffer);
+	wallHitSound.setVolume(1.5f);
 
 	tankMoving.setBuffer(tankMovingBuffer);
 	tankMoving.setVolume(1.5f);
@@ -280,9 +292,9 @@ void Engine::runGame() {
 		}
 		else if (m_nextStageScene) {
 			menu.drawStageChangeScene(window, m_currentStage, clock, m_nextStageScene);
-			tankIdle.stop();
+			float secondCounter = 0.f;
 			tankMoving.stop();
-			bulletSound.stop();
+			bulletSound.stop();	
 		}
 		else if (!menu.getIsInMenu()) {
 
@@ -318,9 +330,20 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, bullets->getFiredBy()))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, bullets->getFiredBy(), wallHit, enemyHit))
+				{
 					break;
-
+				}
+				if (wallHit == true)
+				{
+					wallHitSound.play();
+					wallHit = false;
+				}
+				if (enemyHit == true)
+				{
+					enemyHitSound.play();
+					enemyHit = false;
+				}
 				window.draw(bullets.get()->m_bulletSprite);
 			}
 
@@ -520,7 +543,7 @@ void Engine::advanceStageSetup()
 	m_enemyTanks.clear();
 	m_bulletVec.clear();
 
-	tankIdle.stop();
+	tankIdle.play();
 	tankMoving.stop();
 	bulletSound.stop();
 	m_gameOver = false;
@@ -537,9 +560,6 @@ void Engine::resetGameLogic()
 	m_iceVec.clear();
 	m_enemyTanks.clear();
 	m_bulletVec.clear();
-	tankIdle.stop();
-	tankMoving.stop();
-	bulletSound.stop();
 	m_gameOver = false;
 	m_localPlayerKills = 0;
 	m_localPlayerTankIsMoving = false;
