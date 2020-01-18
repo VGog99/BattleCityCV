@@ -160,6 +160,7 @@ void Engine::runGame() {
 			if (event.type == sf::Event::Closed)
 			{
 				logger.Logi(Logger::Level::Info,"See you later");
+				resetGameLogic();
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Up)
@@ -243,6 +244,12 @@ void Engine::runGame() {
 					continue;
 
 				if (tankAlreadyFired(m_localPlayerTank.get()))
+					continue;
+
+				if ((m_localPlayerTank->m_tankSprite.getPosition().x > 900 ||
+					m_localPlayerTank->m_tankSprite.getPosition().x < 0) ||
+					(m_localPlayerTank->m_tankSprite.getPosition().y > 720 ||
+					m_localPlayerTank->m_tankSprite.getPosition().y < 0))
 					continue;
 
 				logger.Logi(Logger::Level::Debug, "Fire");
@@ -650,6 +657,8 @@ void Engine::resetGameLogic()
 	m_localPlayerLives[0] = 2;
 	m_playedMusic = false;
 	m_localPlayerScore = 0;
+	explosionsVec.clear();
+	spawnAnimVec.clear();
 
 	tankIdle.stop();
 	tankMoving.stop();
