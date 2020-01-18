@@ -9,7 +9,7 @@
 #include "Menu.h"
 #include "../Logging/Logger.h"
 #include "Bullet.h"
-#include "Animation.h"
+#include "AnimatedSprite.hpp"
 #include "Macros.h"
 
 class Engine {
@@ -48,11 +48,15 @@ private:
 
 
 	sf::Texture m_enemyLifeTexture;
+	sf::Texture m_explosionTextureSheet;
 	std::vector<sf::Sprite> enemyLifeSprites;
 
 public:
 	
 	std::unique_ptr<Tank> m_localPlayerTank;
+	Animation explosionAnim;
+	std::vector<AnimatedSprite> explosionsVec;
+
 	unsigned short m_localPlayerLives[2] = { 2, 2 };
 
 	Engine();
@@ -69,6 +73,7 @@ public:
 	void setGameOver(bool gameOver);
 	void advanceStageSetup();
 	void resetGameLogic();
+	Animation createAnimation();
 };
 
 extern Engine gameEngine;

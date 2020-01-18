@@ -8,6 +8,11 @@ Bullet::Bullet()
 
 Bullet::~Bullet()
 {
+	AnimatedSprite explosion(sf::seconds(0.1), true, false);
+	explosion.setPosition(this->m_bulletSprite.getPosition().x, this->m_bulletSprite.getPosition().y);
+	explosion.setOrigin(sf::Vector2f(24, 24));
+	explosion.play(gameEngine.explosionAnim);
+	gameEngine.explosionsVec.push_back(explosion);
 }
 
 Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy)

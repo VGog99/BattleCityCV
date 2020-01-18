@@ -2,7 +2,6 @@
 #include <iostream>
 #include <SFML\Graphics.hpp>
 #include "Macros.h"
-#include "Animation.h"
 
 enum tankType {
 	enemyTank,

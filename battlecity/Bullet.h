@@ -5,7 +5,6 @@
 #include "Macros.h"
 #include "WorldEntity.h"
 #include <algorithm>
-#include "Animation.h"
 #include "Enemy.h"
 
 class Enemy;

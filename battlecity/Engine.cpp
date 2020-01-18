@@ -27,9 +27,12 @@ Engine::Engine()
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
+	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
 
 	enemyHitSound.setBuffer(enemyHitSoundBuffer);
 	enemyHitSound.setVolume(1.5f);
+
+	explosionAnim = createAnimation();
 
 	wallHitSound.setBuffer(wallHitSoundBuffer);
 	wallHitSound.setVolume(10.f);
@@ -74,6 +77,7 @@ void Engine::runGame() {
 	window.setFramerateLimit(60);
 	sf::Clock clock;
 	sf::Clock enemyClock;
+	sf::Clock animClock;
 
 	while (window.isOpen())
 	{
@@ -300,6 +304,7 @@ void Engine::runGame() {
 		else if (!menu.getIsInMenu()) {
 
 			clock.restart();
+			sf::Time frameTime = animClock.restart();
 			sf::Time elapsed = enemyClock.restart();
 
 			//draw ice first - tank should be over ice so we have to draw ice first
@@ -347,6 +352,13 @@ void Engine::runGame() {
 				}
 				window.draw(bullets.get()->m_bulletSprite);
 			}
+
+			for (auto& explosion : explosionsVec) {
+				explosion.update(frameTime);
+				window.draw(explosion);
+			}
+
+			explosionsVec.erase(std::remove_if(explosionsVec.begin(), explosionsVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), explosionsVec.end());
 
 			//draw bush - bullet should be under bush so we have to draw bush first
 			for (auto& entity : m_bushVec) {
@@ -579,6 +591,17 @@ void Engine::resetGameLogic()
 	tankIdle.stop();
 	tankMoving.stop();
 	bulletSound.stop();
+}
+
+Animation Engine::createAnimation()
+{
+	Animation explosionAnimation;
+	explosionAnimation.setSpriteSheet(m_explosionTextureSheet);
+	
+	for (int i = 0; i < 5; i++)
+		explosionAnimation.addFrame(sf::IntRect(0, i * 48, 48, 48));
+
+	return explosionAnimation;
 }
 
 void Engine::setGameOver(bool gameOver)
