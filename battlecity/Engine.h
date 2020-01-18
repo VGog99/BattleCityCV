@@ -46,12 +46,14 @@ private:
 	bool wallHit = false;
 	bool enemyHit = false;
 
+
 	sf::Texture m_enemyLifeTexture;
 	std::vector<sf::Sprite> enemyLifeSprites;
 
 public:
 	
 	std::unique_ptr<Tank> m_localPlayerTank;
+	unsigned short m_localPlayerLives[2] = { 2, 2 };
 
 	Engine();
 	~Engine();

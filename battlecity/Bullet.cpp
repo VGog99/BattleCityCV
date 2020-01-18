@@ -88,7 +88,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	for (auto &enemy : enemyTanks) {
 
-		if (firingTank->typeName() == "enemyTank")
+		if (firingTank != nullptr && firingTank->isEnemy())
 			break;
 
 		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
@@ -107,9 +107,16 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	if (bulletSpriteBounds.intersects(localPlayerBounds)) {
 
-		if (firingTank->typeName() == "localPlayerTank")
+		if (firingTank != nullptr && !firingTank->isEnemy())
 			return true;
 
+		if (gameEngine.m_localPlayerLives[0] == 0) {
+			gameEngine.setGameOver(true);
+			return true;
+		}
+
+		gameEngine.m_localPlayerLives[0]--;
+		
 		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
 		std::cout << "[!] Local player was shot! \n";
 		bullets.erase(bulletItr);

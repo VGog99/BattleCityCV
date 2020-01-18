@@ -52,10 +52,9 @@ void Tank::setTankSpeed(float speed)
 	m_tankSpeed = speed;
 }
 
-std::string Tank::typeName()
+bool Tank::isEnemy() const
 {
-	return "localPlayerTank";
+	return false;
 }
-
 
 

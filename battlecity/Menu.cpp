@@ -5,6 +5,9 @@ Menu::Menu()
 	titleTexture.loadFromFile("../resources/title.png");
 	tankTexture.loadFromFile("../resources/tank.png");
 	m_gameOverTexture.loadFromFile("../resources/gameOver.png");
+	stageFlag.loadFromFile("../resources/stageFlag.png");
+	stageFlagSprite.setTexture(stageFlag);
+	stageFlagSprite.setPosition(sf::Vector2f(733, 570));
 
 	m_gameOverSprite.setTexture(m_gameOverTexture);
 	m_gameOverSprite.setPosition(300, 0);
@@ -21,6 +24,17 @@ Menu::Menu()
 	twoPlayersText = sf::Text("2 PLAYERS", menuFont);
 	exitText = sf::Text("EXIT", menuFont);
 	pauseText = sf::Text("PAUSED", menuFont);
+	currentStageText = sf::Text("1", menuFont, 30);
+	currentStageText.setPosition(sf::Vector2f(770, 625));
+	currentStageText.setFillColor(sf::Color(0, 0, 0, 255));
+
+	firstPlayerText = sf::Text("IP", menuFont, 30);
+	firstPlayerText.setPosition(sf::Vector2f(730, 365));
+	firstPlayerText.setFillColor(sf::Color(0, 0, 0, 255));
+
+	firstPlayerLivesText = sf::Text("", menuFont, 30);
+	firstPlayerLivesText.setPosition(sf::Vector2f(730, 400));
+	firstPlayerLivesText.setFillColor(sf::Color(0, 0, 0, 255));
 
 	grayBackground.setSize(sf::Vector2f(900, 720));		
 	grayBackground.setFillColor(sf::Color(127, 127, 127, 255));
@@ -80,6 +94,26 @@ sf::Text Menu::getStageText()
 sf::Text Menu::getPauseText()
 {
 	return pauseText;
+}
+
+sf::Text Menu::getCurrentStageText()
+{
+	return currentStageText;
+}
+
+sf::Text Menu::getFirstPlayerText()
+{
+	return firstPlayerText;
+}
+
+sf::Text Menu::getFirstPlayerLivesText()
+{
+	return firstPlayerLivesText;
+}
+
+void Menu::setFirstPlayerLivesText(unsigned short lives)
+{
+	firstPlayerLivesText.setString(lives < 10 ? "0" + std::to_string(lives) : std::to_string(lives));
 }
 
 bool Menu::getIsInMenu() const
@@ -156,6 +190,7 @@ void Menu::drawStageChangeScene(sf::RenderWindow& window, unsigned int currentSt
 	sf::Time elapsed = clock.restart();
 	secondCounter += elapsed.asSeconds();
 	std::string stageNumberText = "STAGE " + std::to_string(currentStage + 1);
+	currentStageText.setString(std::to_string(currentStage + 1));
 
 	stageText = sf::Text(stageNumberText, menuFont);
 	stageText.setCharacterSize(35);
@@ -175,4 +210,9 @@ void Menu::drawStageChangeScene(sf::RenderWindow& window, unsigned int currentSt
 sf::Font Menu::getMenuFont()
 {
 	return menuFont;
+}
+
+sf::Sprite Menu::getStageFlag()
+{
+	return stageFlagSprite;
 }

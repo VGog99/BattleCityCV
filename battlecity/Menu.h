@@ -22,12 +22,17 @@ private:
 	sf::Text exitText;
 	sf::Text pauseText;
 	sf::Text stageText;
+	sf::Text currentStageText;
+	sf::Text firstPlayerText;
+	sf::Text firstPlayerLivesText;
 
 	sf::Sprite menuSprite;
 	sf::Texture tankTexture;
 	sf::Sprite tankSprite;
 	sf::Text gameOver;
 	sf::RectangleShape grayBackground;
+	sf::Texture stageFlag;
+	sf::Sprite stageFlagSprite;
 
 public:
 	Menu();
@@ -63,10 +68,12 @@ public:
 	sf::Sprite getTankSprite();
 	sf::Text getExitText();
 	sf::Text getStageText();
-	sf::Text getStageOneText();
-	sf::Text getStageTwoText();
-	sf::Text getStageThreeText();
-	sf::Text getStageFourText();
 	sf::Text getPauseText();
+	sf::Text getCurrentStageText();
+	sf::Text getFirstPlayerText();
+	sf::Text getFirstPlayerLivesText();
+	void setFirstPlayerLivesText(unsigned short lives);
 	sf::Font getMenuFont();
+	sf::Sprite getStageFlag();
+	
 };

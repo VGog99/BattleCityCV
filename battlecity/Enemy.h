@@ -17,6 +17,6 @@ public:
 	void doMovement();
 	float getEnemySpeed();
 	void setEnemySpeed(float speed);
-	std::string typeName();
+	bool isEnemy() const;
 };
 

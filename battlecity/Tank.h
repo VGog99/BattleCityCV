@@ -32,6 +32,7 @@ public:
 
 	float getTankSpeed();
 	void setTankSpeed(float speed);
-	virtual std::string typeName();
+	virtual bool isEnemy() const;
+
 };
 

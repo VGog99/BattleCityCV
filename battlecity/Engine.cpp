@@ -32,7 +32,7 @@ Engine::Engine()
 	enemyHitSound.setVolume(1.5f);
 
 	wallHitSound.setBuffer(wallHitSoundBuffer);
-	wallHitSound.setVolume(1.5f);
+	wallHitSound.setVolume(10.f);
 
 	tankMoving.setBuffer(tankMovingBuffer);
 	tankMoving.setVolume(1.5f);
@@ -70,7 +70,7 @@ void Engine::runGame() {
 
 	int savedMenuOption = menu.getMenuOption();
 
-	sf::RenderWindow window(sf::VideoMode(850, 720), "World of Tanks Vaslui");
+	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
 	window.setFramerateLimit(60);
 	sf::Clock clock;
 	sf::Clock enemyClock;
@@ -251,6 +251,7 @@ void Engine::runGame() {
 			advanceStageSetup();
 			onStageStartPresets();
 			m_nextStageScene = true;
+			menuMusic.play();
 		}
 
 		window.clear();
@@ -298,9 +299,9 @@ void Engine::runGame() {
 		}
 		else if (!menu.getIsInMenu()) {
 
-			window.draw(rightSideBg);
 			clock.restart();
 			sf::Time elapsed = enemyClock.restart();
+
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
 				window.draw(entity->getSprite());
@@ -362,9 +363,18 @@ void Engine::runGame() {
 					enemyLifeSprites.pop_back();
 			}
 
+
+			window.draw(rightSideBg);
+
 			for (auto enemyLife : enemyLifeSprites) {
 				window.draw(enemyLife);
 			}
+
+			window.draw(menu.getStageFlag());
+			window.draw(menu.getCurrentStageText());
+			window.draw(menu.getFirstPlayerText());
+			menu.setFirstPlayerLivesText(m_localPlayerLives[0]);
+			window.draw(menu.getFirstPlayerLivesText());
 
 		}
 		
@@ -563,6 +573,7 @@ void Engine::resetGameLogic()
 	m_gameOver = false;
 	m_localPlayerKills = 0;
 	m_localPlayerTankIsMoving = false;
+	m_localPlayerLives[0] = 2;
 	m_playedMusic = false;
 
 	tankIdle.stop();

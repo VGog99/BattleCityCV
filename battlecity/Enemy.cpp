@@ -34,9 +34,9 @@ void Enemy::setEnemySpeed(float speed)
 	m_enemySpeed = speed;
 }
 
-std::string Enemy::typeName()
+bool Enemy::isEnemy() const
 {
-	return "enemyTank";
+	return true;
 }
 
 void Enemy::fireBullet(std::vector<std::unique_ptr<Bullet>>& m_bulletVec, sf::Time elapsed)
