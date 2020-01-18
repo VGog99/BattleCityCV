@@ -28,11 +28,13 @@ Engine::Engine()
 
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
+	m_spawnAnimTextureSheet.loadFromFile("../resources/spawnAnim.png");
 
 	enemyHitSound.setBuffer(enemyHitSoundBuffer);
 	enemyHitSound.setVolume(1.5f);
 
-	explosionAnim = createAnimation();
+	explosionAnim = createExplosionAnimation();
+	spawnAnim = createSpawnAnimation();
 
 	wallHitSound.setBuffer(wallHitSoundBuffer);
 	wallHitSound.setVolume(10.f);
@@ -239,10 +241,10 @@ void Engine::runGame() {
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
 				
 				switch (tempDirection) {
-					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, m_localPlayerTank.get())); break;
-					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, m_localPlayerTank.get())); break;
-					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
-					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank.get())); break;
+					case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, m_localPlayerTank.get(), false)); break;
+					case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, m_localPlayerTank.get(), false)); break;
+					case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, m_localPlayerTank.get(), false)); break;
+					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank.get(), false)); break;
 				}
 
 				bulletSound.play();
@@ -336,7 +338,7 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, bullets->getFiredBy(), wallHit, enemyHit))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, wallHit, enemyHit))
 				{
 					break;
 				}
@@ -366,15 +368,40 @@ void Engine::runGame() {
 			}
 
 			//we should always have 3 enemies on the map
-			if (m_enemyTanks.size() < 3) {
+			if (m_enemyTanks.size() + spawnAnimVec.size() < 3) {
 
 				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
-				m_enemyTanks.push_back(std::make_unique<Enemy>(generatedPos.first, generatedPos.second));
-				
+
+				AnimatedSprite spawn(sf::seconds(0.25), true, false);
+				spawn.setPosition(generatedPos.first, generatedPos.second);
+				spawn.setOrigin(sf::Vector2f(16.5, 15.5));
+				spawn.play(spawnAnim);
+				spawnAnimVec.push_back(spawn);
+
 				if (!enemyLifeSprites.empty())
 					enemyLifeSprites.pop_back();
 			}
 
+			for (auto& spawnAnim : spawnAnimVec) {
+				spawnAnim.update(frameTime);
+				window.draw(spawnAnim);
+
+				if (!spawnAnim.isPlaying())
+					m_enemyTanks.push_back(std::make_unique<Enemy>(spawnAnim.getPosition().x, spawnAnim.getPosition().y));
+			}
+
+			spawnAnimVec.erase(std::remove_if(spawnAnimVec.begin(), spawnAnimVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), spawnAnimVec.end());
+
+			if (m_localPlayerSpawnSprite != nullptr) {
+				m_localPlayerSpawnSprite->update(frameTime);
+				window.draw(*m_localPlayerSpawnSprite);
+
+				if (!m_localPlayerSpawnSprite->isPlaying()) {
+					m_localPlayerTank->m_tankSprite.setPosition(gameEngine.m_localPlayerSpawnPoint.first, gameEngine.m_localPlayerSpawnPoint.second);
+					delete m_localPlayerSpawnSprite;
+					m_localPlayerSpawnSprite = nullptr;
+				}
+			}
 
 			window.draw(rightSideBg);
 
@@ -593,7 +620,7 @@ void Engine::resetGameLogic()
 	bulletSound.stop();
 }
 
-Animation Engine::createAnimation()
+Animation Engine::createExplosionAnimation()
 {
 	Animation explosionAnimation;
 	explosionAnimation.setSpriteSheet(m_explosionTextureSheet);
@@ -602,6 +629,17 @@ Animation Engine::createAnimation()
 		explosionAnimation.addFrame(sf::IntRect(0, i * 48, 48, 48));
 
 	return explosionAnimation;
+}
+
+Animation Engine::createSpawnAnimation()
+{
+	Animation spawnAnimation;
+	spawnAnimation.setSpriteSheet(m_spawnAnimTextureSheet);
+
+	for (int i = 0; i < 10; i++)
+		spawnAnimation.addFrame(sf::IntRect(0, i * 31, 33, 31));
+
+	return spawnAnimation;
 }
 
 void Engine::setGameOver(bool gameOver)
@@ -708,6 +746,8 @@ void Engine::setUpWorld(unsigned short stage)
 				}
 				case 'p': {
 					m_localPlayerTank = std::make_unique<Tank>(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2);
+					m_localPlayerSpawnPoint.first = x * worldEntitySize + worldEntitySize / 2;
+					m_localPlayerSpawnPoint.second = y * worldEntitySize + worldEntitySize / 2;
 				}
 			}
 

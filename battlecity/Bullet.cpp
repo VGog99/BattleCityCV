@@ -2,6 +2,7 @@
 #include "Bullet.h"
 
 
+
 Bullet::Bullet()
 {
 }
@@ -15,7 +16,7 @@ Bullet::~Bullet()
 	gameEngine.explosionsVec.push_back(explosion);
 }
 
-Bullet::Bullet(Position position, char direction, Tank* firedBy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy)
+Bullet::Bullet(Position position, char direction, Tank* firedBy, bool firedByEnemy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy), firedByEnemy(firedByEnemy)
 {
 	m_bulletTexture.loadFromFile("../resources/bullet.png");
 	m_bulletSprite.setTexture(m_bulletTexture);
@@ -46,7 +47,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, Tank* firingTank, bool& wallHit, bool& enemyHit)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& enemyHit)
 {
 	switch (m_bulletDirection)
 	{
@@ -91,10 +92,8 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			}
 	}
 
+	if (!firedByEnemy)
 	for (auto &enemy : enemyTanks) {
-
-		if (firingTank != nullptr && firingTank->isEnemy())
-			break;
 
 		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
 		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [&enemy](std::unique_ptr<Enemy>& element) {return enemy == element; });
@@ -112,7 +111,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	if (bulletSpriteBounds.intersects(localPlayerBounds)) {
 
-		if (firingTank != nullptr && !firingTank->isEnemy())
+		if (!firedByEnemy)
 			return true;
 
 		if (gameEngine.m_localPlayerLives[0] == 0) {
@@ -123,6 +122,13 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		gameEngine.m_localPlayerLives[0]--;
 		
 		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
+
+		gameEngine.m_localPlayerSpawnSprite = new AnimatedSprite(sf::seconds(0.25), true, false);
+		gameEngine.m_localPlayerSpawnSprite->setPosition(gameEngine.m_localPlayerSpawnPoint.first, gameEngine.m_localPlayerSpawnPoint.second);
+		gameEngine.m_localPlayerSpawnSprite->setOrigin(sf::Vector2f(16.5, 15.5));
+		gameEngine.m_localPlayerSpawnSprite->play(gameEngine.spawnAnim);
+		gameEngine.m_localPlayerTank->m_tankSprite.setPosition(1000, 1000);
+
 		std::cout << "[!] Local player was shot! \n";
 		bullets.erase(bulletItr);
 		return false;

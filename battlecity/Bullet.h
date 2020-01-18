@@ -16,11 +16,12 @@ protected:
 	Position m_bulletPosition;
 	char m_bulletDirection = DIR_UP;
 	Tank* m_firedBy;
+	bool firedByEnemy;
 
 public:
 	Bullet();
 	~Bullet();
-	Bullet(Position position, char direction, Tank* firedBy);
+	Bullet(Position position, char direction, Tank* firedBy, bool firedByEnemy);
 
 	sf::Texture m_bulletTexture;
 	sf::Sprite m_bulletSprite;
@@ -29,7 +30,7 @@ public:
 
 	sf::Texture getTexture();
 	Position getPosition() const;
-	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, Tank* firingTank, bool& wallHit, bool& enemyHit);
+	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& enemyHit);
 
 };
 

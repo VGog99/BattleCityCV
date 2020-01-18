@@ -46,16 +46,20 @@ private:
 	bool wallHit = false;
 	bool enemyHit = false;
 
-
 	sf::Texture m_enemyLifeTexture;
 	sf::Texture m_explosionTextureSheet;
+	sf::Texture m_spawnAnimTextureSheet;
 	std::vector<sf::Sprite> enemyLifeSprites;
+	std::vector<AnimatedSprite> spawnAnimVec;
 
 public:
 	
 	std::unique_ptr<Tank> m_localPlayerTank;
 	Animation explosionAnim;
+	Animation spawnAnim;
 	std::vector<AnimatedSprite> explosionsVec;
+	Position m_localPlayerSpawnPoint;
+	AnimatedSprite* m_localPlayerSpawnSprite;
 
 	unsigned short m_localPlayerLives[2] = { 2, 2 };
 
@@ -73,7 +77,8 @@ public:
 	void setGameOver(bool gameOver);
 	void advanceStageSetup();
 	void resetGameLogic();
-	Animation createAnimation();
+	Animation createExplosionAnimation();
+	Animation createSpawnAnimation();
 };
 
 extern Engine gameEngine;
