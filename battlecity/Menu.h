@@ -30,6 +30,7 @@ private:
 	sf::Texture tankTexture;
 	sf::Sprite tankSprite;
 	sf::Text gameOver;
+	sf::Text m_score;
 	sf::RectangleShape grayBackground;
 	sf::Texture stageFlag;
 	sf::Sprite stageFlagSprite;
@@ -53,6 +54,9 @@ public:
 
 	void setPaused(const bool pause);
 	bool getPaused() const;
+
+	void setScore(sf::Text score);
+	sf::Text getScore();
 
 	void updateSprites();
 

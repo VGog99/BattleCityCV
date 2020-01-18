@@ -103,6 +103,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			bullets.erase(bulletItr);
 			enemyTanks.erase(enemyItr);
 			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
+			gameEngine.setLocalPlayerScore(gameEngine.getLocalPlayerScore() + 100);
 			return false;
 		}
 	}

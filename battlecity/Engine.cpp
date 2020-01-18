@@ -25,6 +25,8 @@ Engine::Engine()
 
 	if (!enemyHitSoundBuffer.loadFromFile("../resources/enemyHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+	if (!font.loadFromFile("../resources/font.ttf"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul font.");
 
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
@@ -277,7 +279,18 @@ void Engine::runGame() {
 		}
 		else if (m_gameOver)
 		{
+			std::ostringstream ss;
+			ss << "Your score is:" << gameEngine.getLocalPlayerScore();
+			sf::Text scoreDisplay;
+			scoreDisplay.setFont(font);
+			scoreDisplay.setCharacterSize(30);
+			scoreDisplay.setStyle(sf::Text::Bold);
+			scoreDisplay.setFillColor(sf::Color::White);
+			scoreDisplay.setPosition(200, 500);
+			scoreDisplay.setString(ss.str());
+			menu.setScore(scoreDisplay);
 			window.draw(menu.m_gameOverSprite);
+			window.draw(menu.getScore());
 			tankIdle.stop();
 			tankMoving.stop();
 
@@ -553,6 +566,16 @@ void Engine::setlocalPlayerKills(const unsigned int localPlayerKills)
 unsigned int Engine::getLocalPlayerKills() const
 {
 	return m_localPlayerKills;
+}
+
+void Engine::setLocalPlayerScore(const uint64_t localPlayerScore)
+{
+	m_localPlayerScore = localPlayerScore;
+}
+
+uint64_t Engine::getLocalPlayerScore() const
+{
+	return m_localPlayerScore;
 }
 
 void Engine::onStageStartPresets()

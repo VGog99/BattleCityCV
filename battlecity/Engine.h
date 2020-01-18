@@ -4,6 +4,7 @@
 #include "Tank.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
 #include "WorldEntity.h"
 #include "Enemy.h"
 #include "Menu.h"
@@ -20,6 +21,7 @@ private:
 	unsigned int m_currentStage = 0;
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
+	unsigned int m_localPlayerScore = 0;
 	bool m_localPlayerTankIsMoving;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
 	std::vector<std::unique_ptr<WorldEntity>> m_iceVec;
@@ -51,6 +53,7 @@ private:
 	sf::Texture m_spawnAnimTextureSheet;
 	std::vector<sf::Sprite> enemyLifeSprites;
 	std::vector<AnimatedSprite> spawnAnimVec;
+	sf::Font font;
 
 public:
 	
@@ -73,6 +76,8 @@ public:
 	void doLocalPlayerMovement();
 	void setlocalPlayerKills(const unsigned int localPlayerKills);
 	unsigned int getLocalPlayerKills() const;
+	void setLocalPlayerScore(const uint64_t localPlayerScore);
+	uint64_t getLocalPlayerScore() const;
 	void onStageStartPresets();
 	void setGameOver(bool gameOver);
 	void advanceStageSetup();

@@ -163,6 +163,16 @@ bool Menu::getPaused() const
 	return m_isPaused;
 }
 
+void Menu::setScore(sf::Text score)
+{
+	m_score = score;
+}
+
+sf::Text Menu::getScore()
+{
+	return m_score;
+}
+
 sf::Sprite Menu::getGameOverSprite() const
 {
 	return m_gameOverSprite;
