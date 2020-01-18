@@ -47,7 +47,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& enemyHit)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& tankHit, bool& solidHit)
 {
 	switch (m_bulletDirection)
 	{
@@ -87,6 +87,10 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 					worldEntities.erase(it);
 					gameEngine.setGameOver(true);
 				}
+				else if (it->get()->getType() == entityType::Steel || it->get()->getType() == entityType::WorldBound)
+				{
+					solidHit = true;
+				}
 
 				return false;
 			}
@@ -99,7 +103,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		auto enemyItr = std::find_if(enemyTanks.begin(), enemyTanks.end(), [&enemy](std::unique_ptr<Enemy>& element) {return enemy == element; });
 		
 		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
-			enemyHit = true;
+			tankHit = true;
 			bullets.erase(bulletItr);
 			enemyTanks.erase(enemyItr);
 			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
@@ -110,7 +114,8 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	sf::FloatRect localPlayerBounds = gameEngine.m_localPlayerTank->m_tankSprite.getGlobalBounds();
 
-	if (bulletSpriteBounds.intersects(localPlayerBounds)) {
+	if (bulletSpriteBounds.intersects(localPlayerBounds))
+	{
 
 		if (!firedByEnemy)
 			return true;
@@ -131,6 +136,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		gameEngine.m_localPlayerTank->m_tankSprite.setPosition(1000, 1000);
 
 		bullets.erase(bulletItr);
+		tankHit = true;
 		return false;
 	}
 

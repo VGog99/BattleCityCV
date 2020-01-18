@@ -23,8 +23,12 @@ Engine::Engine()
 	if (!wallHitSoundBuffer.loadFromFile("../resources/wallHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!enemyHitSoundBuffer.loadFromFile("../resources/enemyHit.wav"))
+	if (!tankHitSoundBuffer.loadFromFile("../resources/tankHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
+	if (!solidHitSoundBuffer.loadFromFile("../resources/solidHit.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
 	if (!font.loadFromFile("../resources/font.ttf"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul font.");
 
@@ -32,26 +36,29 @@ Engine::Engine()
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
 	m_spawnAnimTextureSheet.loadFromFile("../resources/spawnAnim.png");
 
-	enemyHitSound.setBuffer(enemyHitSoundBuffer);
-	enemyHitSound.setVolume(1.5f);
+	tankHitSound.setBuffer(tankHitSoundBuffer);
+	tankHitSound.setVolume(20.5f);
+
+	solidHitSound.setBuffer(solidHitSoundBuffer);
+	solidHitSound.setVolume(10.5f);
 
 	explosionAnim = createExplosionAnimation();
 	spawnAnim = createSpawnAnimation();
 
 	wallHitSound.setBuffer(wallHitSoundBuffer);
-	wallHitSound.setVolume(10.f);
+	wallHitSound.setVolume(20.5f);
 
 	tankMoving.setBuffer(tankMovingBuffer);
-	tankMoving.setVolume(1.5f);
+	tankMoving.setVolume(15.5f);
 
 	gameOver.setBuffer(gameOverBuffer);
-	gameOver.setVolume(1.5f);
+	gameOver.setVolume(25.5f);
 
 	bulletSound.setBuffer(bulletBuffer);
-	bulletSound.setVolume(1.0f);
+	bulletSound.setVolume(15.5f);
 
 	tankIdle.setBuffer(tankIdleBuffer);
-	tankIdle.setVolume(1.0f);
+	tankIdle.setVolume(15.5f);
 
 	onStageStartPresets();
 }
@@ -72,12 +79,12 @@ void Engine::runGame() {
 	if (!menuMusic.openFromFile("../resources/menumusic.wav"))
 		logger.Logi(Logger::Level::Error,"Nu s-a putut incarca fisierul de muzica.");
 
-	menuMusic.setVolume(0.60f);
+	menuMusic.setVolume(25.5f);
 	menuMusic.play();
 
 	int savedMenuOption = menu.getMenuOption();
 
-	sf::RenderWindow window(sf::VideoMode(900, 720), "World of Tanks Vaslui");
+	sf::RenderWindow window(sf::VideoMode(900, 720), "Battle City");
 	window.setFramerateLimit(60);
 	sf::Clock clock;
 	sf::Clock enemyClock;
@@ -351,7 +358,7 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, wallHit, enemyHit))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, wallHit, tankHit, solidHit))
 				{
 					break;
 				}
@@ -360,10 +367,15 @@ void Engine::runGame() {
 					wallHitSound.play();
 					wallHit = false;
 				}
-				if (enemyHit == true)
+				if (solidHit == true)
 				{
-					enemyHitSound.play();
-					enemyHit = false;
+					solidHitSound.play();
+					solidHit = false;
+				}
+				if (tankHit == true)
+				{
+					tankHitSound.play();
+					tankHit = false;
 				}
 				window.draw(bullets.get()->m_bulletSprite);
 			}
@@ -552,9 +564,9 @@ bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
 
 void Engine::doLocalPlayerMovement()
 {
-	if (m_localPlayerTankIsMoving) {
+	if (m_localPlayerTankIsMoving) 
+	{
 		gameEngine.moveTank(m_localPlayerTank.get(), m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
-		//tankMoving.play();
 	}
 }
 
@@ -637,6 +649,7 @@ void Engine::resetGameLogic()
 	m_localPlayerTankIsMoving = false;
 	m_localPlayerLives[0] = 2;
 	m_playedMusic = false;
+	m_localPlayerScore = 0;
 
 	tankIdle.stop();
 	tankMoving.stop();

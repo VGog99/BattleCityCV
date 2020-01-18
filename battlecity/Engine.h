@@ -35,8 +35,10 @@ private:
 	sf::SoundBuffer tankIdleBuffer;
 	sf::SoundBuffer gameOverBuffer;
 	sf::SoundBuffer wallHitSoundBuffer;
-	sf::SoundBuffer enemyHitSoundBuffer;
-	sf::Sound enemyHitSound;
+	sf::SoundBuffer tankHitSoundBuffer;
+	sf::SoundBuffer solidHitSoundBuffer;
+	sf::Sound solidHitSound;
+	sf::Sound tankHitSound;
 	sf::Sound tankMoving;
 	sf::Sound bulletSound;
 	sf::Sound gameOver;
@@ -46,7 +48,8 @@ private:
 	bool m_playedMusic;
 	bool m_nextStageScene = true;
 	bool wallHit = false;
-	bool enemyHit = false;
+	bool tankHit = false;
+	bool solidHit = false;
 
 	sf::Texture m_enemyLifeTexture;
 	sf::Texture m_explosionTextureSheet;
