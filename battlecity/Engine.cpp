@@ -294,7 +294,7 @@ void Engine::runGame() {
 		else if (m_gameOver)
 		{
 			std::ostringstream ss;
-			ss << "Your score is:" << gameEngine.getLocalPlayerScore();
+			ss << "Your score is:" <<getLocalPlayerScore();
 			sf::Text scoreDisplay;
 			scoreDisplay.setFont(font);
 			scoreDisplay.setCharacterSize(30);
@@ -365,24 +365,24 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, wallHit, tankHit, solidHit))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_wallHit, m_tankHit, m_solidHit))
 				{
 					break;
 				}
-				if (wallHit == true)
+				if (m_wallHit == true)
 				{
 					wallHitSound.play();
-					wallHit = false;
+					m_wallHit = false;
 				}
-				if (solidHit == true)
+				if (m_solidHit == true)
 				{
 					solidHitSound.play();
-					solidHit = false;
+					m_solidHit = false;
 				}
-				if (tankHit == true)
+				if (m_tankHit == true)
 				{
 					tankHitSound.play();
-					tankHit = false;
+					m_tankHit = false;
 				}
 				window.draw(bullets.get()->m_bulletSprite);
 			}
@@ -628,6 +628,11 @@ void Engine::onStageStartPresets()
 void Engine::advanceStageSetup()
 {
 	m_currentStage += 1;
+	if (m_currentStage == 10 || m_currentStage == 20 || m_currentStage == 30)
+	{
+		m_localPlayerLives[0]++;
+		logger.Logi(Logger::Level::Info, "Felicitari ai primit o viata in plus");
+	}
 	m_worldEntities.clear();
 	m_bushVec.clear();
 	m_iceVec.clear();

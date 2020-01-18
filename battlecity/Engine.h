@@ -47,9 +47,9 @@ private:
 
 	bool m_playedMusic;
 	bool m_nextStageScene = true;
-	bool wallHit = false;
-	bool tankHit = false;
-	bool solidHit = false;
+	bool m_wallHit = false;
+	bool m_tankHit = false;
+	bool m_solidHit = false;
 
 	sf::Texture m_enemyLifeTexture;
 	sf::Texture m_explosionTextureSheet;
