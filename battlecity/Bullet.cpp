@@ -129,7 +129,6 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		gameEngine.m_localPlayerSpawnSprite->play(gameEngine.spawnAnim);
 		gameEngine.m_localPlayerTank->m_tankSprite.setPosition(1000, 1000);
 
-		std::cout << "[!] Local player was shot! \n";
 		bullets.erase(bulletItr);
 		return false;
 	}

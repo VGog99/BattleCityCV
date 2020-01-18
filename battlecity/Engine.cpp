@@ -756,10 +756,7 @@ void Engine::setUpWorld(unsigned short stage)
 		y++;
 	}
 	logger.Logi(Logger::Level::Info, m_worldEntities.size(), " elements were loaded in this stage ");
-	
-	for (auto spawnPoint : m_enemySpawnPoints) {
-		logger.Logi(Logger::Level::Info, spawnPoint.first, spawnPoint.second);
-	}
+
 }
 
 
