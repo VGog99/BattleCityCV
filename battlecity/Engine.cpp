@@ -460,57 +460,49 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 	switch (direction) {
 	case DIR_UP:
 
-		tankToMove->m_tankSprite.move(0, -speed);
-
-		if (handleCollision(tankToMove, intersection)) {
-			tankToMove->m_tankSprite.move(0, intersection.height);
-			return false;
-		}
-
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 			tankToMove->m_tankSprite.setRotation(0.f);
+
+		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+			tankToMove->m_tankSprite.move(0, -speed);
+		else
+			return false;
 
 		break;
 
 	case DIR_DOWN:
 
-		tankToMove->m_tankSprite.move(0, speed);
-
-		if (handleCollision(tankToMove, intersection)) {
-			tankToMove->m_tankSprite.move(0, -intersection.height);
-			return false;
-		}
-
 		if (tankToMove->m_tankSprite.getRotation() != 180)
 			tankToMove->m_tankSprite.setRotation(180.f);
 
+		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+			tankToMove->m_tankSprite.move(0, speed);
+		else
+			return false;
+		
 		break;
 
 	case DIR_LEFT:
 
-		tankToMove->m_tankSprite.move(-speed, 0);
-
-		if (handleCollision(tankToMove, intersection)) {
-			tankToMove->m_tankSprite.move(intersection.width, 0);
-			return false;
-		}
-
 		if (tankToMove->m_tankSprite.getRotation() != -90)
 			tankToMove->m_tankSprite.setRotation(-90.f);
+
+		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+			tankToMove->m_tankSprite.move(-speed, 0);
+		else
+			return false;
 
 		break;
 
 	case DIR_RIGHT:
 
-		tankToMove->m_tankSprite.move(speed, 0);
-
-		if (handleCollision(tankToMove, intersection)) {
-			tankToMove->m_tankSprite.move(-intersection.width, 0);
-			return false;
-		}
-
 		if (tankToMove->m_tankSprite.getRotation() != 90)
 			tankToMove->m_tankSprite.setRotation(90.f);
+
+		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+			tankToMove->m_tankSprite.move(speed, 0);
+		else
+			return false;
 
 		break;
 	}
@@ -528,6 +520,57 @@ bool Engine::tankAlreadyFired(Tank* tankToCheck)
 	}
 
 	return false;
+}
+
+bool Engine::handleUpwardsCollision(Tank* tankToCheck, char direction)
+{
+	auto dummySprite = tankToCheck->m_tankSprite;
+	auto futurePosition = tankToCheck->m_tankSprite.getPosition();
+
+	switch (direction) {
+	case DIR_UP: futurePosition.y -= tankToCheck->getTankSpeed(); break;
+	case DIR_DOWN: futurePosition.y += tankToCheck->getTankSpeed(); break;
+	case DIR_LEFT: futurePosition.x -= tankToCheck->getTankSpeed(); break;
+	case DIR_RIGHT: futurePosition.x += tankToCheck->getTankSpeed(); break;
+	}
+	
+	dummySprite.setPosition(futurePosition);
+
+	sf::FloatRect bounds = dummySprite.getGlobalBounds();
+
+	for (auto& entity : m_worldEntities) {
+
+		if (entity->getType() == entityType::Bush)
+			continue;
+		if (entity->getType() == entityType::Ice)
+			continue;
+
+		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
+
+		if (bounds.intersects(secondSpriteBounds)) {
+			return false;
+		}
+	}
+
+	for (auto& enemyTank : m_enemyTanks) {
+
+		if (tankToCheck == enemyTank.get())
+			continue;
+
+		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
+
+		if (bounds.intersects(secondSpriteBounds)) {
+			return false;
+		}
+	}
+
+	if (tankToCheck != m_localPlayerTank.get()) {
+		if (bounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
