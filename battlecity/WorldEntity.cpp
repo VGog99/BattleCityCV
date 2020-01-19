@@ -5,7 +5,6 @@ WorldEntity::WorldEntity(entityType type, float posX, float posY) : m_entityType
 	switch (type) {
 		case entityType::Brick: {
 			m_worldEntityTexture.loadFromFile("../resources/brick.png");
-			m_isDamageable = true;
 			break;
 		}
 		case entityType::Steel: {

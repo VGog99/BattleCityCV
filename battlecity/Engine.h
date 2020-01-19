@@ -77,6 +77,8 @@ private:
 	sf::SoundBuffer m_wallHitSoundBuffer;
 	sf::SoundBuffer m_tankHitSoundBuffer;
 	sf::SoundBuffer m_solidHitSoundBuffer;
+	sf::SoundBuffer m_powerUpBuffer;
+	sf::Sound m_powerUpSound;
 	sf::Sound m_solidHitSound;
 	sf::Sound m_tankHitSound;
 	sf::Sound m_tankMoving;

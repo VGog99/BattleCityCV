@@ -29,12 +29,18 @@ Engine::Engine()
 	if (!m_solidHitSoundBuffer.loadFromFile("../resources/solidHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
+	if (!m_powerUpBuffer.loadFromFile("../resources/powerUp.wav"))
+		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
+
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
 	m_spawnAnimTextureSheet.loadFromFile("../resources/spawnAnim.png");
 
 	m_tankHitSound.setBuffer(m_tankHitSoundBuffer);
 	m_tankHitSound.setVolume(20.5f);
+
+	m_powerUpSound.setBuffer(m_powerUpBuffer);
+	m_powerUpSound.setVolume(20.5f);
 
 	m_solidHitSound.setBuffer(m_solidHitSoundBuffer);
 	m_solidHitSound.setVolume(10.5f);
@@ -270,9 +276,17 @@ void Engine::RunGame() {
 		}
 
 		//advance to the next stage if player has killed 20 enemy tanks
-		if (m_localPlayerKills == 20) {
-			AdvanceStageSetup();
-			OnStageStartPresets();
+		if (m_localPlayerKills == 20)
+		{
+			if (m_currentStage != 21) 
+			{
+				AdvanceStageSetup();
+				OnStageStartPresets();
+			}
+			else
+			{
+				m_gameOver = true;
+			}
 			m_nextStageScene = true;
 			menuMusic.play();
 		}
@@ -648,6 +662,7 @@ bool Engine::HandleCollision(Tank* tankToCheck, char direction)
 
 			if (bounds.intersects(secondSpriteBounds)) {
 				auto type = it->GetType();
+				m_powerUpSound.play();
 				logger.Logi(Logger::Level::Info, "You picked up a power up [", type, "]");
 
 				if (it->GetType() == powerUp::StarPU) {
@@ -747,6 +762,8 @@ void Engine::AdvanceStageSetup()
 	m_gameOver = false;
 	m_localPlayerKills = 0;
 
+	m_activePowerUps = { false, false, false, false, false, false };
+
 	SetUpWorld(m_currentStage);
 }
 
@@ -767,10 +784,11 @@ void Engine::ResetGameLogic()
 	m_enemiesRespawned = 0;
 	m_explosionsVec.clear();
 	m_spawnAnimVec.clear();
-
+	
 	m_tankIdleSound.stop();
 	m_tankMoving.stop();
 	m_bulletSound.stop();
+
 }
 
 void Engine::SetUpPUSpawnPoints()
@@ -840,7 +858,7 @@ void Engine::SetUpWorld(unsigned short stage)
 	std::vector<std::string> fileNames = { "../stages/stage1.txt", "../stages/stage2.txt", "../stages/stage3.txt", "../stages/stage4.txt", "../stages/stage5.txt"
 	, "../stages/stage6.txt", "../stages/stage7.txt", "../stages/stage8.txt", "../stages/stage9.txt", "../stages/stage10.txt", "../stages/stage11.txt", "../stages/stage12.txt"
 	, "../stages/stage13.txt", "../stages/stage14.txt", "../stages/stage15.txt", "../stages/stage16.txt", "../stages/stage17.txt", "../stages/stage18.txt", 
-		"../stages/stage19.txt", "../stages/stage20.txt" , "../stages/stage21.txt", "../stages/stage22.txt" };
+		"../stages/stage19.txt", "../stages/stage20.txt" , "../stages/stage21.txt", "../stages/stage22.txt", "../stages/stage23.txt" };
 	std::string inputFromFile;
 	std::ifstream file(fileNames.at(stage));
 
