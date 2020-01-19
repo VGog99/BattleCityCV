@@ -369,7 +369,6 @@ void Engine::runGame() {
 			//do movement and draw local player
 			doLocalPlayerMovement();
 			window.draw(m_localPlayerTank->m_tankSprite);
-			std::cout << m_starsCollected << "\n";
 
 			//do movement and draw enemies
 			for (auto &enemyTank : m_enemyTanks) {
@@ -651,8 +650,10 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 				auto type = it->getType();
 				logger.Logi(Logger::Level::Info, "You picked up a power up [", type, "]");
 
-				if (it->getType() == powerUp::StarPU)
+				if (it->getType() == powerUp::StarPU) {
 					m_starsCollected++;
+					logger.Logi(Logger::Level::Info, "You picked up a star, now you have ", m_starsCollected);
+				}
 
 				m_activePowerUps.at(type) = true;
 				m_powerUps.erase(it);
@@ -937,7 +938,7 @@ void Engine::setUpWorld(unsigned short stage)
 		}
 		y++;
 	}
-	logger.Logi(Logger::Level::Info, m_worldEntities.size(), " elements were loaded in this stage ");
+	logger.Logi(Logger::Level::Info, m_worldEntities.size(), "elements were loaded in this stage ");
 
 }
 

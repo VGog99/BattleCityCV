@@ -14,6 +14,10 @@ enum entityType {
 
 class WorldEntity
 {
+public:
+	WorldEntity(entityType type, float posX, float posY);
+	entityType getType() const;
+	sf::Sprite getSprite() const;
 
 private:
 	sf::Texture m_worldEntityTexture;
@@ -22,10 +26,5 @@ private:
 	bool m_isDamageable;
 	Position m_entityPosition;
 
-public:
-	WorldEntity(entityType type, float posX, float posY);
-	entityType getType() const;
-
-	sf::Sprite getSprite() const;
 };
 

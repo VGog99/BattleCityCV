@@ -16,7 +16,42 @@
 
 class Engine {
 
+public:
+	Engine();
+	~Engine();
+	void runGame();
+	bool moveTank(Tank* tankToMove, const char direction, float speed);
+	unsigned short tankAlreadyFired(Tank* tankToCheck);
+	bool handleCollision(Tank* tankToCheck, char direction);
+	void setUpWorld(unsigned short stage);
+	void doLocalPlayerMovement();
+	void setlocalPlayerKills(const unsigned int localPlayerKills);
+	unsigned int getLocalPlayerKills() const;
+	void setLocalPlayerScore(const uint64_t localPlayerScore);
+	uint64_t getLocalPlayerScore() const;
+	void onStageStartPresets();
+	void setGameOver(bool gameOver);
+	void advanceStageSetup();
+	void resetGameLogic();
+	void setUpPUSpawnPoints();
+	unsigned short getStarsCollected() const;
+	void setStarsCollected(unsigned short stars);
+	
+public:
+	Animation createExplosionAnimation();
+	Animation createSpawnAnimation();
+	std::unique_ptr<Tank> m_localPlayerTank;
+	Animation explosionAnim;
+	Animation spawnAnim;
+	std::vector<AnimatedSprite> explosionsVec;
+	Position m_localPlayerSpawnPoint;
+	AnimatedSprite* m_localPlayerSpawnSprite;
+	std::vector<bool> m_activePowerUps = { false, false, false, false, false, false };
+
+	unsigned short m_localPlayerLives[2] = { 2, 2 };
+
 private:
+
 	bool m_gameStarted;
 	bool m_gameOver;
 	unsigned int m_currentStage = 0;
@@ -63,39 +98,7 @@ private:
 	std::vector<sf::Sprite> enemyLifeSprites;
 	std::vector<AnimatedSprite> spawnAnimVec;
 
-public:
-	
-	std::unique_ptr<Tank> m_localPlayerTank;
-	Animation explosionAnim;
-	Animation spawnAnim;
-	std::vector<AnimatedSprite> explosionsVec;
-	Position m_localPlayerSpawnPoint;
-	AnimatedSprite* m_localPlayerSpawnSprite;
-	std::vector<bool> m_activePowerUps = { false, false, false, false, false, false};
 
-	unsigned short m_localPlayerLives[2] = { 2, 2 };
-
-	Engine();
-	~Engine();
-	void runGame();
-	bool moveTank(Tank* tankToMove, const char direction, float speed);
-	unsigned short tankAlreadyFired(Tank* tankToCheck);
-	bool handleCollision(Tank* tankToCheck, char direction);
-	void setUpWorld(unsigned short stage);
-	void doLocalPlayerMovement();
-	void setlocalPlayerKills(const unsigned int localPlayerKills);
-	unsigned int getLocalPlayerKills() const;
-	void setLocalPlayerScore(const uint64_t localPlayerScore);
-	uint64_t getLocalPlayerScore() const;
-	void onStageStartPresets();
-	void setGameOver(bool gameOver);
-	void advanceStageSetup();
-	void resetGameLogic();
-	void setUpPUSpawnPoints();
-	unsigned short getStarsCollected() const;
-	void setStarsCollected(unsigned short stars);
-	Animation createExplosionAnimation();
-	Animation createSpawnAnimation();
 };
 
 extern Engine gameEngine;

@@ -10,17 +10,18 @@ enum powerUp {
 	StarPU,
 	TankPU
 };
+
 class PowerUps
 {
+public:
+	PowerUps(powerUp type, float posX, float posY);
+	powerUp getType() const;
+	sf::Sprite getSprite() const;
+
 private:
 	sf::Texture m_powerUpTexture;
 	sf::Sprite m_powerUpSprite;
 	powerUp m_powerUp;
 	Position m_powerUpPosition;
-
-public:
-	PowerUps(powerUp type, float posX, float posY);
-	powerUp getType() const;
-	sf::Sprite getSprite() const;
 };
 

@@ -12,13 +12,6 @@ class Enemy;
 
 class Bullet
 {
-protected:
-
-	Position m_bulletPosition;
-	char m_bulletDirection = DIR_UP;
-	Tank* m_firedBy;
-	bool firedByEnemy;
-
 public:
 	Bullet();
 	~Bullet();
@@ -33,5 +26,10 @@ public:
 	Position getPosition() const;
 	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit);
 
+protected:
+	Position m_bulletPosition;
+	char m_bulletDirection = DIR_UP;
+	Tank* m_firedBy;
+	bool firedByEnemy;
 };
 

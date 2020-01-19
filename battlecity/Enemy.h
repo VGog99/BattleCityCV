@@ -4,11 +4,6 @@
 
 class Enemy : public Tank
 {
-protected:
-
-	float m_enemySpeed = 1.2f;
-	float secondCounter = 0.f;
-	bool m_poweredUp = false;
 
 public:
 	Enemy();
@@ -21,5 +16,12 @@ public:
 	float getEnemySpeed();
 	void setEnemySpeed(float speed);
 	bool isEnemy() const;
+
+protected:
+
+	float m_enemySpeed = 1.2f;
+	float secondCounter = 0.f;
+	bool m_poweredUp = false;
+
 };
 

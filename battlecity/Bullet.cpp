@@ -117,7 +117,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			if (enemy->getPoweredUp()) {
 				auto generatedPos = rand() % (powerUpSpawnPoints.size() - 1);
 				auto randomPowerUp = rand() % 5;
-				powerUps.emplace_back(powerUp(4), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
+				powerUps.emplace_back(powerUp(randomPowerUp), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
 			}
 
 			enemyTanks.erase(enemyItr);
