@@ -48,6 +48,9 @@ public:
 	AnimatedSprite* m_localPlayerSpawnSprite;
 	std::vector<bool> m_activePowerUps = { false, false, false, false, false, false };
 	unsigned short m_localPlayerLives[2] = { 2, 2 };
+	sf::Sound m_tankMoving;
+	sf::Sound m_tankIdleSound;
+	bool m_localPlayerTankIsMoving;
 
 private:
 
@@ -60,7 +63,6 @@ private:
 	unsigned short m_enemiesRespawned = 0;
 	unsigned short m_starsCollected = 0;
 	float m_secondsElapsed;
-	bool m_localPlayerTankIsMoving;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
 	std::vector<std::unique_ptr<WorldEntity>> m_iceVec;
 	std::vector<std::unique_ptr<WorldEntity>> m_bushVec;
@@ -81,10 +83,8 @@ private:
 	sf::Sound m_powerUpSound;
 	sf::Sound m_solidHitSound;
 	sf::Sound m_tankHitSound;
-	sf::Sound m_tankMoving;
 	sf::Sound m_bulletSound;
 	sf::Sound m_gameOverSound;
-	sf::Sound m_tankIdleSound;
 	sf::Sound m_wallHitSound;
 
 	bool m_playedMusic;

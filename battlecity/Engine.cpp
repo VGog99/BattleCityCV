@@ -6,6 +6,15 @@
 std::ofstream logFile("log.log", std::ios::app);
 Logger logger(std::cout, Logger::Level::Info);
 
+template <class test>
+void movingSounds(test moving)
+{
+	gameEngine.m_localPlayerTankIsMoving = moving;
+	gameEngine.m_tankIdleSound.stop();
+
+	if (gameEngine.m_tankMoving.getStatus() != sf::Sound::Playing)
+	        gameEngine.m_tankMoving.play();
+}
 Engine::Engine()
 {
 	if (!m_tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
@@ -102,11 +111,7 @@ void Engine::RunGame() {
 			if(!menu.GetIsInMenu()) {
 				m_localPlayerTank->SetTankDirection(DIR_UP);
 				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
-				m_localPlayerTankIsMoving = true;
-				m_tankIdleSound.stop();
-
-				if (m_tankMoving.getStatus() != sf::Sound::Playing)
-					m_tankMoving.play();
+				movingSounds(true);
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
@@ -114,11 +119,7 @@ void Engine::RunGame() {
 			if (!menu.GetIsInMenu()) {
 				m_localPlayerTank->SetTankDirection(DIR_DOWN);
 				logger.Logi(Logger::Level::Debug,"The player moved downwards");
-				m_localPlayerTankIsMoving = true;
-				m_tankIdleSound.stop();
-
-				if (m_tankMoving.getStatus() != sf::Sound::Playing)
-					m_tankMoving.play();
+				movingSounds(true);
 			}
 
 		}
@@ -127,11 +128,7 @@ void Engine::RunGame() {
 			if (!menu.GetIsInMenu()) {
 				m_localPlayerTank->SetTankDirection(DIR_LEFT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the left");
-				m_localPlayerTankIsMoving = true;
-				m_tankIdleSound.stop();
-
-				if (m_tankMoving.getStatus() != sf::Sound::Playing)
-					m_tankMoving.play();
+				movingSounds(true);
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -139,11 +136,7 @@ void Engine::RunGame() {
 			if (!menu.GetIsInMenu()) {
 				m_localPlayerTank->SetTankDirection(DIR_RIGHT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the right");
-				m_localPlayerTankIsMoving = true;
-				m_tankIdleSound.stop();
-
-				if (m_tankMoving.getStatus() != sf::Sound::Playing)
-					m_tankMoving.play();
+				movingSounds(true);
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
