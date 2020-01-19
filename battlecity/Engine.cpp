@@ -6,8 +6,8 @@
 std::ofstream logFile("log.log", std::ios::app);
 Logger logger(std::cout, Logger::Level::Info);
 
-template <class test>
-void movingSounds(test moving)
+template <class sound>
+void movingSounds(sound moving)
 {
 	gameEngine.m_localPlayerTankIsMoving = moving;
 	gameEngine.m_tankIdleSound.stop();
