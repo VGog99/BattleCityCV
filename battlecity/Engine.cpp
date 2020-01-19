@@ -8,64 +8,64 @@ Logger logger(std::cout, Logger::Level::Info);
 
 Engine::Engine()
 {
-	if (!tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
+	if (!m_tankMovingBuffer.loadFromFile("../resources/tankMoving.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
+	if (!m_bulletBuffer.loadFromFile("../resources/bulletSound.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
+	if (!m_tankIdleBuffer.loadFromFile("../resources/tankIdle.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!gameOverBuffer.loadFromFile("../resources/gameOver.wav"))
+	if (!m_gameOverBuffer.loadFromFile("../resources/gameOver.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!wallHitSoundBuffer.loadFromFile("../resources/wallHit.wav"))
+	if (!m_wallHitSoundBuffer.loadFromFile("../resources/wallHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!tankHitSoundBuffer.loadFromFile("../resources/tankHit.wav"))
+	if (!m_tankHitSoundBuffer.loadFromFile("../resources/tankHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!solidHitSoundBuffer.loadFromFile("../resources/solidHit.wav"))
+	if (!m_solidHitSoundBuffer.loadFromFile("../resources/solidHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
 	m_spawnAnimTextureSheet.loadFromFile("../resources/spawnAnim.png");
 
-	tankHitSound.setBuffer(tankHitSoundBuffer);
-	tankHitSound.setVolume(20.5f);
+	m_tankHitSound.setBuffer(m_tankHitSoundBuffer);
+	m_tankHitSound.setVolume(20.5f);
 
-	solidHitSound.setBuffer(solidHitSoundBuffer);
-	solidHitSound.setVolume(10.5f);
+	m_solidHitSound.setBuffer(m_solidHitSoundBuffer);
+	m_solidHitSound.setVolume(10.5f);
 
-	explosionAnim = createExplosionAnimation();
-	spawnAnim = createSpawnAnimation();
+	m_explosionAnim = CreateExplosionAnimation();
+	m_spawnAnim = CreateSpawnAnimation();
 
-	wallHitSound.setBuffer(wallHitSoundBuffer);
-	wallHitSound.setVolume(20.5f);
+	m_wallHitSound.setBuffer(m_wallHitSoundBuffer);
+	m_wallHitSound.setVolume(20.5f);
 
-	tankMoving.setBuffer(tankMovingBuffer);
-	tankMoving.setVolume(15.5f);
+	m_tankMoving.setBuffer(m_tankMovingBuffer);
+	m_tankMoving.setVolume(15.5f);
 
-	gameOver.setBuffer(gameOverBuffer);
-	gameOver.setVolume(25.5f);
+	m_gameOverSound.setBuffer(m_gameOverBuffer);
+	m_gameOverSound.setVolume(25.5f);
 
-	bulletSound.setBuffer(bulletBuffer);
-	bulletSound.setVolume(15.5f);
+	m_bulletSound.setBuffer(m_bulletBuffer);
+	m_bulletSound.setVolume(15.5f);
 
-	tankIdle.setBuffer(tankIdleBuffer);
-	tankIdle.setVolume(15.5f);
+	m_tankIdleSound.setBuffer(m_tankIdleBuffer);
+	m_tankIdleSound.setVolume(15.5f);
 
-	onStageStartPresets();
-	setUpPUSpawnPoints();
+	OnStageStartPresets();
+	SetUpPUSpawnPoints();
 }
 
 Engine::~Engine()
 {
 }
 
-void Engine::runGame() {
+void Engine::RunGame() {
 
 	Menu menu;
 	sf::RectangleShape rightSideBg(sf::Vector2f(180, 720));
@@ -80,7 +80,7 @@ void Engine::runGame() {
 	menuMusic.setVolume(25.5f);
 	menuMusic.play();
 
-	int savedMenuOption = menu.getMenuOption();
+	int savedMenuOption = menu.GetMenuOption();
 
 	sf::RenderWindow window(sf::VideoMode(900, 720), "Battle City");
 	window.setFramerateLimit(60);
@@ -93,51 +93,51 @@ void Engine::runGame() {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
-			if(!menu.getIsInMenu()) {
-				m_localPlayerTank->setTankDirection(DIR_UP);
+			if(!menu.GetIsInMenu()) {
+				m_localPlayerTank->SetTankDirection(DIR_UP);
 				logger.Logi(Logger::Level::Debug,"The player is moving upwards");
 				m_localPlayerTankIsMoving = true;
-				tankIdle.stop();
+				m_tankIdleSound.stop();
 
-				if (tankMoving.getStatus() != sf::Sound::Playing)
-					tankMoving.play();
+				if (m_tankMoving.getStatus() != sf::Sound::Playing)
+					m_tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 
-			if (!menu.getIsInMenu()) {
-				m_localPlayerTank->setTankDirection(DIR_DOWN);
+			if (!menu.GetIsInMenu()) {
+				m_localPlayerTank->SetTankDirection(DIR_DOWN);
 				logger.Logi(Logger::Level::Debug,"The player moved downwards");
 				m_localPlayerTankIsMoving = true;
-				tankIdle.stop();
+				m_tankIdleSound.stop();
 
-				if (tankMoving.getStatus() != sf::Sound::Playing)
-					tankMoving.play();
+				if (m_tankMoving.getStatus() != sf::Sound::Playing)
+					m_tankMoving.play();
 			}
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 
-			if (!menu.getIsInMenu()) {
-				m_localPlayerTank->setTankDirection(DIR_LEFT);
+			if (!menu.GetIsInMenu()) {
+				m_localPlayerTank->SetTankDirection(DIR_LEFT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the left");
 				m_localPlayerTankIsMoving = true;
-				tankIdle.stop();
+				m_tankIdleSound.stop();
 
-				if (tankMoving.getStatus() != sf::Sound::Playing)
-					tankMoving.play();
+				if (m_tankMoving.getStatus() != sf::Sound::Playing)
+					m_tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 
-			if (!menu.getIsInMenu()) {
-				m_localPlayerTank->setTankDirection(DIR_RIGHT);
+			if (!menu.GetIsInMenu()) {
+				m_localPlayerTank->SetTankDirection(DIR_RIGHT);
 				logger.Logi(Logger::Level::Debug,"The player moved to the right");
 				m_localPlayerTankIsMoving = true;
-				tankIdle.stop();
+				m_tankIdleSound.stop();
 
-				if (tankMoving.getStatus() != sf::Sound::Playing)
-					tankMoving.play();
+				if (m_tankMoving.getStatus() != sf::Sound::Playing)
+					m_tankMoving.play();
 			}
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -147,8 +147,8 @@ void Engine::runGame() {
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 		{
 			logger.Logi(Logger::Level::Info, "Level skipped, cheater!");
-			advanceStageSetup();
-			onStageStartPresets();
+			AdvanceStageSetup();
+			OnStageStartPresets();
 			m_nextStageScene = true;
 		}
 
@@ -158,70 +158,70 @@ void Engine::runGame() {
 			if (event.type == sf::Event::Closed)
 			{
 				logger.Logi(Logger::Level::Info,"See you later");
-				resetGameLogic();
+				ResetGameLogic();
 				window.close();
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Up)
 			{
-				if (menu.getIsInMenu()) {
-					savedMenuOption = menu.getMenuOption();
+				if (menu.GetIsInMenu()) {
+					savedMenuOption = menu.GetMenuOption();
 					savedMenuOption--;
-					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 2);
-					menu.setMenuOption(savedMenuOption);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.GetStageChooser() ? 3 : 2);
+					menu.SetMenuOption(savedMenuOption);
 				}
 				else
 				{
 					m_localPlayerTankIsMoving = false;
-					tankMoving.stop();
-					tankIdle.setLoop(true);
-					tankIdle.play();
+					m_tankMoving.stop();
+					m_tankIdleSound.setLoop(true);
+					m_tankIdleSound.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Down)
 			{
-				if (menu.getIsInMenu()) {
-					savedMenuOption = menu.getMenuOption();
+				if (menu.GetIsInMenu()) {
+					savedMenuOption = menu.GetMenuOption();
 					savedMenuOption++;
-					savedMenuOption = std::clamp(savedMenuOption, 0, menu.getStageChooser() ? 3 : 2);
-					menu.setMenuOption(savedMenuOption);
+					savedMenuOption = std::clamp(savedMenuOption, 0, menu.GetStageChooser() ? 3 : 2);
+					menu.SetMenuOption(savedMenuOption);
 				}
 				else
 				{
 					m_localPlayerTankIsMoving = false;
-					tankMoving.stop();
-					tankIdle.setLoop(true);
-					tankIdle.play();
+					m_tankMoving.stop();
+					m_tankIdleSound.setLoop(true);
+					m_tankIdleSound.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Left)
 			{
-				if (!menu.getIsInMenu()) {
+				if (!menu.GetIsInMenu()) {
 					m_localPlayerTankIsMoving = false;
-					tankMoving.stop();
-					tankIdle.setLoop(true);
-					tankIdle.play();
+					m_tankMoving.stop();
+					m_tankIdleSound.setLoop(true);
+					m_tankIdleSound.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Right)
 			{
-				if (!menu.getIsInMenu()) {
+				if (!menu.GetIsInMenu()) {
 					m_localPlayerTankIsMoving = false;
-					tankMoving.stop();
-					tankIdle.setLoop(true);
-					tankIdle.play();
+					m_tankMoving.stop();
+					m_tankIdleSound.setLoop(true);
+					m_tankIdleSound.play();
 				}
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Enter) {
 
-				if (menu.getIsInMenu() && menu.getMenuOption() == 0) {
+				if (menu.GetIsInMenu() && menu.GetMenuOption() == 0) {
 
-					resetGameLogic();
-					onStageStartPresets();
-					setUpWorld(0);
-					tankIdle.play();
-					menu.setIsInMenu(false);
+					ResetGameLogic();
+					OnStageStartPresets();
+					SetUpWorld(0);
+					m_tankIdleSound.play();
+					menu.SetIsInMenu(false);
 				}
-				else if (menu.getIsInMenu() && menu.getMenuOption() == 2) {
+				else if (menu.GetIsInMenu() && menu.GetMenuOption() == 2) {
 					logger.Logi(Logger::Level::Error, "Really, you don't want to play our game? :'(");
 					window.close();
 				}
@@ -230,21 +230,21 @@ void Engine::runGame() {
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::P) {
 				
-				menu.getPaused() ? menu.setPaused(false) : menu.setPaused(true);
-				if (menu.getPaused() == false)
+				menu.GetPaused() ? menu.SetPaused(false) : menu.SetPaused(true);
+				if (menu.GetPaused() == false)
 					logger.Logi(Logger::Level::Info, "Game resumed");
 				else
 					logger.Logi(Logger::Level::Info, "Game paused");
 			}
 			else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
 
-				if (menu.getIsInMenu())
+				if (menu.GetIsInMenu())
 					continue;
 
-				if (tankAlreadyFired(m_localPlayerTank.get()) > 0 && m_starsCollected == 0)
+				if (TankAlreadyFired(m_localPlayerTank.get()) > 0 && m_starsCollected == 0)
 					continue;
 
-				if (tankAlreadyFired(m_localPlayerTank.get()) > 2 && m_starsCollected >= 2)
+				if (TankAlreadyFired(m_localPlayerTank.get()) > 1 && m_starsCollected > 1)
 					continue;
 
 				if ((m_localPlayerTank->m_tankSprite.getPosition().x > 900 ||
@@ -254,7 +254,7 @@ void Engine::runGame() {
 					continue;
 
 				logger.Logi(Logger::Level::Debug, "Fire");
-				auto tempDirection = m_localPlayerTank->getTankDirection();
+				auto tempDirection = m_localPlayerTank->GetTankDirection();
 				auto tempPos = m_localPlayerTank->m_tankSprite.getPosition();
 				
 				switch (tempDirection) {
@@ -264,15 +264,15 @@ void Engine::runGame() {
 					case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, m_localPlayerTank.get(), false)); break;
 				}
 
-				bulletSound.play();
+				m_bulletSound.play();
 			}
 
 		}
 
 		//advance to the next stage if player has killed 20 enemy tanks
 		if (m_localPlayerKills == 20) {
-			advanceStageSetup();
-			onStageStartPresets();
+			AdvanceStageSetup();
+			OnStageStartPresets();
 			m_nextStageScene = true;
 			menuMusic.play();
 		}
@@ -281,48 +281,48 @@ void Engine::runGame() {
 
 		//draw stuff
 
-		if (menu.getIsInMenu()) {
-			menu.updateSprites();
-			window.draw(menu.getMenuSprite());
-			window.draw(menu.getTankSprite());
-			window.draw(menu.getOnePlayerText());
-			window.draw(menu.getTwoPlayersText());
-			window.draw(menu.getExitText());
+		if (menu.GetIsInMenu()) {
+			menu.UpdateSprites();
+			window.draw(menu.GetMenuSprite());
+			window.draw(menu.GetTankSprite());
+			window.draw(menu.GetOnePlayerText());
+			window.draw(menu.GetTwoPlayersText());
+			window.draw(menu.GetExitText());
 		}
-		else if (menu.getPaused()) {
-			window.draw(menu.getPauseText());
+		else if (menu.GetPaused()) {
+			window.draw(menu.GetPauseText());
 		}
 		else if (m_gameOver)
 		{
-			menu.scoreDisplay.setString("You score is: " + std::to_string(m_localPlayerScore));
+			menu.m_scoreDisplay.setString("You score is: " + std::to_string(m_localPlayerScore));
 			window.draw(menu.m_gameOverSprite);
-			window.draw(menu.scoreDisplay);
-			tankIdle.stop();
-			tankMoving.stop();
+			window.draw(menu.m_scoreDisplay);
+			m_tankIdleSound.stop();
+			m_tankMoving.stop();
 
 			if (menu.m_gameOverSprite.getPosition().y != 200) {
 				menu.m_gameOverSprite.move(0, 1);
 			}
 			else {
-				resetGameLogic();
+				ResetGameLogic();
 				menu.m_gameOverSprite.setPosition(300, 0);
-				menu.setIsInMenu(true);
+				menu.SetIsInMenu(true);
 			}
 
-			if (gameOver.getStatus() != sf::Sound::Playing && m_playedMusic == false)
+			if (m_gameOverSound.getStatus() != sf::Sound::Playing && m_playedMusic == false)
 			{
-				gameOver.play();
+				m_gameOverSound.play();
 				m_playedMusic = true;
 			}
 			
 		}
 		else if (m_nextStageScene) {
-			menu.drawStageChangeScene(window, m_currentStage, clock, m_nextStageScene);
+			menu.DrawStageChangeScene(window, m_currentStage, clock, m_nextStageScene);
 			float secondCounter = 0.f;
-			tankMoving.stop();
-			bulletSound.stop();	
+			m_tankMoving.stop();
+			m_bulletSound.stop();	
 		}
-		else if (!menu.getIsInMenu()) {
+		else if (!menu.GetIsInMenu()) {
 
 			clock.restart();
 			sf::Time frameTime = animClock.restart();
@@ -363,11 +363,11 @@ void Engine::runGame() {
 
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
-				window.draw(entity->getSprite());
+				window.draw(entity->GetSprite());
 			}
 
 			//do movement and draw local player
-			doLocalPlayerMovement();
+			DoLocalPlayerMovement();
 			window.draw(m_localPlayerTank->m_tankSprite);
 
 			//do movement and draw enemies
@@ -384,11 +384,11 @@ void Engine::runGame() {
 					}
 				}
 				else {
-					enemyTank->doMovement();
+					enemyTank->DoMovement();
 				}
 
-				if (tankAlreadyFired(enemyTank.get()) == 0 && !m_activePowerUps.at(1)) {
-					enemyTank->fireBullet(m_bulletVec, elapsed);
+				if (TankAlreadyFired(enemyTank.get()) == 0 && !m_activePowerUps.at(1)) {
+					enemyTank->FireBullet(m_bulletVec, elapsed);
 				}
 
 				window.draw(enemyTank->m_tankSprite);
@@ -396,48 +396,48 @@ void Engine::runGame() {
 
 			//draw world entities
 			for (auto &entity : m_worldEntities) {
-				window.draw(entity->getSprite());
+				window.draw(entity->GetSprite());
 			}
 
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_powerUps, m_powerUpSpawnPoints, m_wallHit, m_tankHit, m_solidHit))
+				if (!bullets.get()->HandleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_powerUps, m_powerUpSpawnPoints, m_wallHit, m_tankHit, m_solidHit))
 				{
 					break;
 				}
 				if (m_wallHit == true)
 				{
-					wallHitSound.play();
+					m_wallHitSound.play();
 					m_wallHit = false;
 				}
 				if (m_solidHit == true)
 				{
-					solidHitSound.play();
+					m_solidHitSound.play();
 					m_solidHit = false;
 				}
 				if (m_tankHit == true)
 				{
-					tankHitSound.play();
+					m_tankHitSound.play();
 					m_tankHit = false;
 				}
 				window.draw(bullets.get()->m_bulletSprite);
 			}
 
-			for (auto& explosion : explosionsVec) {
+			for (auto& explosion : m_explosionsVec) {
 				explosion.update(frameTime);
 				window.draw(explosion);
 			}
 
-			explosionsVec.erase(std::remove_if(explosionsVec.begin(), explosionsVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), explosionsVec.end());
+			m_explosionsVec.erase(std::remove_if(m_explosionsVec.begin(), m_explosionsVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), m_explosionsVec.end());
 
 			//draw bush - bullet should be under bush so we have to draw bush first
 			for (auto& entity : m_bushVec) {
-				window.draw(entity->getSprite());
+				window.draw(entity->GetSprite());
 			}
 
 			//we should always have 3 enemies on the map
-			if (m_enemyTanks.size() + spawnAnimVec.size() < 3) {
+			if (m_enemyTanks.size() + m_spawnAnimVec.size() < 3) {
 
 				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
 				bool okToSpawn = false;
@@ -455,16 +455,16 @@ void Engine::runGame() {
 				AnimatedSprite spawn(sf::seconds(0.25), true, false);
 				spawn.setPosition(generatedPos.first, generatedPos.second);
 				spawn.setOrigin(sf::Vector2f(16.5, 15.5));
-				spawn.play(spawnAnim);
-				spawnAnimVec.push_back(spawn);
+				spawn.play(m_spawnAnim);
+				m_spawnAnimVec.push_back(spawn);
 
-				if (!enemyLifeSprites.empty())
-					enemyLifeSprites.pop_back();
+				if (!m_enemyLifeSprites.empty())
+					m_enemyLifeSprites.pop_back();
 				//}
 
 			}
 
-			for (auto& spawnAnim : spawnAnimVec) {
+			for (auto& spawnAnim : m_spawnAnimVec) {
 
 				spawnAnim.update(frameTime);
 				window.draw(spawnAnim);
@@ -484,10 +484,10 @@ void Engine::runGame() {
 
 			}
 
-			spawnAnimVec.erase(std::remove_if(spawnAnimVec.begin(), spawnAnimVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), spawnAnimVec.end());
+			m_spawnAnimVec.erase(std::remove_if(m_spawnAnimVec.begin(), m_spawnAnimVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), m_spawnAnimVec.end());
 
 			for (auto& powerUp : m_powerUps) {
-				window.draw(powerUp.getSprite());
+				window.draw(powerUp.GetSprite());
 			}
 
 			if (m_localPlayerSpawnSprite != nullptr) {
@@ -503,15 +503,15 @@ void Engine::runGame() {
 
 			window.draw(rightSideBg);
 
-			for (auto enemyLife : enemyLifeSprites) {
+			for (auto enemyLife : m_enemyLifeSprites) {
 				window.draw(enemyLife);
 			}
 
-			window.draw(menu.getStageFlag());
-			window.draw(menu.getCurrentStageText());
-			window.draw(menu.getFirstPlayerText());
-			menu.setFirstPlayerLivesText(m_localPlayerLives[0]);
-			window.draw(menu.getFirstPlayerLivesText());
+			window.draw(menu.GetStageFlag());
+			window.draw(menu.GetCurrentStageText());
+			window.draw(menu.GetFirstPlayerText());
+			menu.SetFirstPlayerLivesText(m_localPlayerLives[0]);
+			window.draw(menu.GetFirstPlayerLivesText());
 
 		}
 		
@@ -519,7 +519,7 @@ void Engine::runGame() {
 	}
 }
 
-bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
+bool Engine::MoveTank(Tank* tankToMove, const char direction, float speed)
 {
 	sf::FloatRect intersection;
 	
@@ -529,7 +529,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 			tankToMove->m_tankSprite.setRotation(0.f);
 
-		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
+		if (HandleCollision(tankToMove, tankToMove->GetTankDirection()))
 			tankToMove->m_tankSprite.move(0, -speed);
 		else
 			return false;
@@ -541,7 +541,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 180)
 			tankToMove->m_tankSprite.setRotation(180.f);
 
-		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
+		if (HandleCollision(tankToMove, tankToMove->GetTankDirection()))
 			tankToMove->m_tankSprite.move(0, speed);
 		else
 			return false;
@@ -553,7 +553,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != -90)
 			tankToMove->m_tankSprite.setRotation(-90.f);
 
-		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
+		if (HandleCollision(tankToMove, tankToMove->GetTankDirection()))
 			tankToMove->m_tankSprite.move(-speed, 0);
 		else
 			return false;
@@ -565,7 +565,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 90)
 			tankToMove->m_tankSprite.setRotation(90.f);
 
-		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
+		if (HandleCollision(tankToMove, tankToMove->GetTankDirection()))
 			tankToMove->m_tankSprite.move(speed, 0);
 		else
 			return false;
@@ -577,12 +577,12 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 	return true;
 }
 
-unsigned short Engine::tankAlreadyFired(Tank* tankToCheck)
+unsigned short Engine::TankAlreadyFired(Tank* tankToCheck)
 {
 	unsigned short numberOfBullets = 0;
 
 	for (auto& bullet : m_bulletVec) {
-		if (bullet->getFiredBy() == tankToCheck) {
+		if (bullet->GetFiredBy() == tankToCheck) {
 			numberOfBullets++;
 		}
 	}
@@ -590,16 +590,16 @@ unsigned short Engine::tankAlreadyFired(Tank* tankToCheck)
 	return numberOfBullets;
 }
 
-bool Engine::handleCollision(Tank* tankToCheck, char direction)
+bool Engine::HandleCollision(Tank* tankToCheck, char direction)
 {
 	auto dummySprite = tankToCheck->m_tankSprite;
 	auto futurePosition = tankToCheck->m_tankSprite.getPosition();
 
 	switch (direction) {
-	case DIR_UP: futurePosition.y -= tankToCheck->getTankSpeed(); break;
-	case DIR_DOWN: futurePosition.y += tankToCheck->getTankSpeed(); break;
-	case DIR_LEFT: futurePosition.x -= tankToCheck->getTankSpeed(); break;
-	case DIR_RIGHT: futurePosition.x += tankToCheck->getTankSpeed(); break;
+	case DIR_UP: futurePosition.y -= tankToCheck->GetTankSpeed(); break;
+	case DIR_DOWN: futurePosition.y += tankToCheck->GetTankSpeed(); break;
+	case DIR_LEFT: futurePosition.x -= tankToCheck->GetTankSpeed(); break;
+	case DIR_RIGHT: futurePosition.x += tankToCheck->GetTankSpeed(); break;
 	}
 	
 	dummySprite.setPosition(futurePosition);
@@ -608,12 +608,12 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 
 	for (auto& entity : m_worldEntities) {
 
-		if (entity->getType() == entityType::Bush)
+		if (entity->GetType() == entityType::Bush)
 			continue;
-		if (entity->getType() == entityType::Ice)
+		if (entity->GetType() == entityType::Ice)
 			continue;
 
-		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
+		sf::FloatRect secondSpriteBounds = entity->GetSprite().getGlobalBounds();
 
 		if (bounds.intersects(secondSpriteBounds)) {
 			return false;
@@ -644,13 +644,13 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 		std::vector<PowerUps>::iterator it;
 		for (it = m_powerUps.begin(); it < m_powerUps.end(); it++) {
 		
-			sf::FloatRect secondSpriteBounds = it->getSprite().getGlobalBounds();
+			sf::FloatRect secondSpriteBounds = it->GetSprite().getGlobalBounds();
 
 			if (bounds.intersects(secondSpriteBounds)) {
-				auto type = it->getType();
+				auto type = it->GetType();
 				logger.Logi(Logger::Level::Info, "You picked up a power up [", type, "]");
 
-				if (it->getType() == powerUp::StarPU) {
+				if (it->GetType() == powerUp::StarPU) {
 					m_starsCollected++;
 					logger.Logi(Logger::Level::Info, "You picked up a star, now you have ", m_starsCollected);
 				}
@@ -671,40 +671,40 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 	return true;
 }
 
-void Engine::doLocalPlayerMovement()
+void Engine::DoLocalPlayerMovement()
 {
 	if (m_localPlayerTankIsMoving) 
 	{
-		gameEngine.moveTank(m_localPlayerTank.get(), m_localPlayerTank->getTankDirection(), m_localPlayerTank->getTankSpeed());
+		gameEngine.MoveTank(m_localPlayerTank.get(), m_localPlayerTank->GetTankDirection(), m_localPlayerTank->GetTankSpeed());
 	}
 }
 
-void Engine::setlocalPlayerKills(const unsigned int localPlayerKills)
+void Engine::SetlocalPlayerKills(const unsigned int localPlayerKills)
 {
 	m_localPlayerKills = localPlayerKills;
 }
 
-unsigned int Engine::getLocalPlayerKills() const
+unsigned int Engine::GetLocalPlayerKills() const
 {
 	return m_localPlayerKills;
 }
 
-void Engine::setLocalPlayerScore(const uint64_t localPlayerScore)
+void Engine::SetLocalPlayerScore(const uint64_t localPlayerScore)
 {
 	m_localPlayerScore = localPlayerScore;
 }
 
-uint64_t Engine::getLocalPlayerScore() const
+uint64_t Engine::GetLocalPlayerScore() const
 {
 	return m_localPlayerScore;
 }
 
-void Engine::onStageStartPresets()
+void Engine::OnStageStartPresets()
 {
 	unsigned short x = 630;
 	unsigned short y = 20;
 
-	enemyLifeSprites.clear();
+	m_enemyLifeSprites.clear();
 
 	for (int i = 0; i < 20; i++) {
 		sf::Sprite enemyLifeSprite;
@@ -718,7 +718,7 @@ void Engine::onStageStartPresets()
 		}
 			
 		enemyLifeSprite.setPosition(x, y);
-		enemyLifeSprites.push_back(enemyLifeSprite);
+		m_enemyLifeSprites.push_back(enemyLifeSprite);
 	}
 
 	m_gameOver = false;
@@ -727,7 +727,7 @@ void Engine::onStageStartPresets()
 	m_playedMusic = false;
 }
 
-void Engine::advanceStageSetup()
+void Engine::AdvanceStageSetup()
 {
 	m_currentStage += 1;
 	if (m_currentStage == 10 || m_currentStage == 20 || m_currentStage == 30)
@@ -741,16 +741,16 @@ void Engine::advanceStageSetup()
 	m_enemyTanks.clear();
 	m_bulletVec.clear();
 
-	tankIdle.play();
-	tankMoving.stop();
-	bulletSound.stop();
+	m_tankIdleSound.play();
+	m_tankMoving.stop();
+	m_bulletSound.stop();
 	m_gameOver = false;
 	m_localPlayerKills = 0;
 
-	setUpWorld(m_currentStage);
+	SetUpWorld(m_currentStage);
 }
 
-void Engine::resetGameLogic()
+void Engine::ResetGameLogic()
 {
 	m_currentStage = 0;
 	m_worldEntities.clear();
@@ -765,15 +765,15 @@ void Engine::resetGameLogic()
 	m_playedMusic = false;
 	m_localPlayerScore = 0;
 	m_enemiesRespawned = 0;
-	explosionsVec.clear();
-	spawnAnimVec.clear();
+	m_explosionsVec.clear();
+	m_spawnAnimVec.clear();
 
-	tankIdle.stop();
-	tankMoving.stop();
-	bulletSound.stop();
+	m_tankIdleSound.stop();
+	m_tankMoving.stop();
+	m_bulletSound.stop();
 }
 
-void Engine::setUpPUSpawnPoints()
+void Engine::SetUpPUSpawnPoints()
 {
 	m_powerUpSpawnPoints.push_back(std::make_pair(150, 150));
 	m_powerUpSpawnPoints.push_back(std::make_pair(474, 194));
@@ -793,17 +793,17 @@ void Engine::setUpPUSpawnPoints()
 	m_powerUpSpawnPoints.push_back(std::make_pair(305, 294));
 }
 
-unsigned short Engine::getStarsCollected() const
+unsigned short Engine::GetStarsCollected() const
 {
 	return m_starsCollected;
 }
 
-void Engine::setStarsCollected(unsigned short stars)
+void Engine::SetStarsCollected(unsigned short stars)
 {
 	m_starsCollected = stars;
 }
 
-Animation Engine::createExplosionAnimation()
+Animation Engine::CreateExplosionAnimation()
 {
 	Animation explosionAnimation;
 	explosionAnimation.setSpriteSheet(m_explosionTextureSheet);
@@ -814,7 +814,7 @@ Animation Engine::createExplosionAnimation()
 	return explosionAnimation;
 }
 
-Animation Engine::createSpawnAnimation()
+Animation Engine::CreateSpawnAnimation()
 {
 	Animation spawnAnimation;
 	spawnAnimation.setSpriteSheet(m_spawnAnimTextureSheet);
@@ -825,13 +825,13 @@ Animation Engine::createSpawnAnimation()
 	return spawnAnimation;
 }
 
-void Engine::setGameOver(bool gameOver)
+void Engine::SetGameOver(bool gameOver)
 {
 	m_gameOver = gameOver;
 }
 
 
-void Engine::setUpWorld(unsigned short stage)
+void Engine::SetUpWorld(unsigned short stage)
 {
 	logger.Logi(Logger::Level::Info, "Game Started");
 	unsigned short x = 0;

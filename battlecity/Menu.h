@@ -9,71 +9,71 @@ public:
 	Menu();
 	~Menu();
 
-	bool getIsInMenu() const;
-	void setIsInMenu(const bool set);
-	int getMenuOption() const;
-	void setMenuOption(const int option);
-	void setStageChooser(const bool stageChooser);
-	bool getStageChooser() const;
-	void setPaused(const bool pause);
-	bool getPaused() const;
-	void setScore(sf::Text score);
-	void updateSprites();
-	void drawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock& clock, bool& shouldDraw);
-	void setGameOverSprite(sf::Sprite gameOverSprite);
-	void setFirstPlayerLivesText(unsigned short lives);
+	bool GetIsInMenu() const;
+	void SetIsInMenu(const bool set);
+	int GetMenuOption() const;
+	void SetMenuOption(const int option);
+	void SetStageChooser(const bool stageChooser);
+	bool GetStageChooser() const;
+	void SetPaused(const bool pause);
+	bool GetPaused() const;
+	void SetScore(sf::Text score);
+	void UpdateSprites();
+	void DrawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock& clock, bool& shouldDraw);
+	void SetGameOverSprite(sf::Sprite gameOverSprite);
+	void SetFirstPlayerLivesText(unsigned short lives);
 
-	sf::Text getScore();
-	sf::Sprite createSprite();
-	sf::Sprite getGameOverSprite() const;
+	sf::Text GetScore();
+	sf::Sprite CreateSprite();
+	sf::Sprite GetGameOverSprite() const;
 
-	sf::Text getStartText();
-	sf::Text getOnePlayerText();
-	sf::Text getTwoPlayersText();
-	sf::Sprite getMenuSprite();
-	sf::Sprite getTankSprite();
-	sf::Text getExitText();
-	sf::Text getStageText();
-	sf::Text getPauseText();
-	sf::Text getCurrentStageText();
-	sf::Text getFirstPlayerText();
-	sf::Text getFirstPlayerLivesText();
-	sf::Font getMenuFont();
-	sf::Sprite getStageFlag();
+	sf::Text GetStartText();
+	sf::Text GetOnePlayerText();
+	sf::Text GetTwoPlayersText();
+	sf::Sprite GetMenuSprite();
+	sf::Sprite GetTankSprite();
+	sf::Text GetExitText();
+	sf::Text GetStageText();
+	sf::Text GetPauseText();
+	sf::Text GetCurrentStageText();
+	sf::Text GetFirstPlayerText();
+	sf::Text GetFirstPlayerLivesText();
+	sf::Font GetMenuFont();
+	sf::Sprite GetStageFlag();
 
 public:
 	sf::Texture m_gameOverTexture;
 	sf::Sprite m_gameOverSprite;
-	sf::Text scoreDisplay;
+	sf::Text m_scoreDisplay;
 
 private:
 
 	bool m_isInMenu = true;
 	bool m_isPaused = false;
-	sf::Texture titleTexture;
+	sf::Texture m_titleTexture;
 	int m_menuOption = 0;
 	bool m_stageChooser = false;
-	float secondCounter = 0.f;
+	float m_secondCounter = 0.f;
 
-	sf::Font menuFont;
-	sf::Text startText;
-	sf::Text onePlayerText;
-	sf::Text twoPlayersText;
+	sf::Font m_menuFont;
+	sf::Text m_startText;
+	sf::Text m_onePlayerText;
+	sf::Text m_twoPlayersText;
 
-	sf::Text exitText;
-	sf::Text pauseText;
-	sf::Text stageText;
-	sf::Text currentStageText;
-	sf::Text firstPlayerText;
-	sf::Text firstPlayerLivesText;
+	sf::Text m_exitText;
+	sf::Text m_pauseText;
+	sf::Text m_stageText;
+	sf::Text m_currentStageText;
+	sf::Text m_firstPlayerText;
+	sf::Text m_firstPlayerLivesText;
 
-	sf::Sprite menuSprite;
-	sf::Texture tankTexture;
-	sf::Sprite tankSprite;
-	sf::Text gameOver;
+	sf::Sprite m_menuSprite;
+	sf::Texture m_tankTexture;
+	sf::Sprite m_tankSprite;
+	sf::Text m_gameOver;
 	sf::Text m_score;
-	sf::RectangleShape grayBackground;
-	sf::Texture stageFlag;
-	sf::Sprite stageFlagSprite;
+	sf::RectangleShape m_grayBackground;
+	sf::Texture m_stageFlag;
+	sf::Sprite m_stageFlagSprite;
 
 };

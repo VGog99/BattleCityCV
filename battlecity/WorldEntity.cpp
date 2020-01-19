@@ -2,8 +2,6 @@
 
 WorldEntity::WorldEntity(entityType type, float posX, float posY) : m_entityType(type), m_entityPosition(std::make_pair(posX, posY))
 {
-	m_isDamageable = false;
-
 	switch (type) {
 		case entityType::Brick: {
 			m_worldEntityTexture.loadFromFile("../resources/brick.png");
@@ -43,12 +41,12 @@ WorldEntity::WorldEntity(entityType type, float posX, float posY) : m_entityType
 	m_worldEntitySprite.setPosition(m_entityPosition.first, m_entityPosition.second);
 }
 
-entityType WorldEntity::getType() const
+entityType WorldEntity::GetType() const
 {
 	return m_entityType;
 }
 
-sf::Sprite WorldEntity::getSprite() const
+sf::Sprite WorldEntity::GetSprite() const
 {
 	return m_worldEntitySprite;
 }

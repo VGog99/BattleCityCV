@@ -15,8 +15,8 @@ class PowerUps
 {
 public:
 	PowerUps(powerUp type, float posX, float posY);
-	powerUp getType() const;
-	sf::Sprite getSprite() const;
+	powerUp GetType() const;
+	sf::Sprite GetSprite() const;
 
 private:
 	sf::Texture m_powerUpTexture;

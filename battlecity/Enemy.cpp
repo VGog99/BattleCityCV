@@ -19,52 +19,52 @@ Enemy::Enemy(float posX, float posY, bool poweredUp) : m_poweredUp(poweredUp)
 	m_tankSprite.setPosition(m_tankPosition.first, m_tankPosition.second);
 }
 
-void Enemy::doMovement()
+void Enemy::DoMovement()
 {
-	if (!gameEngine.moveTank(this, m_tankDirection, m_enemySpeed)) {
+	if (!gameEngine.MoveTank(this, m_tankDirection, m_enemySpeed)) {
 		m_tankDirection = (char)(std::rand() % 4 + 48);
 	}
 }
 
-void Enemy::setPoweredUp(bool poweredUp)
+void Enemy::SetPoweredUp(bool poweredUp)
 {
 	m_poweredUp = poweredUp;
 }
 
-bool Enemy::getPoweredUp() const
+bool Enemy::GetPoweredUp() const
 {
 	return m_poweredUp;
 }
 
-float Enemy::getEnemySpeed()
+float Enemy::GetEnemySpeed()
 {
 	return m_enemySpeed;
 }
 
-void Enemy::setEnemySpeed(float speed)
+void Enemy::SetEnemySpeed(float speed)
 {
 	m_enemySpeed = speed;
 }
 
-bool Enemy::isEnemy() const
+bool Enemy::IsEnemy() const
 {
 	return true;
 }
 
-void Enemy::fireBullet(std::vector<std::unique_ptr<Bullet>>& m_bulletVec, sf::Time elapsed)
+void Enemy::FireBullet(std::vector<std::unique_ptr<Bullet>>& m_bulletVec, sf::Time elapsed)
 {
-	auto tempDirection = getTankDirection();
+	auto tempDirection = GetTankDirection();
 	auto tempPos = m_tankSprite.getPosition();
-	secondCounter += elapsed.asSeconds();
+	m_secondCounter += elapsed.asSeconds();
 	double flVal = ((rand() % 10) + 10.00) / 10.00;
 
-	if (secondCounter >= flVal) {
+	if (m_secondCounter >= flVal) {
 		switch (tempDirection) {
 			case DIR_UP: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y - 6), tempDirection, this, true)); break;
 			case DIR_DOWN: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x, tempPos.y + 6), tempDirection, this, true)); break;
 			case DIR_LEFT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x - 6, tempPos.y), tempDirection, this, true)); break;
 			case DIR_RIGHT: m_bulletVec.push_back(std::make_unique<Bullet>(std::make_pair(tempPos.x + 6, tempPos.y), tempDirection, this, true)); break;
 		}
-		secondCounter = 0.f;
+		m_secondCounter = 0.f;
 	}
 }

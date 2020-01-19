@@ -25,33 +25,33 @@ Tank::Tank(float posX, float posY) : m_tankPosition(std::make_pair(posX, posY))
 	//m_localPlayerTank->m_tankSprite.setTextureRect(animation.uvRect);
 }
 
-Position Tank::getPosition() const
+Position Tank::GetPosition() const
 {
 	return m_tankPosition;
 }
 
-char Tank::getTankDirection()
+char Tank::GetTankDirection()
 {
 	return m_tankDirection;
 }
 
-void Tank::setTankDirection(char direction)
+void Tank::SetTankDirection(char direction)
 {
 	m_tankDirection = direction;
 }
 
 
-float Tank::getTankSpeed()
+float Tank::GetTankSpeed()
 {
 	return m_tankSpeed;
 }
 
-void Tank::setTankSpeed(float speed)
+void Tank::SetTankSpeed(float speed)
 {
 	m_tankSpeed = speed;
 }
 
-bool Tank::isEnemy() const
+bool Tank::IsEnemy() const
 {
 	return false;
 }

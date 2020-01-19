@@ -42,12 +42,12 @@ PowerUps::PowerUps(powerUp type, float posX, float posY): m_powerUp(type), m_pow
 	m_powerUpSprite.setPosition(m_powerUpPosition.first, m_powerUpPosition.second);
 
 }
-powerUp PowerUps::getType() const
+powerUp PowerUps::GetType() const
 {
 	return m_powerUp;
 }
 
-sf::Sprite PowerUps::getSprite() const
+sf::Sprite PowerUps::GetSprite() const
 {
 	return m_powerUpSprite;
 }

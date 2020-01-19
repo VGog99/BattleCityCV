@@ -2,59 +2,59 @@
 #include <iostream>
 Menu::Menu()
 {
-	titleTexture.loadFromFile("../resources/title.png");
-	tankTexture.loadFromFile("../resources/tank.png");
+	m_titleTexture.loadFromFile("../resources/title.png");
+	m_tankTexture.loadFromFile("../resources/tank.png");
 	m_gameOverTexture.loadFromFile("../resources/gameOver.png");
-	stageFlag.loadFromFile("../resources/stageFlag.png");
-	stageFlagSprite.setTexture(stageFlag);
-	stageFlagSprite.setPosition(sf::Vector2f(733, 570));
+	m_stageFlag.loadFromFile("../resources/stageFlag.png");
+	m_stageFlagSprite.setTexture(m_stageFlag);
+	m_stageFlagSprite.setPosition(sf::Vector2f(733, 570));
 
 	m_gameOverSprite.setTexture(m_gameOverTexture);
 	m_gameOverSprite.setPosition(300, 0);
 
-	if (!menuFont.loadFromFile("../resources/font.ttf"))
+	if (!m_menuFont.loadFromFile("../resources/font.ttf"))
 	{
 		// error...
 		std::cout << "eroare";
 	}
 
-	scoreDisplay.setFont(menuFont);
-	scoreDisplay.setCharacterSize(30);
-	scoreDisplay.setStyle(sf::Text::Bold);
-	scoreDisplay.setFillColor(sf::Color::White);
-	scoreDisplay.setPosition(200, 500);
+	m_scoreDisplay.setFont(m_menuFont);
+	m_scoreDisplay.setCharacterSize(30);
+	m_scoreDisplay.setStyle(sf::Text::Bold);
+	m_scoreDisplay.setFillColor(sf::Color::White);
+	m_scoreDisplay.setPosition(200, 500);
 
-	menuSprite = createSprite();
-	startText = sf::Text("START", menuFont);
-	onePlayerText = sf::Text("1 PLAYERS", menuFont);
-	twoPlayersText = sf::Text("2 PLAYERS", menuFont);
-	exitText = sf::Text("EXIT", menuFont);
-	pauseText = sf::Text("PAUSED", menuFont);
-	currentStageText = sf::Text("1", menuFont, 30);
-	currentStageText.setPosition(sf::Vector2f(770, 625));
-	currentStageText.setFillColor(sf::Color(0, 0, 0, 255));
+	m_menuSprite = CreateSprite();
+	m_startText = sf::Text("START", m_menuFont);
+	m_onePlayerText = sf::Text("1 PLAYERS", m_menuFont);
+	m_twoPlayersText = sf::Text("2 PLAYERS", m_menuFont);
+	m_exitText = sf::Text("EXIT", m_menuFont);
+	m_pauseText = sf::Text("PAUSED", m_menuFont);
+	m_currentStageText = sf::Text("1", m_menuFont, 30);
+	m_currentStageText.setPosition(sf::Vector2f(770, 625));
+	m_currentStageText.setFillColor(sf::Color(0, 0, 0, 255));
 
-	firstPlayerText = sf::Text("IP", menuFont, 30);
-	firstPlayerText.setPosition(sf::Vector2f(730, 365));
-	firstPlayerText.setFillColor(sf::Color(0, 0, 0, 255));
+	m_firstPlayerText = sf::Text("IP", m_menuFont, 30);
+	m_firstPlayerText.setPosition(sf::Vector2f(730, 365));
+	m_firstPlayerText.setFillColor(sf::Color(0, 0, 0, 255));
 
-	firstPlayerLivesText = sf::Text("", menuFont, 30);
-	firstPlayerLivesText.setPosition(sf::Vector2f(730, 400));
-	firstPlayerLivesText.setFillColor(sf::Color(0, 0, 0, 255));
+	m_firstPlayerLivesText = sf::Text("", m_menuFont, 30);
+	m_firstPlayerLivesText.setPosition(sf::Vector2f(730, 400));
+	m_firstPlayerLivesText.setFillColor(sf::Color(0, 0, 0, 255));
 
-	grayBackground.setSize(sf::Vector2f(900, 720));		
-	grayBackground.setFillColor(sf::Color(127, 127, 127, 255));
-	grayBackground.setPosition(sf::Vector2f(0, 0));
+	m_grayBackground.setSize(sf::Vector2f(900, 720));		
+	m_grayBackground.setFillColor(sf::Color(127, 127, 127, 255));
+	m_grayBackground.setPosition(sf::Vector2f(0, 0));
 
-	tankSprite.setTexture(tankTexture);
-	tankSprite.setOrigin(sf::Vector2f(tankTexture.getSize().x * 0.5, tankTexture.getSize().y * 0.5));
-	tankSprite.setRotation(90.f);
+	m_tankSprite.setTexture(m_tankTexture);
+	m_tankSprite.setOrigin(sf::Vector2f(m_tankTexture.getSize().x * 0.5, m_tankTexture.getSize().y * 0.5));
+	m_tankSprite.setRotation(90.f);
 
 	//startText.setPosition(387, 350);
-	onePlayerText.setPosition(337, 350);
-	twoPlayersText.setPosition(337, 420);
-	exitText.setPosition(402, 490);
-	pauseText.setPosition(370, 360);
+	m_onePlayerText.setPosition(337, 350);
+	m_twoPlayersText.setPosition(337, 420);
+	m_exitText.setPosition(402, 490);
+	m_pauseText.setPosition(370, 360);
 
 }
 
@@ -63,172 +63,172 @@ Menu::~Menu()
 
 }
 
-sf::Text Menu::getStartText() {
-	return startText;
+sf::Text Menu::GetStartText() {
+	return m_startText;
 }
 
-sf::Text Menu::getOnePlayerText()
+sf::Text Menu::GetOnePlayerText()
 {
-	return onePlayerText;
+	return m_onePlayerText;
 }
 
-sf::Text Menu::getTwoPlayersText()
+sf::Text Menu::GetTwoPlayersText()
 {
-	return twoPlayersText;
+	return m_twoPlayersText;
 }
 
-sf::Sprite Menu::getMenuSprite()
+sf::Sprite Menu::GetMenuSprite()
 {
-	return menuSprite;
+	return m_menuSprite;
 }
 
-sf::Sprite Menu::getTankSprite()
+sf::Sprite Menu::GetTankSprite()
 {
-	return tankSprite;
+	return m_tankSprite;
 }
 
-sf::Text Menu::getExitText()
+sf::Text Menu::GetExitText()
 {
-	return exitText;
+	return m_exitText;
 }
 
-sf::Text Menu::getStageText()
+sf::Text Menu::GetStageText()
 {
-	return stageText;
+	return m_stageText;
 }
 
-sf::Text Menu::getPauseText()
+sf::Text Menu::GetPauseText()
 {
-	return pauseText;
+	return m_pauseText;
 }
 
-sf::Text Menu::getCurrentStageText()
+sf::Text Menu::GetCurrentStageText()
 {
-	return currentStageText;
+	return m_currentStageText;
 }
 
-sf::Text Menu::getFirstPlayerText()
+sf::Text Menu::GetFirstPlayerText()
 {
-	return firstPlayerText;
+	return m_firstPlayerText;
 }
 
-sf::Text Menu::getFirstPlayerLivesText()
+sf::Text Menu::GetFirstPlayerLivesText()
 {
-	return firstPlayerLivesText;
+	return m_firstPlayerLivesText;
 }
 
-void Menu::setFirstPlayerLivesText(unsigned short lives)
+void Menu::SetFirstPlayerLivesText(unsigned short lives)
 {
-	firstPlayerLivesText.setString(lives < 10 ? "0" + std::to_string(lives) : std::to_string(lives));
+	m_firstPlayerLivesText.setString(lives < 10 ? "0" + std::to_string(lives) : std::to_string(lives));
 }
 
-bool Menu::getIsInMenu() const
+bool Menu::GetIsInMenu() const
 {
 	return m_isInMenu;
 }
 
-void Menu::setIsInMenu(const bool set)
+void Menu::SetIsInMenu(const bool set)
 {
 	m_isInMenu = set;
 }
 
-sf::Sprite Menu::createSprite()
+sf::Sprite Menu::CreateSprite()
 {
-	sf::Sprite sprite(titleTexture);
+	sf::Sprite sprite(m_titleTexture);
 	sprite.setPosition(240, 60);
 	return sprite;
 }
 
-int Menu::getMenuOption() const
+int Menu::GetMenuOption() const
 {
 	return m_menuOption;
 }
 
-void Menu::setMenuOption(const int option)
+void Menu::SetMenuOption(const int option)
 {
 	m_menuOption = option;
 }
 
-void Menu::setStageChooser(const bool stageChooser)
+void Menu::SetStageChooser(const bool stageChooser)
 {
 	this->m_stageChooser = stageChooser;
 }
 
-bool Menu::getStageChooser() const
+bool Menu::GetStageChooser() const
 {
 	return m_stageChooser;
 }
 
-void Menu::setPaused(const bool pause)
+void Menu::SetPaused(const bool pause)
 {
 	m_isPaused = pause;
 }
 
-bool Menu::getPaused() const
+bool Menu::GetPaused() const
 {
 	return m_isPaused;
 }
 
-void Menu::setScore(sf::Text score)
+void Menu::SetScore(sf::Text score)
 {
 	m_score = score;
 }
 
-sf::Text Menu::getScore()
+sf::Text Menu::GetScore()
 {
 	return m_score;
 }
 
-sf::Sprite Menu::getGameOverSprite() const
+sf::Sprite Menu::GetGameOverSprite() const
 {
 	return m_gameOverSprite;
 }
 
-void Menu::setGameOverSprite(sf::Sprite gameOverSprite) {
+void Menu::SetGameOverSprite(sf::Sprite gameOverSprite) {
 	m_gameOverSprite = gameOverSprite;
 }
 
-void Menu::updateSprites()
+void Menu::UpdateSprites()
 {
-	if (getMenuOption() == 0) {
-		tankSprite.setPosition(onePlayerText.getPosition().x - 35, onePlayerText.getPosition().y + 15);
+	if (GetMenuOption() == 0) {
+		m_tankSprite.setPosition(m_onePlayerText.getPosition().x - 35, m_onePlayerText.getPosition().y + 15);
 	}
-	else if (getMenuOption() == 1) {
-		tankSprite.setPosition(twoPlayersText.getPosition().x - 35, twoPlayersText.getPosition().y + 15);
+	else if (GetMenuOption() == 1) {
+		m_tankSprite.setPosition(m_twoPlayersText.getPosition().x - 35, m_twoPlayersText.getPosition().y + 15);
 	}
 	else {
-		tankSprite.setPosition(exitText.getPosition().x - 35, exitText.getPosition().y + 15);
+		m_tankSprite.setPosition(m_exitText.getPosition().x - 35, m_exitText.getPosition().y + 15);
 	}
 }
 
-void Menu::drawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock& clock, bool& shouldDraw)
+void Menu::DrawStageChangeScene(sf::RenderWindow& window, unsigned int currentStage, sf::Clock& clock, bool& shouldDraw)
 {
 	sf::Time elapsed = clock.restart();
-	secondCounter += elapsed.asSeconds();
+	m_secondCounter += elapsed.asSeconds();
 	std::string stageNumberText = "STAGE " + std::to_string(currentStage + 1);
-	currentStageText.setString(std::to_string(currentStage + 1));
+	m_currentStageText.setString(std::to_string(currentStage + 1));
 
-	stageText = sf::Text(stageNumberText, menuFont);
-	stageText.setCharacterSize(35);
-	stageText.setPosition(330, 320);
-	stageText.setFillColor(sf::Color::Black);
+	m_stageText = sf::Text(stageNumberText, m_menuFont);
+	m_stageText.setCharacterSize(35);
+	m_stageText.setPosition(330, 320);
+	m_stageText.setFillColor(sf::Color::Black);
 
-	if (secondCounter <= 3) {
-		window.draw(grayBackground);
-		window.draw(stageText);
+	if (m_secondCounter <= 3) {
+		window.draw(m_grayBackground);
+		window.draw(m_stageText);
 	}
 	else {
-		secondCounter = 0;
+		m_secondCounter = 0;
 		shouldDraw = false;
 	}
 }
 
-sf::Font Menu::getMenuFont()
+sf::Font Menu::GetMenuFont()
 {
-	return menuFont;
+	return m_menuFont;
 }
 
-sf::Sprite Menu::getStageFlag()
+sf::Sprite Menu::GetStageFlag()
 {
-	return stageFlagSprite;
+	return m_stageFlagSprite;
 }

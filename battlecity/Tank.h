@@ -15,13 +15,13 @@ public:
 	~Tank();
 	Tank(float posX, float posY);
 
-	Position getPosition() const;
-	char getTankDirection();
-	void setTankDirection(char direction);
+	Position GetPosition() const;
+	char GetTankDirection();
+	void SetTankDirection(char direction);
 
-	float getTankSpeed();
-	void setTankSpeed(float speed);
-	virtual bool isEnemy() const;
+	float GetTankSpeed();
+	void SetTankSpeed(float speed);
+	virtual bool IsEnemy() const;
 
 public:
 	sf::Texture m_tankTexture;

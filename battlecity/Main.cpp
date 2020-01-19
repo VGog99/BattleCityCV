@@ -6,6 +6,6 @@ Engine gameEngine;
 int main()
 {
 	std::srand(std::time(0));
-	gameEngine.runGame();
+	gameEngine.RunGame();
 	return 0;
 }

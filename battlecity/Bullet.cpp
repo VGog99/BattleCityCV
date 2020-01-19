@@ -12,11 +12,11 @@ Bullet::~Bullet()
 	AnimatedSprite explosion(sf::seconds(0.1), true, false);
 	explosion.setPosition(this->m_bulletSprite.getPosition().x, this->m_bulletSprite.getPosition().y);
 	explosion.setOrigin(sf::Vector2f(24, 24));
-	explosion.play(gameEngine.explosionAnim);
-	gameEngine.explosionsVec.push_back(explosion);
+	explosion.play(gameEngine.m_explosionAnim);
+	gameEngine.m_explosionsVec.push_back(explosion);
 }
 
-Bullet::Bullet(Position position, char direction, Tank* firedBy, bool firedByEnemy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy), firedByEnemy(firedByEnemy)
+Bullet::Bullet(Position position, char direction, Tank* firedBy, bool firedByEnemy) : m_bulletPosition(position), m_bulletDirection(direction), m_firedBy(firedBy), m_firedByEnemy(firedByEnemy)
 {
 	m_bulletTexture.loadFromFile("../resources/bullet.png");
 	m_bulletSprite.setTexture(m_bulletTexture);
@@ -32,25 +32,25 @@ Bullet::Bullet(Position position, char direction, Tank* firedBy, bool firedByEne
 	}
 }
 
-Tank* Bullet::getFiredBy() const
+Tank* Bullet::GetFiredBy() const
 {
 	return m_firedBy;
 }
 
-sf::Texture Bullet::getTexture()
+sf::Texture Bullet::GetTexture()
 {
 	return m_bulletTexture;
 }
 
-Position Bullet::getPosition() const
+Position Bullet::GetPosition() const
 {
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit)
+bool Bullet::HandleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit)
 {
 	float bulletSpeed = 5;
-	if (gameEngine.getStarsCollected() > 0 && !firedByEnemy)
+	if (gameEngine.GetStarsCollected() > 0 && !m_firedByEnemy)
 		bulletSpeed = 10;
 
 	switch (m_bulletDirection)
@@ -68,34 +68,34 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	for (it = worldEntities.begin(); it < worldEntities.end(); it++) {
 
-			if (it->get()->getType() == entityType::Bush)
+			if (it->get()->GetType() == entityType::Bush)
 				continue;
-			if (it->get()->getType() == entityType::Ice)
+			if (it->get()->GetType() == entityType::Ice)
 				continue;
-			if (it->get()->getType() == entityType::Water)
+			if (it->get()->GetType() == entityType::Water)
 				continue;
 
-			sf::FloatRect worldEntitySpriteBounds = it->get()->getSprite().getGlobalBounds();
+			sf::FloatRect worldEntitySpriteBounds = it->get()->GetSprite().getGlobalBounds();
 			
 			if (bulletSpriteBounds.intersects(worldEntitySpriteBounds)) {
 
 				bullets.erase(bulletItr);
 
-				if (it->get()->getType() == entityType::Brick)
+				if (it->get()->GetType() == entityType::Brick)
 				{
 					worldEntities.erase(it);
 					wallHit = true;
 				}
-				else if (it->get()->getType() == entityType::Eagle)
+				else if (it->get()->GetType() == entityType::Eagle)
 				{
 					worldEntities.erase(it);
-					gameEngine.setGameOver(true);
+					gameEngine.SetGameOver(true);
 				}
-				else if (gameEngine.getStarsCollected() >= 3 && it->get()->getType() == entityType::Steel) {
+				else if (gameEngine.GetStarsCollected() >= 3 && it->get()->GetType() == entityType::Steel) {
 					worldEntities.erase(it);
 					solidHit = true;
 				}
-				else if (it->get()->getType() == entityType::Steel || it->get()->getType() == entityType::WorldBound)
+				else if (it->get()->GetType() == entityType::Steel || it->get()->GetType() == entityType::WorldBound)
 				{
 					solidHit = true;
 				}
@@ -104,7 +104,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			}
 	}
 
-	if (!firedByEnemy)
+	if (!m_firedByEnemy)
 	for (auto &enemy : enemyTanks) {
 
 		sf::FloatRect enemySpriteBounds = enemy->m_tankSprite.getGlobalBounds();
@@ -114,15 +114,15 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			tankHit = true;
 			bullets.erase(bulletItr);
 
-			if (enemy->getPoweredUp()) {
+			if (enemy->GetPoweredUp()) {
 				auto generatedPos = rand() % (powerUpSpawnPoints.size() - 1);
 				auto randomPowerUp = rand() % 5;
-				powerUps.emplace_back(powerUp(randomPowerUp), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
+				powerUps.emplace_back(powerUp(4), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
 			}
 
 			enemyTanks.erase(enemyItr);
-			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
-			gameEngine.setLocalPlayerScore(gameEngine.getLocalPlayerScore() + 100);
+			gameEngine.SetlocalPlayerKills(gameEngine.GetLocalPlayerKills() + 1);
+			gameEngine.SetLocalPlayerScore(gameEngine.GetLocalPlayerScore() + 100);
 			return false;
 		}
 	}
@@ -131,11 +131,11 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	if (bulletSpriteBounds.intersects(localPlayerBounds))
 	{
-		if (!firedByEnemy)
+		if (!m_firedByEnemy)
 			return true;
 
 		if (gameEngine.m_localPlayerLives[0] == 0) {
-			gameEngine.setGameOver(true);
+			gameEngine.SetGameOver(true);
 			return true;
 		}
 
@@ -143,14 +143,14 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			return true;
 
 		gameEngine.m_localPlayerLives[0]--;
-		gameEngine.setStarsCollected(0);
+		gameEngine.SetStarsCollected(0);
 		
 		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
 
 		gameEngine.m_localPlayerSpawnSprite = new AnimatedSprite(sf::seconds(0.25), true, false);
 		gameEngine.m_localPlayerSpawnSprite->setPosition(gameEngine.m_localPlayerSpawnPoint.first, gameEngine.m_localPlayerSpawnPoint.second);
 		gameEngine.m_localPlayerSpawnSprite->setOrigin(sf::Vector2f(16.5, 15.5));
-		gameEngine.m_localPlayerSpawnSprite->play(gameEngine.spawnAnim);
+		gameEngine.m_localPlayerSpawnSprite->play(gameEngine.m_spawnAnim);
 		gameEngine.m_localPlayerTank->m_tankSprite.setPosition(1000, 1000);
 
 		bullets.erase(bulletItr);

@@ -16,15 +16,13 @@ class WorldEntity
 {
 public:
 	WorldEntity(entityType type, float posX, float posY);
-	entityType getType() const;
-	sf::Sprite getSprite() const;
+	entityType GetType() const;
+	sf::Sprite GetSprite() const;
 
 private:
 	sf::Texture m_worldEntityTexture;
 	sf::Sprite m_worldEntitySprite;
 	entityType m_entityType;
-	bool m_isDamageable;
 	Position m_entityPosition;
-
 };
 

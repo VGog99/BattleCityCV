@@ -19,35 +19,34 @@ class Engine {
 public:
 	Engine();
 	~Engine();
-	void runGame();
-	bool moveTank(Tank* tankToMove, const char direction, float speed);
-	unsigned short tankAlreadyFired(Tank* tankToCheck);
-	bool handleCollision(Tank* tankToCheck, char direction);
-	void setUpWorld(unsigned short stage);
-	void doLocalPlayerMovement();
-	void setlocalPlayerKills(const unsigned int localPlayerKills);
-	unsigned int getLocalPlayerKills() const;
-	void setLocalPlayerScore(const uint64_t localPlayerScore);
-	uint64_t getLocalPlayerScore() const;
-	void onStageStartPresets();
-	void setGameOver(bool gameOver);
-	void advanceStageSetup();
-	void resetGameLogic();
-	void setUpPUSpawnPoints();
-	unsigned short getStarsCollected() const;
-	void setStarsCollected(unsigned short stars);
-	
+	void RunGame();
+	bool MoveTank(Tank* tankToMove, const char direction, float speed);
+	unsigned short TankAlreadyFired(Tank* tankToCheck);
+	bool HandleCollision(Tank* tankToCheck, char direction);
+	void SetUpWorld(unsigned short stage);
+	void DoLocalPlayerMovement();
+	void SetlocalPlayerKills(const unsigned int localPlayerKills);
+	unsigned int GetLocalPlayerKills() const;
+	void SetLocalPlayerScore(const uint64_t localPlayerScore);
+	uint64_t GetLocalPlayerScore() const;
+	void OnStageStartPresets();
+	void SetGameOver(bool gameOver);
+	void AdvanceStageSetup();
+	void ResetGameLogic();
+	void SetUpPUSpawnPoints();
+	unsigned short GetStarsCollected() const;
+	void SetStarsCollected(unsigned short stars);
+	Animation CreateExplosionAnimation();
+	Animation CreateSpawnAnimation();
+
 public:
-	Animation createExplosionAnimation();
-	Animation createSpawnAnimation();
 	std::unique_ptr<Tank> m_localPlayerTank;
-	Animation explosionAnim;
-	Animation spawnAnim;
-	std::vector<AnimatedSprite> explosionsVec;
+	Animation m_explosionAnim;
+	Animation m_spawnAnim;
+	std::vector<AnimatedSprite> m_explosionsVec;
 	Position m_localPlayerSpawnPoint;
 	AnimatedSprite* m_localPlayerSpawnSprite;
 	std::vector<bool> m_activePowerUps = { false, false, false, false, false, false };
-
 	unsigned short m_localPlayerLives[2] = { 2, 2 };
 
 private:
@@ -71,20 +70,20 @@ private:
 	std::vector<Position> m_powerUpSpawnPoints;
 	std::vector<PowerUps> m_powerUps;
 
-	sf::SoundBuffer tankMovingBuffer;
-	sf::SoundBuffer bulletBuffer;
-	sf::SoundBuffer tankIdleBuffer;
-	sf::SoundBuffer gameOverBuffer;
-	sf::SoundBuffer wallHitSoundBuffer;
-	sf::SoundBuffer tankHitSoundBuffer;
-	sf::SoundBuffer solidHitSoundBuffer;
-	sf::Sound solidHitSound;
-	sf::Sound tankHitSound;
-	sf::Sound tankMoving;
-	sf::Sound bulletSound;
-	sf::Sound gameOver;
-	sf::Sound tankIdle;
-	sf::Sound wallHitSound;
+	sf::SoundBuffer m_tankMovingBuffer;
+	sf::SoundBuffer m_bulletBuffer;
+	sf::SoundBuffer m_tankIdleBuffer;
+	sf::SoundBuffer m_gameOverBuffer;
+	sf::SoundBuffer m_wallHitSoundBuffer;
+	sf::SoundBuffer m_tankHitSoundBuffer;
+	sf::SoundBuffer m_solidHitSoundBuffer;
+	sf::Sound m_solidHitSound;
+	sf::Sound m_tankHitSound;
+	sf::Sound m_tankMoving;
+	sf::Sound m_bulletSound;
+	sf::Sound m_gameOverSound;
+	sf::Sound m_tankIdleSound;
+	sf::Sound m_wallHitSound;
 
 	bool m_playedMusic;
 	bool m_nextStageScene = true;
@@ -95,10 +94,8 @@ private:
 	sf::Texture m_enemyLifeTexture;
 	sf::Texture m_explosionTextureSheet;
 	sf::Texture m_spawnAnimTextureSheet;
-	std::vector<sf::Sprite> enemyLifeSprites;
-	std::vector<AnimatedSprite> spawnAnimVec;
-
-
+	std::vector<sf::Sprite> m_enemyLifeSprites;
+	std::vector<AnimatedSprite> m_spawnAnimVec;
 };
 
 extern Engine gameEngine;
