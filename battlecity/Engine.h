@@ -24,6 +24,7 @@ private:
 	unsigned int m_localPlayerKills;
 	unsigned int m_localPlayerScore = 0;
 	unsigned short m_enemiesRespawned = 0;
+	unsigned short m_starsCollected = 0;
 	float m_secondsElapsed;
 	bool m_localPlayerTankIsMoving;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
@@ -78,7 +79,7 @@ public:
 	~Engine();
 	void runGame();
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
-	bool tankAlreadyFired(Tank* tankToCheck);
+	unsigned short tankAlreadyFired(Tank* tankToCheck);
 	bool handleCollision(Tank* tankToCheck, char direction);
 	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();
@@ -91,6 +92,8 @@ public:
 	void advanceStageSetup();
 	void resetGameLogic();
 	void setUpPUSpawnPoints();
+	unsigned short getStarsCollected() const;
+	void setStarsCollected(unsigned short stars);
 	Animation createExplosionAnimation();
 	Animation createSpawnAnimation();
 };

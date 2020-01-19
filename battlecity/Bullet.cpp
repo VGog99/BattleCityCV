@@ -49,12 +49,16 @@ Position Bullet::getPosition() const
 
 bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit)
 {
+	float bulletSpeed = 5;
+	if (gameEngine.getStarsCollected() > 0 && !firedByEnemy)
+		bulletSpeed = 10;
+
 	switch (m_bulletDirection)
 	{
-		case DIR_UP: this->m_bulletSprite.move(0, -5); break;
-		case DIR_DOWN: this->m_bulletSprite.move(0, 5); break;
-		case DIR_LEFT: this->m_bulletSprite.move(-5, 0); break;
-		case DIR_RIGHT: this->m_bulletSprite.move(5, 0); break;
+		case DIR_UP: this->m_bulletSprite.move(0, -bulletSpeed); break;
+		case DIR_DOWN: this->m_bulletSprite.move(0, bulletSpeed); break;
+		case DIR_LEFT: this->m_bulletSprite.move(-bulletSpeed, 0); break;
+		case DIR_RIGHT: this->m_bulletSprite.move(bulletSpeed, 0); break;
 	}
 
 	sf::FloatRect bulletSpriteBounds = this->m_bulletSprite.getGlobalBounds();
@@ -87,6 +91,10 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 					worldEntities.erase(it);
 					gameEngine.setGameOver(true);
 				}
+				else if (gameEngine.getStarsCollected() >= 3 && it->get()->getType() == entityType::Steel) {
+					worldEntities.erase(it);
+					solidHit = true;
+				}
 				else if (it->get()->getType() == entityType::Steel || it->get()->getType() == entityType::WorldBound)
 				{
 					solidHit = true;
@@ -109,7 +117,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			if (enemy->getPoweredUp()) {
 				auto generatedPos = rand() % (powerUpSpawnPoints.size() - 1);
 				auto randomPowerUp = rand() % 5;
-				powerUps.emplace_back(powerUp(1), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
+				powerUps.emplace_back(powerUp(4), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
 			}
 
 			enemyTanks.erase(enemyItr);
@@ -135,6 +143,7 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			return true;
 
 		gameEngine.m_localPlayerLives[0]--;
+		gameEngine.setStarsCollected(0);
 		
 		// to do: de implementat functionalitatea cand local player-ul este lovit (kill si scazut o viata)
 

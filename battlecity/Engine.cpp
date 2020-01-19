@@ -241,7 +241,10 @@ void Engine::runGame() {
 				if (menu.getIsInMenu())
 					continue;
 
-				if (tankAlreadyFired(m_localPlayerTank.get()))
+				if (tankAlreadyFired(m_localPlayerTank.get()) > 0 && m_starsCollected == 0)
+					continue;
+
+				if (tankAlreadyFired(m_localPlayerTank.get()) > 2 && m_starsCollected >= 2)
 					continue;
 
 				if ((m_localPlayerTank->m_tankSprite.getPosition().x > 900 ||
@@ -331,6 +334,7 @@ void Engine::runGame() {
 				//grenade
 				if (m_activePowerUps.at(0)) {
 					m_enemyTanks.clear();
+					logger.Logi(Logger::Level::Info, "All enemies disappeared");
 					m_activePowerUps.at(0) = false;
 				}
 				
@@ -338,17 +342,23 @@ void Engine::runGame() {
 				if (m_activePowerUps.at(5)) {
 					m_localPlayerLives[0]++;
 					m_localPlayerLives[1]++;
+					logger.Logi(Logger::Level::Info, "You received an extra life");
 					m_activePowerUps.at(5) = false;
 				}
 
+				// shield
 				if (m_activePowerUps.at(2)) {
 					m_secondsElapsed += frameTime.asSeconds();
 
 					if (m_secondsElapsed >= 10) {
 						m_secondsElapsed = 0;
 						m_activePowerUps.at(2) = false;
+						logger.Logi(Logger::Level::Info, "You are no longer immune!");
 					}
+					
 				}
+
+				
 			}
 
 			//draw ice first - tank should be over ice so we have to draw ice first
@@ -359,6 +369,7 @@ void Engine::runGame() {
 			//do movement and draw local player
 			doLocalPlayerMovement();
 			window.draw(m_localPlayerTank->m_tankSprite);
+			std::cout << m_starsCollected << "\n";
 
 			//do movement and draw enemies
 			for (auto &enemyTank : m_enemyTanks) {
@@ -370,13 +381,14 @@ void Engine::runGame() {
 					{
 						m_secondsElapsed = 0;
 						m_activePowerUps.at(1) = false;
+						logger.Logi(Logger::Level::Info, "Your power up expired, enemies are no longer frozen");
 					}
 				}
 				else {
 					enemyTank->doMovement();
 				}
 
-				if (!tankAlreadyFired(enemyTank.get()) && !m_activePowerUps.at(1)) {
+				if (tankAlreadyFired(enemyTank.get()) == 0 && !m_activePowerUps.at(1)) {
 					enemyTank->fireBullet(m_bulletVec, elapsed);
 				}
 
@@ -429,7 +441,18 @@ void Engine::runGame() {
 			if (m_enemyTanks.size() + spawnAnimVec.size() < 3) {
 
 				auto generatedPos = m_enemySpawnPoints.at(rand() % m_enemySpawnPoints.size());
+				bool okToSpawn = false;
 
+				/*sf::RectangleShape dummy;
+				dummy.setSize(sf::Vector2f(27, 30));
+				dummy.setPosition(generatedPos.first, generatedPos.second);
+
+				for (auto& enemy : m_enemyTanks) {
+					if (!dummy.getGlobalBounds().intersects(enemy->m_tankSprite.getGlobalBounds()))
+						okToSpawn = true;
+				}
+
+				if (okToSpawn) {*/
 				AnimatedSprite spawn(sf::seconds(0.25), true, false);
 				spawn.setPosition(generatedPos.first, generatedPos.second);
 				spawn.setOrigin(sf::Vector2f(16.5, 15.5));
@@ -438,6 +461,8 @@ void Engine::runGame() {
 
 				if (!enemyLifeSprites.empty())
 					enemyLifeSprites.pop_back();
+				//}
+
 			}
 
 			for (auto& spawnAnim : spawnAnimVec) {
@@ -553,15 +578,17 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 	return true;
 }
 
-bool Engine::tankAlreadyFired(Tank* tankToCheck)
+unsigned short Engine::tankAlreadyFired(Tank* tankToCheck)
 {
+	unsigned short numberOfBullets = 0;
+
 	for (auto& bullet : m_bulletVec) {
 		if (bullet->getFiredBy() == tankToCheck) {
-			return true;
+			numberOfBullets++;
 		}
 	}
 
-	return false;
+	return numberOfBullets;
 }
 
 bool Engine::handleCollision(Tank* tankToCheck, char direction)
@@ -606,6 +633,14 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 		}
 	}
 
+	//for (auto& spawnAnimation : spawnAnimVec) {
+	//	sf::FloatRect secondSpriteBounds = spawnAnimation.getGlobalBounds();
+
+	//	if (bounds.intersects(secondSpriteBounds)) {
+	//		return false;
+	//	}
+	//}
+
 	if (tankToCheck == m_localPlayerTank.get()) {
 		std::vector<PowerUps>::iterator it;
 		for (it = m_powerUps.begin(); it < m_powerUps.end(); it++) {
@@ -615,6 +650,10 @@ bool Engine::handleCollision(Tank* tankToCheck, char direction)
 			if (bounds.intersects(secondSpriteBounds)) {
 				auto type = it->getType();
 				logger.Logi(Logger::Level::Info, "You picked up a power up [", type, "]");
+
+				if (it->getType() == powerUp::StarPU)
+					m_starsCollected++;
+
 				m_activePowerUps.at(type) = true;
 				m_powerUps.erase(it);
 				break;
@@ -751,6 +790,16 @@ void Engine::setUpPUSpawnPoints()
 	m_powerUpSpawnPoints.push_back(std::make_pair(359, 214));
 	m_powerUpSpawnPoints.push_back(std::make_pair(408, 294));	
 	m_powerUpSpawnPoints.push_back(std::make_pair(305, 294));
+}
+
+unsigned short Engine::getStarsCollected() const
+{
+	return m_starsCollected;
+}
+
+void Engine::setStarsCollected(unsigned short stars)
+{
+	m_starsCollected = stars;
 }
 
 Animation Engine::createExplosionAnimation()
