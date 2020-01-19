@@ -18,6 +18,12 @@ Menu::Menu()
 		std::cout << "eroare";
 	}
 
+	scoreDisplay.setFont(menuFont);
+	scoreDisplay.setCharacterSize(30);
+	scoreDisplay.setStyle(sf::Text::Bold);
+	scoreDisplay.setFillColor(sf::Color::White);
+	scoreDisplay.setPosition(200, 500);
+
 	menuSprite = createSprite();
 	startText = sf::Text("START", menuFont);
 	onePlayerText = sf::Text("1 PLAYERS", menuFont);

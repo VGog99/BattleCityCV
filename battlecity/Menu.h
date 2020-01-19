@@ -41,6 +41,7 @@ public:
 
 	sf::Texture m_gameOverTexture;
 	sf::Sprite m_gameOverSprite;
+	sf::Text scoreDisplay;
 
 	bool getIsInMenu() const;
 	void setIsInMenu(const bool set);

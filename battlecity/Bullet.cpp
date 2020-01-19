@@ -47,7 +47,7 @@ Position Bullet::getPosition() const
 	return m_bulletPosition;
 }
 
-bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& tankHit, bool& solidHit)
+bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit)
 {
 	switch (m_bulletDirection)
 	{
@@ -105,6 +105,13 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 		if (bulletSpriteBounds.intersects(enemySpriteBounds)) {
 			tankHit = true;
 			bullets.erase(bulletItr);
+
+			if (enemy->getPoweredUp()) {
+				auto generatedPos = rand() % (powerUpSpawnPoints.size() - 1);
+				auto randomPowerUp = rand() % 5;
+				powerUps.emplace_back(powerUp(1), powerUpSpawnPoints.at(generatedPos).first, powerUpSpawnPoints.at(generatedPos).second);
+			}
+
 			enemyTanks.erase(enemyItr);
 			gameEngine.setlocalPlayerKills(gameEngine.getLocalPlayerKills() + 1);
 			gameEngine.setLocalPlayerScore(gameEngine.getLocalPlayerScore() + 100);
@@ -116,7 +123,6 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 
 	if (bulletSpriteBounds.intersects(localPlayerBounds))
 	{
-
 		if (!firedByEnemy)
 			return true;
 
@@ -124,6 +130,9 @@ bool Bullet::handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::ve
 			gameEngine.setGameOver(true);
 			return true;
 		}
+
+		if (gameEngine.m_activePowerUps.at(2) == true)
+			return true;
 
 		gameEngine.m_localPlayerLives[0]--;
 		

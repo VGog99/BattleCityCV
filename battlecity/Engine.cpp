@@ -29,9 +29,6 @@ Engine::Engine()
 	if (!solidHitSoundBuffer.loadFromFile("../resources/solidHit.wav"))
 		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul de muzica.");
 
-	if (!font.loadFromFile("../resources/font.ttf"))
-		logger.Logi(Logger::Level::Error, "Nu s-a putut incarca fisierul font.");
-
 	m_enemyLifeTexture.loadFromFile("../resources/enemyLife.png");
 	m_explosionTextureSheet.loadFromFile("../resources/explosion.png");
 	m_spawnAnimTextureSheet.loadFromFile("../resources/spawnAnim.png");
@@ -61,6 +58,7 @@ Engine::Engine()
 	tankIdle.setVolume(15.5f);
 
 	onStageStartPresets();
+	setUpPUSpawnPoints();
 }
 
 Engine::~Engine()
@@ -293,23 +291,14 @@ void Engine::runGame() {
 		}
 		else if (m_gameOver)
 		{
-			std::ostringstream ss;
-			ss << "Your score is:" <<getLocalPlayerScore();
-			sf::Text scoreDisplay;
-			scoreDisplay.setFont(font);
-			scoreDisplay.setCharacterSize(30);
-			scoreDisplay.setStyle(sf::Text::Bold);
-			scoreDisplay.setFillColor(sf::Color::White);
-			scoreDisplay.setPosition(200, 500);
-			scoreDisplay.setString(ss.str());
-			menu.setScore(scoreDisplay);
+			menu.scoreDisplay.setString("You score is: " + std::to_string(m_localPlayerScore));
 			window.draw(menu.m_gameOverSprite);
-			window.draw(menu.getScore());
+			window.draw(menu.scoreDisplay);
 			tankIdle.stop();
 			tankMoving.stop();
 
 			if (menu.m_gameOverSprite.getPosition().y != 200) {
-				menu.m_gameOverSprite.move(0, 2.5);
+				menu.m_gameOverSprite.move(0, 1);
 			}
 			else {
 				resetGameLogic();
@@ -336,6 +325,32 @@ void Engine::runGame() {
 			sf::Time frameTime = animClock.restart();
 			sf::Time elapsed = enemyClock.restart();
 
+
+			// powerUps
+			{
+				//grenade
+				if (m_activePowerUps.at(0)) {
+					m_enemyTanks.clear();
+					m_activePowerUps.at(0) = false;
+				}
+				
+				// tank - extra life
+				if (m_activePowerUps.at(5)) {
+					m_localPlayerLives[0]++;
+					m_localPlayerLives[1]++;
+					m_activePowerUps.at(5) = false;
+				}
+
+				if (m_activePowerUps.at(2)) {
+					m_secondsElapsed += frameTime.asSeconds();
+
+					if (m_secondsElapsed >= 10) {
+						m_secondsElapsed = 0;
+						m_activePowerUps.at(2) = false;
+					}
+				}
+			}
+
 			//draw ice first - tank should be over ice so we have to draw ice first
 			for (auto& entity : m_iceVec) {
 				window.draw(entity->getSprite());
@@ -348,9 +363,20 @@ void Engine::runGame() {
 			//do movement and draw enemies
 			for (auto &enemyTank : m_enemyTanks) {
 			
-				enemyTank->doMovement();
+				// timer power up, enemies should freeze
+				if (m_activePowerUps.at(1)) {
+					m_secondsElapsed += frameTime.asSeconds();
+					if (m_secondsElapsed >= 10)
+					{
+						m_secondsElapsed = 0;
+						m_activePowerUps.at(1) = false;
+					}
+				}
+				else {
+					enemyTank->doMovement();
+				}
 
-				if (!tankAlreadyFired(enemyTank.get())) {
+				if (!tankAlreadyFired(enemyTank.get()) && !m_activePowerUps.at(1)) {
 					enemyTank->fireBullet(m_bulletVec, elapsed);
 				}
 
@@ -365,7 +391,7 @@ void Engine::runGame() {
 			//bullet logic and draw bullets
 			for (auto& bullets : m_bulletVec) {
 
-				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_wallHit, m_tankHit, m_solidHit))
+				if (!bullets.get()->handleBullet(m_bulletVec, m_worldEntities, m_enemyTanks, m_powerUps, m_powerUpSpawnPoints, m_wallHit, m_tankHit, m_solidHit))
 				{
 					break;
 				}
@@ -415,14 +441,30 @@ void Engine::runGame() {
 			}
 
 			for (auto& spawnAnim : spawnAnimVec) {
+
 				spawnAnim.update(frameTime);
 				window.draw(spawnAnim);
 
-				if (!spawnAnim.isPlaying())
-					m_enemyTanks.push_back(std::make_unique<Enemy>(spawnAnim.getPosition().x, spawnAnim.getPosition().y));
+				if (!spawnAnim.isPlaying()) {
+					m_enemiesRespawned++;
+
+					if (m_enemiesRespawned == 1 || m_enemiesRespawned == 8 || m_enemiesRespawned == 15) {
+						m_enemyTanks.push_back(std::make_unique<Enemy>(spawnAnim.getPosition().x, spawnAnim.getPosition().y, true));
+					}
+					else
+					{
+						m_enemyTanks.push_back(std::make_unique<Enemy>(spawnAnim.getPosition().x, spawnAnim.getPosition().y, false));
+					}
+								
+				}
+
 			}
 
 			spawnAnimVec.erase(std::remove_if(spawnAnimVec.begin(), spawnAnimVec.end(), [](AnimatedSprite sprite) { return sprite.isPlaying() == false; }), spawnAnimVec.end());
+
+			for (auto& powerUp : m_powerUps) {
+				window.draw(powerUp.getSprite());
+			}
 
 			if (m_localPlayerSpawnSprite != nullptr) {
 				m_localPlayerSpawnSprite->update(frameTime);
@@ -463,7 +505,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 0)
 			tankToMove->m_tankSprite.setRotation(0.f);
 
-		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
 			tankToMove->m_tankSprite.move(0, -speed);
 		else
 			return false;
@@ -475,7 +517,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 180)
 			tankToMove->m_tankSprite.setRotation(180.f);
 
-		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
 			tankToMove->m_tankSprite.move(0, speed);
 		else
 			return false;
@@ -487,7 +529,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != -90)
 			tankToMove->m_tankSprite.setRotation(-90.f);
 
-		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
 			tankToMove->m_tankSprite.move(-speed, 0);
 		else
 			return false;
@@ -499,7 +541,7 @@ bool Engine::moveTank(Tank* tankToMove, const char direction, float speed)
 		if (tankToMove->m_tankSprite.getRotation() != 90)
 			tankToMove->m_tankSprite.setRotation(90.f);
 
-		if (handleUpwardsCollision(tankToMove, tankToMove->getTankDirection()))
+		if (handleCollision(tankToMove, tankToMove->getTankDirection()))
 			tankToMove->m_tankSprite.move(speed, 0);
 		else
 			return false;
@@ -522,7 +564,7 @@ bool Engine::tankAlreadyFired(Tank* tankToCheck)
 	return false;
 }
 
-bool Engine::handleUpwardsCollision(Tank* tankToCheck, char direction)
+bool Engine::handleCollision(Tank* tankToCheck, char direction)
 {
 	auto dummySprite = tankToCheck->m_tankSprite;
 	auto futurePosition = tankToCheck->m_tankSprite.getPosition();
@@ -564,6 +606,22 @@ bool Engine::handleUpwardsCollision(Tank* tankToCheck, char direction)
 		}
 	}
 
+	if (tankToCheck == m_localPlayerTank.get()) {
+		std::vector<PowerUps>::iterator it;
+		for (it = m_powerUps.begin(); it < m_powerUps.end(); it++) {
+		
+			sf::FloatRect secondSpriteBounds = it->getSprite().getGlobalBounds();
+
+			if (bounds.intersects(secondSpriteBounds)) {
+				auto type = it->getType();
+				logger.Logi(Logger::Level::Info, "You picked up a power up [", type, "]");
+				m_activePowerUps.at(type) = true;
+				m_powerUps.erase(it);
+				break;
+			}
+		}
+	}
+
 	if (tankToCheck != m_localPlayerTank.get()) {
 		if (bounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds())) {
 			return false;
@@ -571,45 +629,6 @@ bool Engine::handleUpwardsCollision(Tank* tankToCheck, char direction)
 	}
 
 	return true;
-}
-
-bool Engine::handleCollision(Tank* tankToCheck, sf::FloatRect& intersection)
-{
-	sf::FloatRect firstSpriteBounds = tankToCheck->m_tankSprite.getGlobalBounds();
-
-	for (auto &enemyTank : m_enemyTanks) {
-
-		if (tankToCheck == enemyTank.get())
-			continue;
-
-		sf::FloatRect secondSpriteBounds = enemyTank->m_tankSprite.getGlobalBounds();
-
-		if (firstSpriteBounds.intersects(secondSpriteBounds, intersection)) {
-			return true;
-		}
-	}
-
-	if (tankToCheck != m_localPlayerTank.get()) {
-		if (firstSpriteBounds.intersects(m_localPlayerTank->m_tankSprite.getGlobalBounds(), intersection)) {
-			return true;
-		}
-	}
-
-	for (auto &entity : m_worldEntities) {
-
-		if (entity->getType() == entityType::Bush)
-			continue;
-		if (entity->getType() == entityType::Ice)
-			continue;
-
-		sf::FloatRect secondSpriteBounds = entity->getSprite().getGlobalBounds();
-
-		if (firstSpriteBounds.intersects(secondSpriteBounds, intersection)) {
-			return true;
-		}
-	}
-	
-	return false;
 }
 
 void Engine::doLocalPlayerMovement()
@@ -705,12 +724,33 @@ void Engine::resetGameLogic()
 	m_localPlayerLives[0] = 2;
 	m_playedMusic = false;
 	m_localPlayerScore = 0;
+	m_enemiesRespawned = 0;
 	explosionsVec.clear();
 	spawnAnimVec.clear();
 
 	tankIdle.stop();
 	tankMoving.stop();
 	bulletSound.stop();
+}
+
+void Engine::setUpPUSpawnPoints()
+{
+	m_powerUpSpawnPoints.push_back(std::make_pair(150, 150));
+	m_powerUpSpawnPoints.push_back(std::make_pair(474, 194));
+	m_powerUpSpawnPoints.push_back(std::make_pair(140, 370));
+	m_powerUpSpawnPoints.push_back(std::make_pair(69, 463));
+	m_powerUpSpawnPoints.push_back(std::make_pair(153, 555));
+	m_powerUpSpawnPoints.push_back(std::make_pair(308, 571));
+	m_powerUpSpawnPoints.push_back(std::make_pair(436, 464));
+	m_powerUpSpawnPoints.push_back(std::make_pair(588, 378));
+	m_powerUpSpawnPoints.push_back(std::make_pair(630, 557));
+	m_powerUpSpawnPoints.push_back(std::make_pair(548, 630));
+	m_powerUpSpawnPoints.push_back(std::make_pair(459, 548));
+	m_powerUpSpawnPoints.push_back(std::make_pair(572, 269));
+	m_powerUpSpawnPoints.push_back(std::make_pair(598, 74));
+	m_powerUpSpawnPoints.push_back(std::make_pair(359, 214));
+	m_powerUpSpawnPoints.push_back(std::make_pair(408, 294));	
+	m_powerUpSpawnPoints.push_back(std::make_pair(305, 294));
 }
 
 Animation Engine::createExplosionAnimation()
@@ -833,7 +873,7 @@ void Engine::setUpWorld(unsigned short stage)
 					break;
 				}
 				case 'h': {
-					m_enemyTanks.push_back(std::make_unique<Enemy>(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
+					m_enemyTanks.push_back(std::make_unique<Enemy>(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2, false));
 					m_enemySpawnPoints.push_back(std::make_pair(x * worldEntitySize + worldEntitySize / 2, y * worldEntitySize + worldEntitySize / 2));
 					break;
 				}

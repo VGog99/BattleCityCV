@@ -36,6 +36,11 @@ PowerUps::PowerUps(powerUp type, float posX, float posY): m_powerUp(type), m_pow
 		break;
 	}
 	}
+
+	m_powerUpSprite.setTexture(m_powerUpTexture);
+	m_powerUpSprite.setOrigin(sf::Vector2f(m_powerUpTexture.getSize().x * 0.5, m_powerUpTexture.getSize().y * 0.5));
+	m_powerUpSprite.setPosition(m_powerUpPosition.first, m_powerUpPosition.second);
+
 }
 powerUp PowerUps::getType() const
 {

@@ -6,6 +6,7 @@
 #include "WorldEntity.h"
 #include <algorithm>
 #include "Enemy.h"
+#include "PowerUps.h"
 
 class Enemy;
 
@@ -30,7 +31,7 @@ public:
 
 	sf::Texture getTexture();
 	Position getPosition() const;
-	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, bool& wallHit, bool& tankHit, bool& solidHit);
+	bool handleBullet(std::vector<std::unique_ptr<Bullet>>& bullets, std::vector<std::unique_ptr<WorldEntity>>& worldEntities, std::vector<std::unique_ptr<Enemy>>& enemyTanks, std::vector<PowerUps>& powerUps, std::vector<Position> powerUpSpawnPoints, bool& wallHit, bool& tankHit, bool& solidHit);
 
 };
 

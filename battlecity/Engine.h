@@ -12,6 +12,7 @@
 #include "Bullet.h"
 #include "AnimatedSprite.hpp"
 #include "Macros.h"
+#include "PowerUps.h"
 
 class Engine {
 
@@ -22,6 +23,8 @@ private:
 	unsigned int m_stageChosen;
 	unsigned int m_localPlayerKills;
 	unsigned int m_localPlayerScore = 0;
+	unsigned short m_enemiesRespawned = 0;
+	float m_secondsElapsed;
 	bool m_localPlayerTankIsMoving;
 	std::vector<std::unique_ptr<WorldEntity>> m_worldEntities;
 	std::vector<std::unique_ptr<WorldEntity>> m_iceVec;
@@ -29,6 +32,8 @@ private:
 	std::vector<std::unique_ptr<Enemy>> m_enemyTanks;
 	std::vector<std::unique_ptr<Bullet>> m_bulletVec;
 	std::vector<Position> m_enemySpawnPoints;
+	std::vector<Position> m_powerUpSpawnPoints;
+	std::vector<PowerUps> m_powerUps;
 
 	sf::SoundBuffer tankMovingBuffer;
 	sf::SoundBuffer bulletBuffer;
@@ -56,7 +61,6 @@ private:
 	sf::Texture m_spawnAnimTextureSheet;
 	std::vector<sf::Sprite> enemyLifeSprites;
 	std::vector<AnimatedSprite> spawnAnimVec;
-	sf::Font font;
 
 public:
 	
@@ -66,6 +70,7 @@ public:
 	std::vector<AnimatedSprite> explosionsVec;
 	Position m_localPlayerSpawnPoint;
 	AnimatedSprite* m_localPlayerSpawnSprite;
+	std::vector<bool> m_activePowerUps = { false, false, false, false, false, false};
 
 	unsigned short m_localPlayerLives[2] = { 2, 2 };
 
@@ -74,8 +79,7 @@ public:
 	void runGame();
 	bool moveTank(Tank* tankToMove, const char direction, float speed);
 	bool tankAlreadyFired(Tank* tankToCheck);
-	bool handleUpwardsCollision(Tank* tankToCheck, char direction);
-	bool handleCollision(Tank* tankToCheck, sf::FloatRect& intersection);
+	bool handleCollision(Tank* tankToCheck, char direction);
 	void setUpWorld(unsigned short stage);
 	void doLocalPlayerMovement();
 	void setlocalPlayerKills(const unsigned int localPlayerKills);
@@ -86,6 +90,7 @@ public:
 	void setGameOver(bool gameOver);
 	void advanceStageSetup();
 	void resetGameLogic();
+	void setUpPUSpawnPoints();
 	Animation createExplosionAnimation();
 	Animation createSpawnAnimation();
 };
